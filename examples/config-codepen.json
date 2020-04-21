@@ -1,0 +1,28 @@
+{
+  "artoolkitUrl": "https://raw.githack.com/kalwalt/jsartoolkitNFT/master/build/artoolkitNFT_wasm.js",
+  "cameraPara": "https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/kalwalt/jsartoolkitNFT/master/examples/Data/camera_para.dat",
+  "videoSettings": {
+    "width": {
+      "min": 640,
+      "max": 800
+    },
+    "height": {
+      "min": 480,
+      "max": 600
+    },
+    "facingMode": "environment",
+    "onError": ""
+  },
+  "loading": {
+    "logo": {
+      "src": "https://raw.githack.com/kalwalt/jsartoolkitNFT/master/examples/Data/arNFT-logo.gif",
+      "alt": "arNFT.js logo"
+    },
+    "loadingMessage": "Loading, please wait..."
+  },
+  "renderer": {
+    "alpha": true,
+    "antialias": true,
+    "precision": "mediump"
+  }
+}
