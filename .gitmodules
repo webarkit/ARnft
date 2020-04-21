@@ -1,0 +1,3 @@
+[submodule "libs/jsartoolkitNFT"]
+	path = libs/jsartoolkitNFT
+	url = https://github.com/kalwalt/jsartoolkitNFT
