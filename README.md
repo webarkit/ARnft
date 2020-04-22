@@ -21,3 +21,10 @@ http://localhost:8000/examples/arNFT_example.html
 4️⃣ Point your device 📱 to the pinball image 👇 a red cube will appear !
 
 <img src= https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg width="250"/>
+
+
+## Features
+
+- **NFT** (**N**atural **F**eature **T**racking) Markers, read my article: [NFT natural feature tracking with jsartoolkit5](https://www.kalwaltart.com/blog/2020/01/21/nft-natural-feature-tracking-with-jsartoolkit5/)
+- **ES6** standard.
+- Configuration data in an External .json file.

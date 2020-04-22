@@ -17,8 +17,15 @@
     "NFT",
     "markerless"
   ],
-  "author": "Walter Perdan (@kalwalt https://github.com/kalwalt/)",
-  "repository": "git://https://github.com/kalwalt/ARnft.git",
+  "author": {
+    "name": "Walter Perdan",
+    "email": "github@kalwaltart.it",
+    "url": "https://www.kalwaltart.com"
+    },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kalwalt/ARnft"
+  },
   "homepage": "https://github.com/kalwalt/ARnft",
   "contributors": [
     "Github Contributors (https://github.com/kalwalt/ARnft/graphs/contributors)"
