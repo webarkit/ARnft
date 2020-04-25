@@ -21,7 +21,7 @@
     "name": "Walter Perdan",
     "email": "github@kalwaltart.it",
     "url": "https://www.kalwaltart.com"
-    },
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/kalwalt/ARnft"
@@ -56,9 +56,8 @@
   },
   "scripts": {
     "dev-es6": "webpack --mode development --progress --colors --watch",
-    "build-es6": "webpack --mode production",
+    "build-es6": "webpack --mode production --optimize-minimize -d",
     "build-jshint": "grunt jshint --force",
-    "jsbeautifier": "grunt jsbeautifier",
     "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
   },
   "license": "LGPL-3.0",
