@@ -240,7 +240,6 @@ export default class Utils {
             this.setMatrix(camera.projectionMatrix, proj)
             break
           }
-
           case 'endLoading': {
             if (msg.end == true) {
               // removing loader page if present
@@ -254,7 +253,12 @@ export default class Utils {
             }
             break
           }
-
+          case 'nftData': {
+            let nft = JSON.parse(msg.nft)
+            var nftEvent = new CustomEvent('getNFTData', {detail: {dpi: nft.dpi, width: nft.width, height: nft.height}})
+            document.dispatchEvent(nftEvent)
+            break
+          }
           case 'found': {
             found(msg)
             break
@@ -270,8 +274,6 @@ export default class Utils {
     }
 
     const workerRunner = () => {
-    // continuing 'workerRunner' function at start-workerEnd.js file
-    // see the Gruntfile.js to better understand the division of this function between two files
       self.onmessage = (e) => {
         const msg = e.data
         switch (msg.type) {
@@ -340,9 +342,11 @@ export default class Utils {
               }
             }
             console.debug('Loading NFT marker at: ', nftMarkerUrl)
-            ar.loadNFTMarker(nftMarkerUrl, (markerId) => {
-              ar.trackNFTMarkerId(markerId)
-              console.log('loadNFTMarker -> ', markerId)
+            ar.loadNFTMarker(nftMarkerUrl, (nft) => {
+              postMessage({ type: 'nftData',  nft: JSON.stringify(nft) })
+              ar.trackNFTMarkerId(nft.id)
+              console.log('loadNFTMarker -> ', nft.id)
+              console.log(nft);
               postMessage({ type: 'endLoading', end: true }),
               (err) => {
                 console.error('Error in loading marker on Worker', err)
