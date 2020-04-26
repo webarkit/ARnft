@@ -59,6 +59,12 @@ export default class ARnft {
 
   add (obj) {
     let root = this.root
+    document.addEventListener('getNFTData', (ev) => {
+      // console.log(ev)
+      var msg = ev.detail
+      obj.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
+      obj.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
+    })
     root.add(obj)
   }
 
