@@ -1,6 +1,6 @@
 {
   "name": "ARnft",
-  "version": "0.6.6",
+  "version": "0.6.7",
   "main": "dist/ARnft.js",
   "module": "src/index.js",
   "description": "WebAR Javscript library for markerless AR",
