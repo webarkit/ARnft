@@ -1,10 +1,8 @@
 import axios from 'axios'
 import Worker from './Worker.js'
+import * as THREE from 'three'
 
 export default class Utils {
-  constructor () {
-  }
-
   static getUserMedia (container, markerUrl, video, canvas, root, statsObj, configData) {
     const facing = configData.videoSettings.facingMode || 'environment'
 
@@ -149,7 +147,7 @@ export default class Utils {
     }
   }
 
-  static _startWorker (container, markerUrl, video, input_width, input_height, canvas_draw, render_update, track_update, root, configData) {
+  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, root, configData) {
     let vw, vh
     let sw, sh
     let pscale, sscale
@@ -158,11 +156,11 @@ export default class Utils {
     let ox, oy
     let worker
 
-    const canvas_process = document.createElement('canvas')
-    const context_process = canvas_process.getContext('2d')
+    const canvasProcess = document.createElement('canvas')
+    const contextProcess = canvasProcess.getContext('2d')
 
     const renderer = new THREE.WebGLRenderer({
-      canvas: canvas_draw,
+      canvas: canvasDraw,
       alpha: configData.renderer.alpha,
       antialias: configData.renderer.antialias,
       precision: configData.renderer.precision
@@ -182,11 +180,11 @@ export default class Utils {
     scene.add(root)
 
     const load = () => {
-      vw = input_width
-      vh = input_height
+      vw = inputWidth
+      vh = inputHeight
 
       pscale = 320 / Math.max(vw, (vh / 3) * 4)
-      sscale = this.isMobile() ? window.outerWidth / input_width : 1
+      sscale = this.isMobile() ? window.outerWidth / inputWidth : 1
 
       sw = vw * sscale
       sh = vh * sscale
@@ -197,10 +195,10 @@ export default class Utils {
       ph = Math.max(h, (w / 4) * 3)
       ox = (pw - w) / 2
       oy = (ph - h) / 2
-      canvas_process.style.clientWidth = pw + 'px'
-      canvas_process.style.clientHeight = ph + 'px'
-      canvas_process.width = pw
-      canvas_process.height = ph
+      canvasProcess.style.clientWidth = pw + 'px'
+      canvasProcess.style.clientHeight = ph + 'px'
+      canvasProcess.width = pw
+      canvasProcess.height = ph
 
       renderer.setSize(sw, sh)
 
@@ -235,7 +233,7 @@ export default class Utils {
             break
           }
           case 'endLoading': {
-            if (msg.end == true) {
+            if (msg.end === true) {
               // removing loader page if present
               const loader = document.getElementById('loading')
               if (loader) {
@@ -249,7 +247,7 @@ export default class Utils {
           }
           case 'nftData': {
             let nft = JSON.parse(msg.nft)
-            var nftEvent = new CustomEvent('getNFTData', {detail: {dpi: nft.dpi, width: nft.width, height: nft.height}})
+            var nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
             document.dispatchEvent(nftEvent)
             break
           }
@@ -262,7 +260,7 @@ export default class Utils {
             break
           }
         }
-        track_update()
+        trackUpdate()
         process()
       }
     }
@@ -281,23 +279,18 @@ export default class Utils {
     let time = 0
 
     const process = () => {
-      context_process.fillStyle = 'black'
-      context_process.fillRect(0, 0, pw, ph)
-      context_process.drawImage(video, 0, 0, vw, vh, ox, oy, w, h)
+      contextProcess.fillStyle = 'black'
+      contextProcess.fillRect(0, 0, pw, ph)
+      contextProcess.drawImage(video, 0, 0, vw, vh, ox, oy, w, h)
 
-      const imageData = context_process.getImageData(0, 0, pw, ph)
+      const imageData = contextProcess.getImageData(0, 0, pw, ph)
       worker.postMessage({ type: 'process', imagedata: imageData }, [
         imageData.data.buffer
       ])
     }
 
-    const tick = () => {
-      draw()
-      requestAnimationFrame(tick)
-    }
-
     const draw = () => {
-      render_update()
+      renderUpdate()
       const now = Date.now()
       const dt = now - lasttime
       time += dt
@@ -338,6 +331,11 @@ export default class Utils {
       }
 
       renderer.render(scene, camera)
+    }
+
+    const tick = () => {
+      draw()
+      window.requestAnimationFrame(tick)
     }
 
     load()
