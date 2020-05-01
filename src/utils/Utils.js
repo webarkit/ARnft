@@ -289,11 +289,6 @@ export default class Utils {
       ])
     }
 
-    const tick = () => {
-      draw()
-      window.requestAnimationFrame(tick)
-    }
-
     const draw = () => {
       renderUpdate()
       const now = Date.now()
@@ -336,6 +331,11 @@ export default class Utils {
       }
 
       renderer.render(scene, camera)
+    }
+
+    const tick = () => {
+      draw()
+      window.requestAnimationFrame(tick)
     }
 
     load()
