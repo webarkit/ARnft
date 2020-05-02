@@ -50,7 +50,7 @@
     "grunt-contrib-jshint": "^2.1.0",
     "grunt-eslint": "^22.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.115.0",
+    "three": "^0.116.0",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "worker-loader": "^2.0.0"
@@ -62,6 +62,9 @@
     "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
   },
   "license": "LGPL-3.0",
+  "resolutions": {
+    "ecstatic": "^4.1.4"
+  },
   "dependencies": {
     "@babel/runtime": "^7.9.6",
     "http-server": "^0.12.3"
