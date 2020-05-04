@@ -11,8 +11,7 @@
       "min": 480,
       "max": 600
     },
-    "facingMode": "environment",
-    "onError": ""
+    "facingMode": "environment"
   },
   "loading": {
     "logo": {
