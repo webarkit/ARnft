@@ -17,16 +17,16 @@ export default class ARnft {
 
   _initialize (markerUrl, stats) {
     console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px')
-    let root = this.root
-    let config = this.config
-    let data = Utils.jsonParser(config)
+    const root = this.root
+    const config = this.config
+    const data = Utils.jsonParser(config)
 
     data.then((configData) => {
       Container.createLoading(configData)
       Container.createStats(stats)
-      let containerObj = Container.createContainer()
-      let container = containerObj.container
-      let canvas = containerObj.canvas
+      const containerObj = Container.createContainer()
+      const container = containerObj.container
+      const canvas = containerObj.canvas
 
       let statsMain, statsWorker
 
@@ -40,7 +40,7 @@ export default class ARnft {
         document.getElementById('stats2').appendChild(statsWorker.dom)
       }
 
-      let statsObj = {
+      const statsObj = {
         statsMain: statsMain,
         statsWorker: statsWorker,
         stats: stats
@@ -77,7 +77,7 @@ export default class ARnft {
   }
 
   add (obj) {
-    let root = this.root
+    const root = this.root
     document.addEventListener('getNFTData', (ev) => {
       // console.log(ev)
       var msg = ev.detail
@@ -88,11 +88,11 @@ export default class ARnft {
   }
 
   loadModel (url, x, y, z, scale) {
-    let root = this.root
+    const root = this.root
     let model
 
     /* Load Model */
-    let threeGLTFLoader = new THREE.GLTFLoader()
+    const threeGLTFLoader = new THREE.GLTFLoader()
 
     threeGLTFLoader.load(url, (gltf) => {
       model = gltf.scene
@@ -108,7 +108,7 @@ export default class ARnft {
   }
 
   dispatchEvent (event) {
-    let listeners = this.listeners[event.name]
+    const listeners = this.listeners[event.name]
     if (listeners) {
       for (let i = 0; i < listeners.length; i++) {
         listeners[i].call(this, event)
@@ -125,7 +125,7 @@ export default class ARnft {
 
   removeEventListener (name, callback) {
     if (this.listeners[name]) {
-      let index = this.listeners[name].indexOf(callback)
+      const index = this.listeners[name].indexOf(callback)
       if (index > -1) {
         this.listeners[name].splice(index, 1)
       }

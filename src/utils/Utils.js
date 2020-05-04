@@ -211,7 +211,7 @@ export default class Utils {
             break
           }
           case 'nftData': {
-            let nft = JSON.parse(msg.nft)
+            const nft = JSON.parse(msg.nft)
             var nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
             document.dispatchEvent(nftEvent)
             break
