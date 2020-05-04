@@ -165,6 +165,9 @@ export default class Utils {
       canvasProcess.width = pw
       canvasProcess.height = ph
 
+      let setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
+      document.dispatchEvent(setWindowSizeEvent)
+
       //renderer.setSize(sw, sh)
 
       worker = new Worker()
@@ -239,8 +242,8 @@ export default class Utils {
         world = null
       } else {
         world = JSON.parse(msg.matrixGL_RH)
-        let matrixGL_RH_Event = new CustomEvent('getMatrixGL_RH', {detail: {matrixGL_RH: world}})
-        document.dispatchEvent(matrixGL_RH_Event)
+        const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH', { detail: { matrixGL_RH: world } })
+        document.dispatchEvent(matrixGLrhEvent)
       }
     }
 
@@ -264,42 +267,6 @@ export default class Utils {
       const dt = now - lasttime
       time += dt
       lasttime = now
-
-      const interpolationFactor = 24
-
-      const trackedMatrix = {
-        // for interpolation
-        delta: [
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0
-        ],
-        interpolated: [
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0
-        ]
-      }
-
-      if (!world) {
-        root.visible = false
-      } else {
-        root.visible = true
-
-        // interpolate matrix
-        for (let i = 0; i < 16; i++) {
-          trackedMatrix.delta[i] = world[i] - trackedMatrix.interpolated[i]
-          trackedMatrix.interpolated[i] =
-                    trackedMatrix.interpolated[i] +
-                    trackedMatrix.delta[i] / interpolationFactor
-        }
-        // set matrix of 'root' by detected 'world' matrix
-        this.setMatrix(root.matrix, trackedMatrix.interpolated)
-      }
-
-      //renderer.render(scene, camera)
     }
 
     const tick = () => {
@@ -308,8 +275,36 @@ export default class Utils {
     }
 
     load()
-    //tick()
     process()
+  }
+
+  static interpolate (world) {
+    const interpolationFactor = 24
+
+    const trackedMatrix = {
+      // for interpolation
+      delta: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+      ],
+      interpolated: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+      ]
+    }
+
+    // interpolate matrix
+    for (let i = 0; i < 16; i++) {
+      trackedMatrix.delta[i] = world[i] - trackedMatrix.interpolated[i]
+      trackedMatrix.interpolated[i] =
+                  trackedMatrix.interpolated[i] +
+                  trackedMatrix.delta[i] / interpolationFactor
+    }
+    return trackedMatrix.interpolated
   }
 
   static isMobile () {

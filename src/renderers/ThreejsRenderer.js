@@ -1,4 +1,5 @@
 import * as THREE from 'three'
+import Utils from '../utils/Utils'
 
 export default class ThreejsRenderer {
   constructor (configData, canvasDraw, root) {
@@ -16,21 +17,33 @@ export default class ThreejsRenderer {
 
   initRenderer () {
     this.camera.matrixAutoUpdate = false
-
+    document.addEventListener('getProjectionMatrix', (ev) => {
+      Utils.setMatrix(this.camera.projectionMatrix, ev.detail.proj)
+    })
     this.scene.add(this.camera)
 
     const light = new THREE.AmbientLight(0xffffff)
     this.scene.add(light)
 
+    document.addEventListener('getMatrixGL_RH', (ev) => {
+      this.root.visible = true
+      Utils.setMatrix(this.root.matrix, ev.detail.matrixGL_RH)
+    })
+
+    this.root.visible = false
+
     this.scene.add(this.root)
-    this.renderer.setSize(640, 480)
+    document.addEventListener('getWindowSize', (ev) => {
+      this.renderer.setSize(ev.detail.sw, ev.detail.sh)
+    })
   }
 
   draw () {
     this.renderer.render(this.scene, this.camera)
   }
 
-  /*tick () {
+  // tick to be implemented
+  /* tick () {
     this.draw()
     window.requestAnimationFrame(this.tick)
   }*/
