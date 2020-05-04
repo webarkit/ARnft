@@ -69,13 +69,15 @@ export default class ARnft {
           configData)
       })
 
-      const renderer = new ThreejsRenderer(configData, canvas, root)
-      renderer.initRenderer()
-      const tick = () => {
-        renderer.draw()
-        window.requestAnimationFrame(tick)
+      if (configData.renderer.type === 'three') {
+        const renderer = new ThreejsRenderer(configData, canvas, root)
+        renderer.initRenderer()
+        const tick = () => {
+          renderer.draw()
+          window.requestAnimationFrame(tick)
+        }
+        tick()
       }
-      tick()
     })
     return this
   }
