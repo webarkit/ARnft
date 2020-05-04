@@ -1,6 +1,5 @@
 import axios from 'axios'
 import Worker from './Worker.js'
-import * as THREE from 'three'
 
 export default class Utils {
   static async getUserMedia (configData) {
@@ -124,26 +123,6 @@ export default class Utils {
     const canvasProcess = document.createElement('canvas')
     const contextProcess = canvasProcess.getContext('2d')
 
-    /*const renderer = new THREE.WebGLRenderer({
-      canvas: canvasDraw,
-      alpha: configData.renderer.alpha,
-      antialias: configData.renderer.antialias,
-      precision: configData.renderer.precision
-    })
-    renderer.setPixelRatio(window.devicePixelRatio)
-
-    const scene = new THREE.Scene()
-
-    const camera = new THREE.Camera()
-    camera.matrixAutoUpdate = false
-
-    scene.add(camera)
-
-    const light = new THREE.AmbientLight(0xffffff)
-    scene.add(light)
-
-    scene.add(root)*/
-
     const load = () => {
       vw = inputWidth
       vh = inputHeight
@@ -167,8 +146,6 @@ export default class Utils {
 
       let setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
       document.dispatchEvent(setWindowSizeEvent)
-
-      //renderer.setSize(sw, sh)
 
       worker = new Worker()
 
@@ -197,7 +174,6 @@ export default class Utils {
             proj[5] *= ratioH
             proj[9] *= ratioH
             proj[13] *= ratioH
-            //this.setMatrix(camera.projectionMatrix, proj)
             let projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
             document.dispatchEvent(projectionMatrixEvent)
             break
@@ -247,9 +223,6 @@ export default class Utils {
       }
     }
 
-    let lasttime = Date.now()
-    let time = 0
-
     const process = () => {
       contextProcess.fillStyle = 'black'
       contextProcess.fillRect(0, 0, pw, ph)
@@ -261,20 +234,13 @@ export default class Utils {
       ])
     }
 
-    const draw = () => {
-      renderUpdate()
-      const now = Date.now()
-      const dt = now - lasttime
-      time += dt
-      lasttime = now
-    }
-
     const tick = () => {
-      draw()
+      renderUpdate()
       window.requestAnimationFrame(tick)
     }
 
     load()
+    tick()
     process()
   }
 
