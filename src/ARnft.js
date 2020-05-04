@@ -27,7 +27,6 @@ export default class ARnft {
       let containerObj = Container.createContainer()
       let container = containerObj.container
       let canvas = containerObj.canvas
-      //let video = containerObj.video
 
       let statsMain, statsWorker
 
@@ -47,27 +46,27 @@ export default class ARnft {
         stats: stats
       }
 
-      Utils.getUserMedia3(configData).then(  (video) => {
-          Utils._startWorker(
-            container,
-            markerUrl,
-            video,
-            640,
-            480,
-            canvas,
-            () => {
-              if (statsObj.stats) {
-                statsObj.statsMain.update()
-              }
-            },
-            () => {
-              if (statsObj.stats) {
-                statsObj.statsWorker.update()
-              }
-            },
-            root,
-            configData)
-        })
+      Utils.getUserMedia(configData).then((video) => {
+        Utils._startWorker(
+          container,
+          markerUrl,
+          video,
+          video.videoWidth,
+          video.videoHeight,
+          canvas,
+          () => {
+            if (statsObj.stats) {
+              statsObj.statsMain.update()
+            }
+          },
+          () => {
+            if (statsObj.stats) {
+              statsObj.statsWorker.update()
+            }
+          },
+          root,
+          configData)
+      })
     })
     return this
   }
