@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Worker from './Worker.js'
+import CustomEvent from 'custom-event'
 
 export default class Utils {
   static async getUserMedia (configData) {
@@ -144,7 +145,7 @@ export default class Utils {
       canvasProcess.width = pw
       canvasProcess.height = ph
 
-      let setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
+      const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
       document.dispatchEvent(setWindowSizeEvent)
 
       worker = new Worker()
@@ -174,7 +175,7 @@ export default class Utils {
             proj[5] *= ratioH
             proj[9] *= ratioH
             proj[13] *= ratioH
-            let projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
+            const projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
             document.dispatchEvent(projectionMatrixEvent)
             break
           }
@@ -193,7 +194,7 @@ export default class Utils {
           }
           case 'nftData': {
             const nft = JSON.parse(msg.nft)
-            var nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
+            const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
             document.dispatchEvent(nftEvent)
             break
           }

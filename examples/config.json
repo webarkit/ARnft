@@ -21,6 +21,7 @@
     "loadingMessage": "Loading, please wait..."
   },
   "renderer": {
+    "type": "three",
     "alpha": true,
     "antialias": true,
     "precision": "mediump"
