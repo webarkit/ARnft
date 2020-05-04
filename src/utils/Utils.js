@@ -124,7 +124,7 @@ export default class Utils {
     const canvasProcess = document.createElement('canvas')
     const contextProcess = canvasProcess.getContext('2d')
 
-    const renderer = new THREE.WebGLRenderer({
+    /*const renderer = new THREE.WebGLRenderer({
       canvas: canvasDraw,
       alpha: configData.renderer.alpha,
       antialias: configData.renderer.antialias,
@@ -142,7 +142,7 @@ export default class Utils {
     const light = new THREE.AmbientLight(0xffffff)
     scene.add(light)
 
-    scene.add(root)
+    scene.add(root)*/
 
     const load = () => {
       vw = inputWidth
@@ -165,7 +165,7 @@ export default class Utils {
       canvasProcess.width = pw
       canvasProcess.height = ph
 
-      renderer.setSize(sw, sh)
+      //renderer.setSize(sw, sh)
 
       worker = new Worker()
 
@@ -194,7 +194,9 @@ export default class Utils {
             proj[5] *= ratioH
             proj[9] *= ratioH
             proj[13] *= ratioH
-            this.setMatrix(camera.projectionMatrix, proj)
+            //this.setMatrix(camera.projectionMatrix, proj)
+            let projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
+            document.dispatchEvent(projectionMatrixEvent)
             break
           }
           case 'endLoading': {
@@ -297,7 +299,7 @@ export default class Utils {
         this.setMatrix(root.matrix, trackedMatrix.interpolated)
       }
 
-      renderer.render(scene, camera)
+      //renderer.render(scene, camera)
     }
 
     const tick = () => {
@@ -306,7 +308,7 @@ export default class Utils {
     }
 
     load()
-    tick()
+    //tick()
     process()
   }
 
