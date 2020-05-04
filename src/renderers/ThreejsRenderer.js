@@ -27,7 +27,8 @@ export default class ThreejsRenderer {
 
     document.addEventListener('getMatrixGL_RH', (ev) => {
       this.root.visible = true
-      Utils.setMatrix(this.root.matrix, ev.detail.matrixGL_RH)
+      const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
+      Utils.setMatrix(this.root.matrix, matrix)
     })
 
     this.root.visible = false
