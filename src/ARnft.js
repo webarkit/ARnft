@@ -1,6 +1,7 @@
 import Utils from './utils/Utils'
 import Container from './utils/html/Container'
 import Stats from 'stats.js'
+import ThreejsRenderer from './renderers/ThreejsRenderer'
 import * as THREE from 'three'
 
 export default class ARnft {
@@ -67,6 +68,14 @@ export default class ARnft {
           root,
           configData)
       })
+
+      const renderer = new ThreejsRenderer(configData, canvas, root)
+      renderer.initRenderer()
+      const tick = () => {
+        renderer.draw()
+        window.requestAnimationFrame(tick)
+      }
+      tick()
     })
     return this
   }
