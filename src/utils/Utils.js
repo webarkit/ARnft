@@ -237,6 +237,8 @@ export default class Utils {
         world = null
       } else {
         world = JSON.parse(msg.matrixGL_RH)
+        let matrixGL_RH_Event = new CustomEvent('getMatrixGL_RH', {detail: {matrixGL_RH: world}})
+        document.dispatchEvent(matrixGL_RH_Event)
       }
     }
 
