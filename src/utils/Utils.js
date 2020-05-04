@@ -1,57 +1,15 @@
 import axios from 'axios'
 import Worker from './Worker.js'
-import * as THREE from 'three'
+import CustomEvent from 'custom-event'
 
 export default class Utils {
-  static getUserMedia (container, markerUrl, video, canvas, root, statsObj, configData) {
+  static async getUserMedia (configData) {
+    const video = document.getElementById('video')
     const facing = configData.videoSettings.facingMode || 'environment'
-
-    const onError = configData.onError || function (err) { console.error('ARnft internal getUserMedia', err) }
-
-    let readyToPlay = false
-    const eventNames = [
-      'touchstart', 'touchend', 'touchmove', 'touchcancel',
-      'click', 'mousedown', 'mouseup', 'mousemove',
-      'keydown', 'keyup', 'keypress', 'scroll'
-    ]
-    const play = () => {
-      if (readyToPlay) {
-        video.play().then(() => {
-          this._startWorker(
-            container,
-            markerUrl,
-            video,
-            video.videoWidth,
-            video.videoHeight,
-            canvas,
-            () => {
-              if (statsObj.stats) {
-                statsObj.statsMain.update()
-              }
-            },
-            () => {
-              if (statsObj.stats) {
-                statsObj.statsWorker.update()
-              }
-            },
-            root,
-            configData
-          )
-        }).catch((error) => {
-          onError(error)
-          // ARnft._teardownVideo(video) // to be solved !!
-        })
-        if (!video.paused) {
-          eventNames.forEach((eventName) => {
-            window.removeEventListener(eventName, play, true)
-          })
-        }
-      }
-    }
-    eventNames.forEach((eventName) => {
-      window.addEventListener(eventName, play, true)
-    })
-
+    const onError = configData.onError || ((err) => { console.error('ARnft internal getUserMedia', err) })
+    let stream = null
+    const constraints = {}
+    const mediaDevicesConstraints = {}
     const success = (stream) => {
       // DEPRECATED: don't use window.URL.createObjectURL(stream) any longer it might be removed soon. Only there to support old browsers src: https://developer.mozilla.org/en-US/docs/Web/API/URL/createObjectURL
       if (window.URL.createObjectURL) {
@@ -63,14 +21,9 @@ export default class Utils {
         }
       }
       video.srcObject = stream // This should be used instead. Which has the benefit to give us access to the stream object
-      readyToPlay = true
       video.autoplay = true
       video.playsInline = true
-      play() // Try playing without user input, should work on non-Android Chrome
     }
-
-    const constraints = {}
-    const mediaDevicesConstraints = {}
     if (configData.videoSettings.width) {
       mediaDevicesConstraints.width = configData.videoSettings.width
       if (typeof configData.videoSettings.width === 'object') {
@@ -110,10 +63,16 @@ export default class Utils {
 
     if (navigator.mediaDevices || window.MediaStreamTrack.getSources) {
       if (navigator.mediaDevices) {
-        navigator.mediaDevices.getUserMedia({
-          audio: false,
-          video: mediaDevicesConstraints
-        }).then(success, onError)
+        console.log('inside mediaDevices')
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: mediaDevicesConstraints
+          })
+          success(stream)
+        } catch (error) {
+          console.error(error)
+        }
       } else {
         // This function of accessing the media device is deprecated and outdated and shouldn't be used anymore.
         window.MediaStreamTrack.getSources((sources) => {
@@ -131,7 +90,7 @@ export default class Utils {
             onError('Failed to get camera facing the wanted direction')
           } else {
             if (navigator.getUserMedia) {
-              navigator.getUserMedia(hdConstraints, success, onError)
+              stream = navigator.getUserMedia(hdConstraints, success, onError)
             } else {
               onError('navigator.getUserMedia is not supported on your browser')
             }
@@ -145,6 +104,12 @@ export default class Utils {
         onError('navigator.getUserMedia is not supported on your browser')
       }
     }
+
+    return new Promise(resolve => {
+      video.onloadedmetadata = () => {
+        resolve(video)
+      }
+    })
   }
 
   static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, root, configData) {
@@ -158,26 +123,6 @@ export default class Utils {
 
     const canvasProcess = document.createElement('canvas')
     const contextProcess = canvasProcess.getContext('2d')
-
-    const renderer = new THREE.WebGLRenderer({
-      canvas: canvasDraw,
-      alpha: configData.renderer.alpha,
-      antialias: configData.renderer.antialias,
-      precision: configData.renderer.precision
-    })
-    renderer.setPixelRatio(window.devicePixelRatio)
-
-    const scene = new THREE.Scene()
-
-    const camera = new THREE.Camera()
-    camera.matrixAutoUpdate = false
-
-    scene.add(camera)
-
-    const light = new THREE.AmbientLight(0xffffff)
-    scene.add(light)
-
-    scene.add(root)
 
     const load = () => {
       vw = inputWidth
@@ -200,7 +145,8 @@ export default class Utils {
       canvasProcess.width = pw
       canvasProcess.height = ph
 
-      renderer.setSize(sw, sh)
+      const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
+      document.dispatchEvent(setWindowSizeEvent)
 
       worker = new Worker()
 
@@ -229,7 +175,8 @@ export default class Utils {
             proj[5] *= ratioH
             proj[9] *= ratioH
             proj[13] *= ratioH
-            this.setMatrix(camera.projectionMatrix, proj)
+            const projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
+            document.dispatchEvent(projectionMatrixEvent)
             break
           }
           case 'endLoading': {
@@ -246,8 +193,8 @@ export default class Utils {
             break
           }
           case 'nftData': {
-            let nft = JSON.parse(msg.nft)
-            var nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
+            const nft = JSON.parse(msg.nft)
+            const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
             document.dispatchEvent(nftEvent)
             break
           }
@@ -272,11 +219,10 @@ export default class Utils {
         world = null
       } else {
         world = JSON.parse(msg.matrixGL_RH)
+        const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH', { detail: { matrixGL_RH: world } })
+        document.dispatchEvent(matrixGLrhEvent)
       }
     }
-
-    let lasttime = Date.now()
-    let time = 0
 
     const process = () => {
       contextProcess.fillStyle = 'black'
@@ -289,58 +235,43 @@ export default class Utils {
       ])
     }
 
-    const draw = () => {
-      renderUpdate()
-      const now = Date.now()
-      const dt = now - lasttime
-      time += dt
-      lasttime = now
-
-      const interpolationFactor = 24
-
-      const trackedMatrix = {
-        // for interpolation
-        delta: [
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0
-        ],
-        interpolated: [
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0,
-          0, 0, 0, 0
-        ]
-      }
-
-      if (!world) {
-        root.visible = false
-      } else {
-        root.visible = true
-
-        // interpolate matrix
-        for (let i = 0; i < 16; i++) {
-          trackedMatrix.delta[i] = world[i] - trackedMatrix.interpolated[i]
-          trackedMatrix.interpolated[i] =
-                    trackedMatrix.interpolated[i] +
-                    trackedMatrix.delta[i] / interpolationFactor
-        }
-        // set matrix of 'root' by detected 'world' matrix
-        this.setMatrix(root.matrix, trackedMatrix.interpolated)
-      }
-
-      renderer.render(scene, camera)
-    }
-
     const tick = () => {
-      draw()
+      renderUpdate()
       window.requestAnimationFrame(tick)
     }
 
     load()
     tick()
     process()
+  }
+
+  static interpolate (world) {
+    const interpolationFactor = 24
+
+    const trackedMatrix = {
+      // for interpolation
+      delta: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+      ],
+      interpolated: [
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0,
+        0, 0, 0, 0
+      ]
+    }
+
+    // interpolate matrix
+    for (let i = 0; i < 16; i++) {
+      trackedMatrix.delta[i] = world[i] - trackedMatrix.interpolated[i]
+      trackedMatrix.interpolated[i] =
+                  trackedMatrix.interpolated[i] +
+                  trackedMatrix.delta[i] / interpolationFactor
+    }
+    return trackedMatrix.interpolated
   }
 
   static isMobile () {

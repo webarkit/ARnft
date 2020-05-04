@@ -1,6 +1,6 @@
 {
   "name": "ARnft",
-  "version": "0.6.7",
+  "version": "0.7.0",
   "main": "dist/ARnft.js",
   "module": "src/index.js",
   "description": "WebAR Javscript library for markerless AR",
@@ -39,6 +39,7 @@
     "@babel/preset-env": "^7.9.6",
     "axios": "^0.19.2",
     "babel-loader": "^8.1.0",
+    "custom-event": "^1.0.1",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-import": "^2.20.2",
