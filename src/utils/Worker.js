@@ -1,3 +1,6 @@
+/* eslint-env worker */
+import { ARToolkitNFT, ARControllerNFT } from '@kalwalt/jsartoolkit-nft'
+
   self.onmessage = (e) => {
     const msg = e.data
     switch (msg.type) {
@@ -18,32 +21,13 @@
 
   const load = (msg) => {
     const basePath = self.origin
-    let artoolkitUrl, cameraParamUrl, nftMarkerUrl
+    let cameraParamUrl, nftMarkerUrl
     console.debug('Base path:', basePath)
-    // test if the msg.param (the incoming url) is an http or https path
-    const regexA = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
-    const reA = regexA.test(msg.artoolkitUrl)
-    if (reA == true) {
-      if (msg.addPath) {
-        artoolkitUrl = basePath + '/' + msg.addPath + '/' + msg.artoolkitUrl
-      } else {
-        artoolkitUrl = msg.artoolkitUrl
-      }
-    } else if (reA == false) {
-      if (msg.addPath) {
-        console.debug('addPath exist: ', msg.addPath)
-        artoolkitUrl = basePath + '/' + msg.addPath + '/' + msg.artoolkitUrl
-      } else {
-        artoolkitUrl = basePath + '/' + msg.artoolkitUrl
-      }
-    }
-    console.debug('Importing WASM lib from: ', artoolkitUrl)
-
-    importScripts(artoolkitUrl)
-
-    self.addEventListener('artoolkitNFT-loaded', function () {
-      const onLoad = () => {
-        ar = new ARControllerNFT(msg.pw, msg.ph, param)
+    //self.addEventListener('load', function () {
+      //const artoolkitNFT = new ARToolkitNFT()
+      const onLoad = (arController) => {
+        //ar = new ARControllerNFT(msg.pw, msg.ph, param)
+        ar = arController;
         const cameraMatrix = ar.getCameraMatrix()
 
         ar.addEventListener('getNFTMarker', (ev) => {
@@ -100,8 +84,11 @@
       }
       console.debug('Loading camera at:', cameraParamUrl)
       // we cannot pass the entire ARControllerNFT, so we re-create one inside the Worker, starting from camera_param
-      const param = new ARCameraParamNFT(cameraParamUrl, onLoad, onError)
-    })
+      //const param = new ARCameraParamNFT(cameraParamUrl, onLoad, onError)
+      //artoolkitNFT.init().then(_ => {
+        ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
+     //});
+  //  })//eventliste
   }
 
   const process = () => {
