@@ -53,7 +53,7 @@
     "stats.js": "^0.17.0",
     "three": "^0.117.1",
     "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11",
+    "webpack-cli": "^3.3.12",
     "worker-loader": "^2.0.0"
   },
   "scripts": {
