@@ -51,7 +51,7 @@
     "grunt-contrib-jshint": "^2.1.0",
     "grunt-eslint": "^23.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.117.1",
+    "three": "^0.118.3",
     "webpack": "^4.42.1",
     "webpack-cli": "^3.3.11",
     "worker-loader": "^2.0.0"
