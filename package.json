@@ -67,7 +67,7 @@
     "ecstatic": "^4.1.4"
   },
   "dependencies": {
-    "@babel/runtime": "^7.10.2",
+    "@babel/runtime": "^7.10.5",
     "http-server": "^0.12.3"
   }
 }
