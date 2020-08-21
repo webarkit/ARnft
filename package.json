@@ -34,7 +34,7 @@
     "url": "https://github.com/kalwalt/ARnft/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.10.5",
+    "@babel/core": "^7.11.4",
     "@babel/plugin-transform-runtime": "^7.10.5",
     "@babel/preset-env": "^7.10.4",
     "axios": "^0.19.2",
