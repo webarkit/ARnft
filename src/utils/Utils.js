@@ -216,7 +216,11 @@ export default class Utils {
 
     const found = (msg) => {
       if (!msg) {
-        world = null
+        if (world) {
+          world = null
+          const nftTrackingLostEvent = new CustomEvent('nftTrackingLost')
+          document.dispatchEvent(nftTrackingLostEvent)
+        }
       } else {
         world = JSON.parse(msg.matrixGL_RH)
         const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH', { detail: { matrixGL_RH: world } })
