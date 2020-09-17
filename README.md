@@ -6,19 +6,25 @@ A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT
 
 ## Start using it !
 
-1️⃣ Install the npm packages:
+:one: &nbsp; Clone the repository:
+
+`git clone --recursive https://github.com/webarkit/ARnft.git`
+
+(Note, this repository contains a submodule for [jsartoolkitNFT](https://github.com/kalwalt/jsartoolkitnFT). If you have already cloned this repository without the `--recursive` option, you can add the submodule using the command `git submodule update --init --recursive`)
+
+:two: &nbsp; Install the npm packages:
 
 `npm install`
 
-2️⃣ Run the node server:
+:three: &nbsp; Run the node server:
 
 `http-server . -p 8000`
 
-3️⃣ Go to the example:
+:four: &nbsp; Go to the example:
 
 http://localhost:8000/examples/arNFT_example.html
 
-4️⃣ Point your device 📱 to the pinball image 👇 a red cube will appear !
+:five: &nbsp; Point your device 📱 to the pinball image 👇 a red cube will appear !
 
 <img src= https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg width="250"/>
 
