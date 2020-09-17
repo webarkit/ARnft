@@ -2,6 +2,22 @@ import axios from 'axios'
 import Worker from './Worker.js'
 import CustomEvent from 'custom-event'
 
+const trackedMatrix = {
+  // for interpolation
+  delta: [
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  ],
+  interpolated: [
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0,
+    0, 0, 0, 0
+  ]
+}
+
 export default class Utils {
   static async getUserMedia (configData) {
     const video = document.getElementById('video')
@@ -216,7 +232,11 @@ export default class Utils {
 
     const found = (msg) => {
       if (!msg) {
-        world = null
+        if (world) {
+          world = null
+          const nftTrackingLostEvent = new CustomEvent('nftTrackingLost')
+          document.dispatchEvent(nftTrackingLostEvent)
+        }
       } else {
         world = JSON.parse(msg.matrixGL_RH)
         const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH', { detail: { matrixGL_RH: world } })
@@ -247,22 +267,6 @@ export default class Utils {
 
   static interpolate (world) {
     const interpolationFactor = 24
-
-    const trackedMatrix = {
-      // for interpolation
-      delta: [
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0
-      ],
-      interpolated: [
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0,
-        0, 0, 0, 0
-      ]
-    }
 
     // interpolate matrix
     for (let i = 0; i < 16; i++) {

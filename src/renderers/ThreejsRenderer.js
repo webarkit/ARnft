@@ -31,6 +31,10 @@ export default class ThreejsRenderer {
       Utils.setMatrix(this.root.matrix, matrix)
     })
 
+    document.addEventListener('nftTrackingLost', () => {
+      this.root.visible = false
+    })
+
     this.root.visible = false
 
     this.scene.add(this.root)
