@@ -14,7 +14,7 @@ A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT
 
 :two: &nbsp; Install the npm packages:
 
-`npm install`
+`yarn install`
 
 :three: &nbsp; Run the node server:
 
