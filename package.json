@@ -52,7 +52,7 @@
     "grunt-eslint": "^23.0.0",
     "stats.js": "^0.17.0",
     "three": "^0.120.1",
-    "webpack": "^4.44.1",
+    "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "worker-loader": "^3.0.2"
   },
