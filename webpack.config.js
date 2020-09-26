@@ -57,6 +57,6 @@ module.exports = {
   // @see https://stackoverflow.com/questions/59487224/webpack-throws-error-with-emscripten-cant-resolve-fs
   node: {
     // maybe this is not needed for ARmft
-     'fs': 'empty'
+    // 'fs': 'empty'
   }
 }
