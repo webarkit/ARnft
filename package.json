@@ -1,6 +1,6 @@
 {
-  "name": "ARnft",
-  "version": "0.7.3",
+  "name": "@kalwalt/ar-nft",
+  "version": "0.7.4",
   "main": "dist/ARnft.js",
   "module": "src/index.js",
   "description": "WebAR Javscript library for markerless AR",
@@ -37,12 +37,12 @@
     "@babel/core": "^7.11.6",
     "@babel/plugin-transform-runtime": "^7.11.5",
     "@babel/preset-env": "^7.11.5",
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "babel-loader": "^8.1.0",
     "custom-event": "^1.0.1",
-    "eslint": "^7.9.0",
+    "eslint": "^7.10.0",
     "eslint-config-standard": "^14.1.1",
-    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
@@ -51,10 +51,10 @@
     "grunt-contrib-jshint": "^2.1.0",
     "grunt-eslint": "^23.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.120.1",
-    "webpack": "^4.44.1",
+    "three": "^0.121.1",
+    "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
-    "worker-loader": "^3.0.2"
+    "worker-loader": "^3.0.3"
   },
   "scripts": {
     "dev-es6": "webpack --mode development --progress --colors --watch",

@@ -19,10 +19,8 @@
 		<script src="../dist/ARnft.js"></script>
 
     <script>
-			console.log(ARnft);
 			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
 			.then((nft) => {
-				console.log(nft);
 				let mat = new THREE.MeshLambertMaterial({color: 0xff0000});
 				let cubeGeom = new THREE.CubeGeometry(1,1,1);
 				let cube = new THREE.Mesh(cubeGeom, mat);
