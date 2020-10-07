@@ -3,6 +3,7 @@ import Container from './utils/html/Container'
 import Stats from 'stats.js'
 import ThreejsRenderer from './renderers/ThreejsRenderer'
 import * as THREE from 'three'
+import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export default class ARnft {
   constructor (width, height, config) {
@@ -12,7 +13,7 @@ export default class ARnft {
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.7.4'
+    this.version = '0.7.5'
     console.log('ARnft ', this.version)
   }
 

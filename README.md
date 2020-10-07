@@ -32,5 +32,8 @@ http://localhost:8000/examples/arNFT_example.html
 ## Features
 
 - **NFT** (**N**atural **F**eature **T**racking) Markers, read my article: [NFT natural feature tracking with jsartoolkit5](https://www.kalwaltart.com/blog/2020/01/21/nft-natural-feature-tracking-with-jsartoolkit5/)
-- **ES6** standard.
+- **ES6** standard. You can install as a npm package and use it as a module (experimental). Install it with:
+```
+npm i @kalwalt/ar-nft
+```
 - Configuration data in an External .json file.
