@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>NFT marker example with a WebWorker and Three.js</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
+			.then((nft) => {
+				nft.showImage('./Data/aframe-k.png', 0xbbbbff, 180);
+			}).catch((error) => {
+				console.log(error);
+			});
+
+    </script>
+</body>
+
+</html>
