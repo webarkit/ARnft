@@ -28,6 +28,12 @@ http://localhost:8000/examples/arNFT_example.html
 
 <img src= https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg width="250"/>
 
+## Examples
+Test the examples in the `/examples` folder:
+- `arNFT_example.html` The simplest example displaying a red cube.
+- `arNFT_image_example.html` Example showing an image.
+- `arNFT_gltf_example.html` Example showing a gltf model (Duck).
+You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
 
 ## Features
 
