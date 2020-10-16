@@ -119,6 +119,21 @@ export default class ARnft {
     })
   }
 
+  showImage (url, color, scale) {
+    const root = this.root
+    const texture = new THREE.TextureLoader().load(url)
+    const mat = new THREE.MeshLambertMaterial({ color: color, map: texture })
+    const planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
+    const plane = new THREE.Mesh(planeGeom, mat)
+    plane.scale.set(scale, scale, scale)
+    document.addEventListener('getNFTData', (ev) => {
+      var msg = ev.detail
+      plane.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
+      plane.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
+    })
+    root.add(plane)
+  }
+
   dispatchEvent (event) {
     const listeners = this.listeners[event.name]
     if (listeners) {
