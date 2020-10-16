@@ -1,7 +1,6 @@
 /* eslint-env worker */
 import jsartoolkitNFT from '@kalwalt/jsartoolkit-nft'
 const { ARToolkitNFT, ARControllerNFT } = jsartoolkitNFT
-const artoolkitNFT = new ARToolkitNFT()
 
   self.onmessage = (e) => {
     const msg = e.data
@@ -16,7 +15,6 @@ const artoolkitNFT = new ARToolkitNFT()
       }
     }
   }
-  console.log(artoolkitNFT);
 
   let next = null
   let ar = null
