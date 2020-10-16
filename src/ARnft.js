@@ -104,17 +104,16 @@ export default class ARnft {
     let model
 
     /* Load Model */
-    const threeGLTFLoader = new THREE.GLTFLoader()
+    const threeGLTFLoader = new GLTFLoader()
 
-    threeGLTFLoader.load(url, (gltf) => {
+    threeGLTFLoader.load(url, gltf => {
       model = gltf.scene
-      model.scale.set(scale, scale, scale)
+      model.scale.set(80, 80, 80)
       model.rotation.x = Math.PI / 2
       model.position.x = x
       model.position.y = y
       model.position.z = z
 
-      model.matrixAutoUpdate = false
       root.add(model)
     })
   }
