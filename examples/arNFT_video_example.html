@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example showing an image</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+			<video
+				loop
+				autoplay
+				muted
+				webkit-playsinline
+				playsinline
+				crossOrigin="anonymous"
+				id="arvideo">
+				<!-- video taken from https://github.com/hatsumatsu/lab--ar002/blob/master/video/video--01.mp4 by @hatsumatsu -->
+				<source src="https://avo-content-dev.s3.amazonaws.com/videos/bg_1588085276090.mp4" type='video/mp4'>
+			</video>
+
+		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
+			.then((nft) => {
+				nft.addVideo('arvideo', 180);
+			}).catch((error) => {
+				console.log(error);
+			});
+
+    </script>
+</body>
+
+</html>

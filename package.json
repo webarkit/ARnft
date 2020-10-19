@@ -33,7 +33,7 @@
     "url": "https://github.com/kalwalt/ARnft/issues"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.1",
+    "@babel/core": "^7.12.3",
     "@babel/plugin-transform-runtime": "^7.12.1",
     "@babel/preset-env": "^7.12.1",
     "axios": "^0.20.0",
@@ -56,7 +56,7 @@
     "worker-loader": "^3.0.4"
   },
   "scripts": {
-    "dev-es6": "webpack --mode development --progress --colors --watch",
+    "dev-es6": "webpack --mode development --progress --watch",
     "build-es6": "webpack --mode production",
     "build-jshint": "grunt jshint --force",
     "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
