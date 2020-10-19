@@ -99,7 +99,7 @@ export default class ARnft {
     root.add(obj)
   }
 
-  loadModel (url, x, y, z, scale) {
+  addModel (url, x, y, z, scale) {
     const root = this.root
     let model
 
@@ -118,7 +118,7 @@ export default class ARnft {
     })
   }
 
-  showImage (url, color, scale) {
+  addImage (url, color, scale) {
     const root = this.root
     const texture = new THREE.TextureLoader().load(url)
     const mat = new THREE.MeshLambertMaterial({ color: color, map: texture })
