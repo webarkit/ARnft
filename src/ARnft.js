@@ -13,7 +13,7 @@ export default class ARnft {
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.7.6'
+    this.version = '0.7.7'
     console.log('ARnft ', this.version)
   }
 
@@ -108,7 +108,7 @@ export default class ARnft {
 
     threeGLTFLoader.load(url, gltf => {
       model = gltf.scene
-      model.scale.set(80, 80, 80)
+      model.scale.set(scale, scale, scale)
       model.rotation.x = Math.PI / 2
       model.position.x = x
       model.position.y = y
