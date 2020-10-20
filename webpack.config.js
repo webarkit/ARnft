@@ -1,23 +1,18 @@
 const path = require('path')
 
-module.exports = {
-  entry: './src/index.js',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'ARnft.js',
-    library: 'ARnft',
-    libraryTarget: 'umd',
-    // @see: https://github.com/webpack/webpack/issues/3929
-    libraryExport: 'default',
-    // @see: https://github.com/webpack/webpack/issues/6522
-    globalObject: 'typeof self !== \'undefined\' ? self : this'
-  },
-  externals: {
+module.exports = (env, argv) => {
+  const externals = {
     three: {
       commonjs: 'three',
       commonjs2: 'three',
       amd: 'three',
       root: 'THREE' // indicates global variable
+    },
+    aframe: {
+      commonjs: 'aframe',
+      commonjs2: 'aframe',
+      amd: 'aframe',
+      root: 'AFRAME' // indicates global variable
     },
     stats: {
       commonjs: 'stats.js',
@@ -25,8 +20,8 @@ module.exports = {
       amd: 'stats.js',
       root: 'Stats' // indicates global variable
     }
-  },
-  module: {
+  };
+  const module = {
     rules: [
       {
         test: /\.js?$/,
@@ -50,13 +45,47 @@ module.exports = {
         }
       }
     ]
-  },
-  resolve: {
+  };
+  const resolve = {
     extensions: ['.js']
-  },
+  };
   // @see https://stackoverflow.com/questions/59487224/webpack-throws-error-with-emscripten-cant-resolve-fs
-  node: {
+  const node = {
     // maybe this is not needed for ARmft
     // 'fs': 'empty'
   }
+  return [{
+    name: 'ARnft-aframe',
+    entry: './src/index.aframe.js',
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: 'ARnft.aframe.js',
+      library: 'ARnft.aframe',
+      libraryTarget: 'umd',
+      // @see: https://github.com/webpack/webpack/issues/3929
+      libraryExport: 'default',
+      // @see: https://github.com/webpack/webpack/issues/6522
+      globalObject: 'typeof self !== \'undefined\' ? self : this'
+    },
+    resolve,
+    module,
+    externals
+  },
+  {
+  name: 'ARnft',
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'ARnft.js',
+    library: 'ARnft',
+    libraryTarget: 'umd',
+    // @see: https://github.com/webpack/webpack/issues/3929
+    libraryExport: 'default',
+    // @see: https://github.com/webpack/webpack/issues/6522
+    globalObject: 'typeof self !== \'undefined\' ? self : this'
+  },
+  resolve,
+  module,
+  externals
+}]
 }

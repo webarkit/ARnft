@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example showing an simple red cube</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
+		<script src="../dist/ARnft.aframe.js"></script>
+
+    <a-scene ar-nft>
+			<ar-nft url='examples/DataNFT/pinball'>
+				<a-box></a-box>
+			</ar-nft>
+		</a-scene>
+</body>
+
+</html>
