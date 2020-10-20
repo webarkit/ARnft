@@ -21,11 +21,10 @@
     <script>
 			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
 			.then((nft) => {
-				nft.loadModel('./Data/models/Duck/glTF/Duck.glb', 40, 80, 80, 80);
+				nft.addModel('./Data/models/Duck/glTF/Duck.glb', 40, 80, 80, 80);
 			}).catch((error) => {
 				console.log(error);
 			});
-
     </script>
 </body>
 

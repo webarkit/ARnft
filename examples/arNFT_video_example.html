@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>ARnft example showing an simple red cube</title>
+	<title>ARnft example showing a video</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
 	<link rel="stylesheet" href="css/nft-style.css">
 </head>
@@ -14,6 +14,16 @@
           target="_blank">
           🖼 Marker Image
       </a>
+			<video
+				loop
+				autoplay
+				muted
+				webkit-playsinline
+				playsinline
+				crossOrigin="anonymous"
+				id="arvideo">
+				<source src="https://avo-content-dev.s3.amazonaws.com/videos/bg_1588085276090.mp4" type='video/mp4'>
+			</video>
 
 		<script src="js/third_party/three.js/three.min.js"></script>
 		<script src="../dist/ARnft.js"></script>
@@ -21,12 +31,7 @@
     <script>
 			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
 			.then((nft) => {
-				let mat = new THREE.MeshLambertMaterial({color: 0xff0000});
-				let cubeGeom = new THREE.CubeGeometry(1,1,1);
-				let cube = new THREE.Mesh(cubeGeom, mat);
-				cube.position.z = 90;
-				cube.scale.set(180,180,180);
-				nft.add(cube);
+				nft.addVideo('arvideo', 180);
 			}).catch((error) => {
 				console.log(error);
 			});

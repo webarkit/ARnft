@@ -13,7 +13,7 @@ export default class ARnft {
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.7.6'
+    this.version = '0.7.7'
     console.log('ARnft ', this.version)
   }
 
@@ -99,7 +99,7 @@ export default class ARnft {
     root.add(obj)
   }
 
-  loadModel (url, x, y, z, scale) {
+  addModel (url, x, y, z, scale) {
     const root = this.root
     let model
 
@@ -108,7 +108,7 @@ export default class ARnft {
 
     threeGLTFLoader.load(url, gltf => {
       model = gltf.scene
-      model.scale.set(80, 80, 80)
+      model.scale.set(scale, scale, scale)
       model.rotation.x = Math.PI / 2
       model.position.x = x
       model.position.y = y
@@ -118,12 +118,29 @@ export default class ARnft {
     })
   }
 
-  showImage (url, color, scale) {
+  addImage (url, color, scale) {
     const root = this.root
     const texture = new THREE.TextureLoader().load(url)
     const mat = new THREE.MeshLambertMaterial({ color: color, map: texture })
     const planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
     const plane = new THREE.Mesh(planeGeom, mat)
+    plane.scale.set(scale, scale, scale)
+    document.addEventListener('getNFTData', (ev) => {
+      var msg = ev.detail
+      plane.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
+      plane.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
+    })
+    root.add(plane)
+  }
+
+  addVideo (id, scale) {
+    const root = this.root
+    var ARVideo = document.getElementById(id)
+    var texture = new THREE.VideoTexture(ARVideo)
+    var mat = new THREE.MeshLambertMaterial({ color: 0xbbbbff, map: texture })
+    ARVideo.play()
+    var planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
+    var plane = new THREE.Mesh(planeGeom, mat)
     plane.scale.set(scale, scale, scale)
     document.addEventListener('getNFTData', (ev) => {
       var msg = ev.detail

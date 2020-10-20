@@ -33,6 +33,7 @@ Test the examples in the `/examples` folder:
 - `arNFT_example.html` The simplest example displaying a red cube.
 - `arNFT_image_example.html` Example showing an image.
 - `arNFT_gltf_example.html` Example showing a gltf model (Duck).
+- `arNFT_video_example.html` Example showing a video.
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
 
 ## Features

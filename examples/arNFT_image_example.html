@@ -21,11 +21,10 @@
     <script>
 			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
 			.then((nft) => {
-				nft.showImage('./Data/aframe-k.png', 0xbbbbff, 180);
+				nft.addImage('./Data/aframe-k.png', 0xbbbbff, 180);
 			}).catch((error) => {
 				console.log(error);
 			});
-
     </script>
 </body>
 
