@@ -14,11 +14,13 @@ AFRAME.registerComponent('arnft-anchor', {
     let arnftSystem = this.el.sceneEl.systems.arnft
     console.log(arnftSystem);
     //var markerParameters = Object.assign({}, ARnftSourceAframe.defaultMarkerParameters)
-    let source = new ARnftSourceAframe()
+    let source = this._sourceAframe = new ARnftSourceAframe()
     source.setMarkerUrl(_this.data.descriptorsUrl)
+    console.log(this._sourceAframe);
       console.log(arnftSystem);
     //let markerUrl = this.data.descriptorsUrl;
     _this.el.object3D.visible = true
+    console.log(this);
     var markerRoot = new THREE.Group()
     //scene.add(markerRoot)
 

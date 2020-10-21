@@ -20,6 +20,11 @@ AFRAME.registerSystem('arnft', {
   init: function () {
     var _this = this
     console.log(this.data);
+    let sourceAframe = this._sourceAframe = new ARnftSourceAframe()
+    console.log(sourceAframe);
+    let markerUrl;// = sourceAframe.getMarkerUrl()
+    markerUrl = this._sourceAframe.markerUrl;
+    //console.log(this.el.sceneEl);
     // trying to jnect configData for now, it will became "schema" parameters
     let configData = {
       artoolkitUrl: this.data.artoolkitUrl,
@@ -36,6 +41,7 @@ AFRAME.registerSystem('arnft', {
       },
     }
     this.el.sceneEl.addEventListener('renderstart', function () {
+      console.log(_this);
       let sceneEl = _this.el.sceneEl.object3D
       let camera = _this.el.sceneEl.camera
       let renderer = _this.el.sceneEl.renderer
@@ -52,9 +58,7 @@ AFRAME.registerSystem('arnft', {
       const containerObj = Container.createContainer()
       const container = containerObj.container
       const canvas = containerObj.canvas
-      let sourceAframe = new ARnftSourceAframe()
-      console.log(sourceAframe);
-      let markerUrl = sourceAframe.getMarkerUrl()
+
       let statsMain, statsWorker
 
       if (stats) {
