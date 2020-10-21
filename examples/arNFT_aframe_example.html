@@ -18,10 +18,11 @@
 		<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
 		<script src="../dist/ARnft.aframe.js"></script>
 
-    <a-scene ar-nft>
+    <a-scene arnft='artoolkitUrl: libs/jsartoolkitNFT/build/artoolkitNFT_wasm.js'>
 			<ar-nft url='examples/DataNFT/pinball'>
 				<a-box></a-box>
 			</ar-nft>
+			<a-entity camera></a-entity>
 		</a-scene>
 </body>
 

@@ -1,19 +1,29 @@
 import * as AFRAME from 'aframe'
+import * as THREE from 'three'
 import Stats from 'stats.js'
 import Container from './utils/html/Container'
 import Utils from './utils/Utils'
+import ARnftSourceAframe from './ARnft-source-aframe'
 
 AFRAME.registerSystem('arnft', {
   schema: {
-
+    artoolkitUrl: {
+      type: 'string',
+      default: 'libs/jsartoolkitNFT/build/artoolkitNFT_wasm.js'
+    },
+    cameraPara: {
+      type: 'string',
+      default: 'examples/Data/camera_para.dat'
+    }
   },
 
   init: function () {
     var _this = this
+    console.log(this.data);
     // trying to jnect configData for now, it will became "schema" parameters
     let configData = {
-      artoolkitUrl: "libs/jsartoolkitNFT/build/artoolkitNFT_wasm.js",
-      cameraPara: "examples/Data/camera_para.dat",
+      artoolkitUrl: this.data.artoolkitUrl,
+      cameraPara: this.data.cameraPara,
       videoSettings: {
         facingMode: "environment"
       },
@@ -26,17 +36,25 @@ AFRAME.registerSystem('arnft', {
       },
     }
     this.el.sceneEl.addEventListener('renderstart', function () {
-      let scene = _this.el.sceneEl.object3D
+      let sceneEl = _this.el.sceneEl.object3D
       let camera = _this.el.sceneEl.camera
       let renderer = _this.el.sceneEl.renderer
       let stats = true
+
+      let mat = new THREE.MeshLambertMaterial({ color: 0xff0000 })
+      let cubeGeom = new THREE.CubeGeometry(1, 1, 1)
+      let cube = new THREE.Mesh(cubeGeom, mat)
+      sceneEl.add(cube)
+      sceneEl.matrixAutoUpdate = false
 
       Container.createLoading(configData)
       Container.createStats(stats)
       const containerObj = Container.createContainer()
       const container = containerObj.container
       const canvas = containerObj.canvas
-      let markerUrl = "examples/DataNFT/pinball"
+      let sourceAframe = new ARnftSourceAframe()
+      console.log(sourceAframe);
+      let markerUrl = sourceAframe.getMarkerUrl()
       let statsMain, statsWorker
 
       if (stats) {
@@ -73,7 +91,7 @@ AFRAME.registerSystem('arnft', {
               statsObj.statsWorker.update()
             }
           },
-          scene,
+          sceneEl,
           configData)
       })
     })

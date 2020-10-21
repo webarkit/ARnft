@@ -1,4 +1,5 @@
 import * as AFRAME from 'aframe'
+import ARnftSourceAframe from '../ARnft-source-aframe'
 
 AFRAME.registerComponent('arnft-anchor', {
   schema: {
@@ -8,8 +9,19 @@ AFRAME.registerComponent('arnft-anchor', {
     }
   },
   init: function () {
-    var arnftSystem = this.el.sceneEl.systems.arnft
+    var _this = this
+    console.log(this.data);
+    let arnftSystem = this.el.sceneEl.systems.arnft
     console.log(arnftSystem);
+    //var markerParameters = Object.assign({}, ARnftSourceAframe.defaultMarkerParameters)
+    let source = new ARnftSourceAframe()
+    source.setMarkerUrl(_this.data.descriptorsUrl)
+      console.log(arnftSystem);
+    //let markerUrl = this.data.descriptorsUrl;
+    _this.el.object3D.visible = true
+    var markerRoot = new THREE.Group()
+    //scene.add(markerRoot)
+
   },
 })
 
