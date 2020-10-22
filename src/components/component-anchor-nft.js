@@ -21,8 +21,6 @@ AFRAME.registerComponent('arnft-anchor', {
     //let markerUrl = this.data.descriptorsUrl;
     _this.el.object3D.visible = true
     console.log(this);
-    var markerRoot = new THREE.Group()
-    //scene.add(markerRoot)
 
   },
 })

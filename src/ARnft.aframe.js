@@ -1,5 +1,4 @@
 import * as AFRAME from 'aframe'
-import * as THREE from 'three'
 import Stats from 'stats.js'
 import Container from './utils/html/Container'
 import Utils from './utils/Utils'
@@ -47,10 +46,6 @@ AFRAME.registerSystem('arnft', {
       let renderer = _this.el.sceneEl.renderer
       let stats = true
 
-      let mat = new THREE.MeshLambertMaterial({ color: 0xff0000 })
-      let cubeGeom = new THREE.CubeGeometry(1, 1, 1)
-      let cube = new THREE.Mesh(cubeGeom, mat)
-      sceneEl.add(cube)
       sceneEl.matrixAutoUpdate = false
 
       Container.createLoading(configData)
