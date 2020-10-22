@@ -1,0 +1,58 @@
+import * as BABYLON from 'babylonjs'
+import Utils from '../utils/Utils'
+
+export default class BabylonjsRenderer {
+  constructor (configData, canvasDraw, root) {
+    this.root = root
+    this.canvas = canvasDraw
+    // load the 3D engine
+    this.engine = new BABYLON.Engine(canvasDraw, configData.renderer.antialias, { alpha: configData.renderer.alpha })
+    this.engine.setSize(configData.videoSettings.width.max, configData.videoSettings.height)
+    this.scene = new BABYLON.Scene(this.engine)
+    this.scene.useRightHandedSystem = true
+    this.camera = null
+  }
+
+  initRenderer () {
+    this.camera = new BABYLON.Camera('camera1', new BABYLON.Vector3(0, 0, 0), this.scene)
+    // this.camera.matrixAutoUpdate = false
+    this.camera.attachControl(this.canvas, true)
+    document.addEventListener('getProjectionMatrix', (ev) => {
+      // Utils.setMatrix(this.camera.projectionMatrix, ev.detail.proj)
+      this.camera.freezeProjectionMatrix(BABYLON.Matrix.FromArray(ev.detail.proj))
+    })
+
+    const markerRoot = new BABYLON.AbstractMesh('markerRoot', this.scene)
+
+    this.root = markerRoot
+
+    this.root.wasVisible = false
+    this.root.markerMatrix = new Float64Array(12)
+
+    // create a basic light, aiming 0,1,0 - meaning, to the sky
+    const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene)
+
+    document.addEventListener('getMatrixGL_RH', (ev) => {
+      this.root.visible = true
+      const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
+      Utils.setMatrix(this.root.markerMatrix, matrix)
+    })
+
+    document.addEventListener('nftTrackingLost', () => {
+      this.root.visible = false
+    })
+
+    this.root.visible = false
+
+    // this.scene.add(this.root)
+    document.addEventListener('getWindowSize', (ev) => {
+      this.engine.setSize(ev.detail.sw, ev.detail.sh)
+    })
+  }
+
+  draw () {
+    this.engine.runRenderLoop(() => {
+      this.scene.render()
+    })
+  }
+}

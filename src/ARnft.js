@@ -2,15 +2,20 @@ import Utils from './utils/Utils'
 import Container from './utils/html/Container'
 import Stats from 'stats.js'
 import ThreejsRenderer from './renderers/ThreejsRenderer'
+import BabylonjsRenderer from './renderers/BabylonjsRenderer'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
 export default class ARnft {
-  constructor (width, height, config) {
+  constructor (width, height, config, renderType) {
     this.width = width
     this.height = height
-    this.root = new THREE.Object3D()
-    this.root.matrixAutoUpdate = false
+    if (renderType === 'three') {
+      this.root = new THREE.Object3D()
+      this.root.matrixAutoUpdate = false
+    } else if (renderType === 'babylon') {
+      this.root = null
+    }
     this.config = config
     this.listeners = {}
     this.version = '0.7.7'
@@ -72,6 +77,14 @@ export default class ARnft {
 
       if (configData.renderer.type === 'three') {
         const renderer = new ThreejsRenderer(configData, canvas, root)
+        renderer.initRenderer()
+        const tick = () => {
+          renderer.draw()
+          window.requestAnimationFrame(tick)
+        }
+        tick()
+      } else if (configData.renderer.type === 'babylon') {
+        const renderer = new BabylonjsRenderer(configData, canvas, root)
         renderer.initRenderer()
         const tick = () => {
           renderer.draw()

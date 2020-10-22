@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example showing an simple red cube</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="https://preview.babylonjs.com/babylon.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config-babylonjs.json', 'babylon')
+			.then((nft) => {
+				var box = BABYLON.Mesh.CreateBox('box1', 1, scene);
+				nft.add(cube);
+			}).catch((error) => {
+				console.log(error);
+			});
+    </script>
+</body>
+
+</html>

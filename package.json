@@ -51,6 +51,7 @@
     "grunt-eslint": "^23.0.0",
     "stats.js": "^0.17.0",
     "three": "^0.121.1",
+    "babylonjs": "^4.1.0",
     "webpack": "^5.1.3",
     "webpack-cli": "^4.0.0",
     "worker-loader": "^3.0.4"
