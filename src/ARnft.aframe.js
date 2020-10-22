@@ -21,9 +21,8 @@ AFRAME.registerSystem('arnft', {
     console.log(this.data);
     let sourceAframe = this._sourceAframe = new ARnftSourceAframe()
     console.log(sourceAframe);
-    let markerUrl;// = sourceAframe.getMarkerUrl()
+    let markerUrl;
     markerUrl = this._sourceAframe.markerUrl;
-    //console.log(this.el.sceneEl);
     // trying to jnect configData for now, it will became "schema" parameters
     let configData = {
       artoolkitUrl: this.data.artoolkitUrl,
