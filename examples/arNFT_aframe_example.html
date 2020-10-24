@@ -18,11 +18,11 @@
 		<script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
 		<script src="../dist/ARnft.aframe.js"></script>
 
-    <a-scene arnft='artoolkitUrl: libs/jsartoolkitNFT/build/artoolkitNFT_wasm.js'>
+    <a-scene arnft='artoolkitUrl: libs/jsartoolkitNFT/build/artoolkitNFT_wasm.js' embedded color-space="sRGB" renderer="colorManagement: true, physicallyCorrectLights">
 			<ar-nft url='examples/DataNFT/pinball'>
-				<a-box></a-box>
+				<a-box position='0 0 0' scale='.08 .08 0' material='opacity: 0.75; color: red;'></a-box>
 			</ar-nft>
-			<a-entity camera></a-entity>
+			<a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
 		</a-scene>
 </body>
 

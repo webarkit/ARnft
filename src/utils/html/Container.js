@@ -17,6 +17,21 @@ export default class Container {
     return obj
   }
 
+  static createAframeContainer () {
+    const container = document.createElement('div')
+    container.id = 'app'
+    const video = document.createElement('video')
+    video.id = 'video'
+    video.setAttribute('autoplay', '')
+    video.setAttribute('muted', '')
+    video.setAttribute('playsinline', '')
+    container.appendChild(video)
+    const loading = document.getElementById('loading')
+    document.body.insertBefore(container, loading)
+    const obj = { container: container, video: video }
+    return obj
+  }
+
   static createStats (create) {
     if (create) {
       const stats = document.createElement('div')

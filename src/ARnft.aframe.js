@@ -49,9 +49,9 @@ AFRAME.registerSystem('arnft', {
 
       Container.createLoading(configData)
       Container.createStats(stats)
-      const containerObj = Container.createContainer()
+      const containerObj = Container.createAframeContainer()
       const container = containerObj.container
-      const canvas = containerObj.canvas
+      const canvas = _this.el.sceneEl.canvas
 
       let statsMain, statsWorker
 
