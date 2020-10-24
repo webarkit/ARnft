@@ -128,7 +128,7 @@ export default class Utils {
     })
   }
 
-  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, root, configData) {
+  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, configData) {
     let vw, vh
     let sw, sh
     let pscale, sscale
