@@ -11,7 +11,7 @@ AFRAME.registerComponent('arnft-anchor', {
   },
   init: function () {
     var _this = this
-    // not sure if this 'container' is needed
+    // not sure if this 'container' (<body element) is needed
     const container = this.el.sceneEl.parentNode;
     let vw, vh; // display css width, height
     const videoRatio = 4 / 3;
@@ -34,6 +34,7 @@ AFRAME.registerComponent('arnft-anchor', {
     let camera = arnftSystem.sceneEl.camera
     //console.log('camera inside component', camera)
     camera.matrixAutoUpdate = false
+    //console.log(arnftSystem.sceneEl.canvas.height);
     document.addEventListener('getProjectionMatrix', (ev) => {
       // we need to setup the camera?
       const projM = new AFRAME.THREE.Matrix4()
