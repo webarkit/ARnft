@@ -112,6 +112,13 @@ export default class ARnft {
     root.add(obj)
   }
 
+  addB () {
+    let scene = BabylonjsRenderer.getScene()
+    //console.log(scene);
+    var box = new BABYLON.Mesh.CreateBox("box", {height: 5}, scene)
+    box.parent = BabylonjsRenderer.getRoot()
+  }
+
   addModel (url, x, y, z, scale) {
     const root = this.root
     let model
