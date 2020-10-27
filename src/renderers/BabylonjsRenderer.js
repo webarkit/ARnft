@@ -56,4 +56,23 @@ export default class BabylonjsRenderer {
       this.scene.render()
     })
   }
+
+  getScene() {
+    return this.scene
+  }
+
+  getRoot() {
+    return this.root
+  }
+
+  static getScene() {
+    // this may kill the app!
+    //return this.getScene()
+
+    return {}
+  }
+
+  static getRoot() {
+    return this.getRoot()
+  }
 }
