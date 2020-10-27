@@ -5,8 +5,9 @@ export default class BabylonjsRenderer {
   constructor (configData, canvasDraw, root) {
     this.root = root
     this.canvas = canvasDraw
+
     // load the 3D engine
-    this.engine = new BABYLON.Engine(canvasDraw, configData.renderer.antialias, { alpha: configData.renderer.alpha })
+    this.engine = new BABYLON.Engine(this.canvas, configData.renderer.antialias, { alpha: configData.renderer.alpha })
     this.engine.setSize(configData.videoSettings.width.max, configData.videoSettings.height)
     this.scene = new BABYLON.Scene(this.engine)
     this.scene.useRightHandedSystem = true
@@ -35,7 +36,7 @@ export default class BabylonjsRenderer {
     document.addEventListener('getMatrixGL_RH', (ev) => {
       this.root.visible = true
       const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
-      Utils.setMatrix(this.root.markerMatrix, matrix)
+      this.root.markerMatrix = matrix
     })
 
     document.addEventListener('nftTrackingLost', () => {
