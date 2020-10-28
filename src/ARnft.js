@@ -66,7 +66,6 @@ export default class ARnft {
               statsObj.statsWorker.update()
             }
           },
-          root,
           configData)
       })
 
