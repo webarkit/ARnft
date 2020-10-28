@@ -39,6 +39,10 @@ export default class Utils {
       video.srcObject = stream // This should be used instead. Which has the benefit to give us access to the stream object
       video.autoplay = true
       video.playsInline = true
+      /*video.style.position = 'absolute'
+      video.style.top = '0px'
+      video.style.left = '0px'*/
+      video.style.zIndex = -2
     }
     if (configData.videoSettings.width) {
       mediaDevicesConstraints.width = configData.videoSettings.width
@@ -128,7 +132,7 @@ export default class Utils {
     })
   }
 
-  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, root, configData) {
+  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, configData) {
     let vw, vh
     let sw, sh
     let pscale, sscale
@@ -138,6 +142,8 @@ export default class Utils {
     let worker
 
     const canvasProcess = document.createElement('canvas')
+    //canvasProcess.setAttribute('id', 'canvas-process')
+    //console.log(canvasProcess);
     const contextProcess = canvasProcess.getContext('2d')
 
     const load = () => {

@@ -89,7 +89,6 @@ AFRAME.registerSystem('arnft', {
               statsObj.statsWorker.update()
             }
           },
-          sceneEl,
           configData)
       })
     })
