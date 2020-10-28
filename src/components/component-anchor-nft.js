@@ -55,14 +55,15 @@ AFRAME.registerComponent('arnft-anchor', {
     let rootEl = arnftSystem.sceneEl.object3D
     rootEl.visible = true
     let matrixEl = rootEl.matrix
-    rootEl.matrixAutoUpdate = false
+    //rootEl.matrixAutoUpdate = false
     //console.log("aframe matrix is: ", matrixEl)
     document.addEventListener('getMatrixGL_RH', (ev) => {
-      console.log(ev);
+      //console.log(ev);
       rootEl.visible = true
       const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
       Utils.setMatrix(matrixEl, matrix)
       //rootEl.matrixAutoUpdate = false
+      //console.log(matrix);
     })
     console.log(rootEl.visible);
   }
