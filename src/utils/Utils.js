@@ -39,9 +39,9 @@ export default class Utils {
       video.srcObject = stream // This should be used instead. Which has the benefit to give us access to the stream object
       video.autoplay = true
       video.playsInline = true
-      /*video.style.position = 'absolute'
+      video.style.position = 'absolute'
       video.style.top = '0px'
-      video.style.left = '0px'*/
+      video.style.left = '0px'
       video.style.zIndex = -2
     }
     if (configData.videoSettings.width) {
@@ -141,10 +141,8 @@ export default class Utils {
     let ox, oy
     let worker
 
-    const canvasProcess = document.createElement('canvas')
-    //canvasProcess.setAttribute('id', 'canvas-process')
-    //console.log(canvasProcess);
-    const contextProcess = canvasProcess.getContext('2d')
+    const contextProcess = canvasDraw.getContext('2d')
+    console.log(contextProcess);
 
     const load = () => {
       vw = inputWidth
@@ -162,10 +160,13 @@ export default class Utils {
       ph = Math.max(h, (w / 4) * 3)
       ox = (pw - w) / 2
       oy = (ph - h) / 2
-      canvasProcess.style.clientWidth = pw + 'px'
-      canvasProcess.style.clientHeight = ph + 'px'
-      canvasProcess.width = pw
-      canvasProcess.height = ph
+
+      canvasDraw.style.clientWidth = pw + 'px'
+      canvasDraw.style.clientHeight = ph + 'px'
+      canvasDraw.width = pw
+      canvasDraw.height = ph
+      canvasDraw.style.zIndex = -10
+
 
       const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
       document.dispatchEvent(setWindowSizeEvent)
