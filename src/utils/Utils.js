@@ -166,6 +166,8 @@ export default class Utils {
 
       worker = new Worker()
 
+      offscreenCanvas(640, 480)
+
       worker.postMessage({
         type: 'load',
         pw: pw,
@@ -226,6 +228,7 @@ export default class Utils {
         trackUpdate()
         process()
       }
+
     }
 
     let world
@@ -253,6 +256,11 @@ export default class Utils {
       worker.postMessage({ type: 'process', imagedata: imageData }, [
         imageData.data.buffer
       ])
+    }
+
+    const offscreenCanvas = (width, height) => {
+      const offscreen = new OffscreenCanvas(width, height)
+      worker.postMessage({type: 'offscreenCanv', canvas: offscreen}, [offscreen]);
     }
 
     const tick = () => {
