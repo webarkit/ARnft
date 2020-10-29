@@ -1,5 +1,6 @@
 /* eslint-env worker */
 import { ARToolkitNFT, ARControllerNFT } from '@kalwalt/jsartoolkit-nft'
+const artoolkitNFT = new ARToolkitNFT()
 
   self.onmessage = (e) => {
     const msg = e.data
@@ -91,12 +92,12 @@ import { ARToolkitNFT, ARControllerNFT } from '@kalwalt/jsartoolkit-nft'
       //console.log(ARToolkitNFT)
       // we cannot pass the entire ARControllerNFT, so we re-create one inside the Worker, starting from camera_param
       //const param = new ARCameraParamNFT(cameraParamUrl, onLoad, onError)
-      //artoolkitNFT.init().then(_ => {
+      artoolkitNFT.init().then(_ => {
           let options = {
             canvas: ofcanvas
           }
       ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl, options).then(onLoad).catch(onError)
-     //});
+     });
   //  })//eventliste
   }
 
