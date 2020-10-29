@@ -13,23 +13,19 @@ const artoolkitNFT = new ARToolkitNFT()
         next = msg.imagedata
         process()
       }
-      case 'offscreenCanv': {
-        ofcanvas = msg.canvas
-      }
     }
   }
 
   let next = null
   let ar = null
   let markerResult = null
-  let ofcanvas = null
 
   const load = (msg) => {
 
     const basePath = self.origin
     let cameraParamUrl, nftMarkerUrl
     console.debug('Base path:', basePath)
-    //self.addEventListener('load', function () {
+    // self.addEventListener('load', function () {
       //const artoolkitNFT = new ARToolkitNFT()
       const onLoad = (arController) => {
         //ar = new ARControllerNFT(msg.pw, msg.ph, param)
@@ -93,12 +89,9 @@ const artoolkitNFT = new ARToolkitNFT()
       // we cannot pass the entire ARControllerNFT, so we re-create one inside the Worker, starting from camera_param
       //const param = new ARCameraParamNFT(cameraParamUrl, onLoad, onError)
       artoolkitNFT.init().then(_ => {
-          let options = {
-            canvas: ofcanvas
-          }
-      ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl, options).then(onLoad).catch(onError)
-     });
-  //  })//eventliste
+      ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
+     })
+    // })//eventlistener
   }
 
   const process = () => {
