@@ -89,7 +89,11 @@ const artoolkitNFT = new ARToolkitNFT()
       // we cannot pass the entire ARControllerNFT, so we re-create one inside the Worker, starting from camera_param
       //const param = new ARCameraParamNFT(cameraParamUrl, onLoad, onError)
       artoolkitNFT.init().then(_ => {
-      ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
+        console.log(msg.canvas)
+        let options = {
+           canvas: msg.canvas
+         }
+      ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl, options).then(onLoad).catch(onError)
       })
     // })//eventlistener
   }
