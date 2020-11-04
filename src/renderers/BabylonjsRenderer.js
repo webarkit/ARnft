@@ -10,6 +10,7 @@ export default class BabylonjsRenderer {
     this.engine = new BABYLON.Engine(this.canvas, configData.renderer.antialias, { alpha: configData.renderer.alpha })
     this.engine.setSize(configData.videoSettings.width.max, configData.videoSettings.height)
     this.scene = new BABYLON.Scene(this.engine)
+    this.scene.clearColor = new BABYLON.Color4(0.3, 0.3, 0.3, 0.0)
     this.scene.useRightHandedSystem = true
     this.camera = null
   }
@@ -22,6 +23,7 @@ export default class BabylonjsRenderer {
       // Utils.setMatrix(this.camera.projectionMatrix, ev.detail.proj)
       this.camera.freezeProjectionMatrix(BABYLON.Matrix.FromArray(ev.detail.proj))
     })
+    window.camera = this.camera
 
     const markerRoot = new BABYLON.AbstractMesh('markerRoot', this.scene)
 
@@ -39,11 +41,17 @@ export default class BabylonjsRenderer {
       this.root.markerMatrix = matrix
     })
 
+    // create a box
+    var box = new BABYLON.Mesh.CreateBox('box1', { height: 5 }, this.scene)
+    //box.visible = true;
+    //set the marker object as box parent
+    box.parent = this.root
+
     document.addEventListener('nftTrackingLost', () => {
       this.root.visible = false
     })
 
-    this.root.visible = false
+    //this.root.visible = false
 
     // this.scene.add(this.root)
     document.addEventListener('getWindowSize', (ev) => {
