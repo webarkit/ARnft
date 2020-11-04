@@ -2,7 +2,7 @@
 import { ARToolkitNFT, ARControllerNFT } from '@kalwalt/jsartoolkit-nft'
 const artoolkitNFT = new ARToolkitNFT()
 
-  self.onmessage = (e) => {
+  onmessage = (e) => {
     const msg = e.data
     switch (msg.type) {
       case 'load': {
@@ -26,13 +26,12 @@ const artoolkitNFT = new ARToolkitNFT()
     let cameraParamUrl, nftMarkerUrl
     console.debug('Base path:', basePath)
     // self.addEventListener('load', function () {
-      //const artoolkitNFT = new ARToolkitNFT()
       const onLoad = (arController) => {
-        //ar = new ARControllerNFT(msg.pw, msg.ph, param)
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix()
 
         ar.addEventListener('getNFTMarker', (ev) => {
+          console.log('found!');
           markerResult = { type: 'found', matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH), proj: JSON.stringify(cameraMatrix) }
         })
         // after the ARController is set up, we load the NFT Marker
@@ -52,16 +51,17 @@ const artoolkitNFT = new ARToolkitNFT()
           }
         }
         console.debug('Loading NFT marker at: ', nftMarkerUrl)
-        ar.loadNFTMarker(nftMarkerUrl, (nft) => {
-          postMessage({ type: 'nftData',  nft: JSON.stringify(nft) })
-          ar.trackNFTMarkerId(nft.id)
-          console.log('loadNFTMarker -> ', nft.id)
-          console.log(nft);
-          postMessage({ type: 'endLoading', end: true }),
-          (err) => {
+
+        ar.loadNFTMarker(nftMarkerUrl).then(
+          (nft) => {
+            postMessage({ type: 'nftData',  nft: JSON.stringify(nft) })
+            ar.trackNFTMarkerId(nft.id)
+            console.log('loadNFTMarker -> ', nft.id)
+            console.log(nft);
+            postMessage({ type: 'endLoading', end: true })
+          }).catch((err) => {
             console.error('Error in loading marker on Worker', err)
-          }
-        })
+          })
 
         postMessage({ type: 'loaded', proj: JSON.stringify(cameraMatrix) })
       }
@@ -90,7 +90,7 @@ const artoolkitNFT = new ARToolkitNFT()
       //const param = new ARCameraParamNFT(cameraParamUrl, onLoad, onError)
       artoolkitNFT.init().then(_ => {
       ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
-     })
+      })
     // })//eventlistener
   }
 
