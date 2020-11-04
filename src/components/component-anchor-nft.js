@@ -49,13 +49,14 @@ AFRAME.registerComponent('arnft-anchor', {
       const newRatio = container.clientWidth / container.clientHeight;
       //console.log("newCam", fov, ratio, newRatio);
       const newCam = new AFRAME.THREE.PerspectiveCamera(fov, newRatio, near, far);
-      camera.projectionMatrix = newCam.projectionMatrix
+      //camera.projectionMatrix = newCam.projectionMatrix
+      camera.projectionMatrix = projM
     })
 
-    let rootEl = arnftSystem.sceneEl.object3D
-    rootEl.visible = true
+    let rootEl = arnftSystem.sceneEl.childNodes[1].object3D
+    rootEl.visible = false
     let matrixEl = rootEl.matrix
-    //rootEl.matrixAutoUpdate = false
+    rootEl.matrixAutoUpdate = false
     //console.log("aframe matrix is: ", matrixEl)
     document.addEventListener('getMatrixGL_RH', (ev) => {
       //console.log(ev);
@@ -63,9 +64,9 @@ AFRAME.registerComponent('arnft-anchor', {
       const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
       Utils.setMatrix(matrixEl, matrix)
       //rootEl.matrixAutoUpdate = false
-      //console.log(matrix);
+      console.log(matrixEl);
+      console.log(rootEl.visible);
     })
-    console.log(rootEl.visible);
   }
 })
 
