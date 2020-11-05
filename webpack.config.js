@@ -24,6 +24,12 @@ module.exports = {
       commonjs2: 'stats.js',
       amd: 'stats.js',
       root: 'Stats' // indicates global variable
+    },
+    babylonjs: {
+      commonjs: 'babylonjs',
+      commonjs2: 'babylonjs',
+      amd: 'babylonjs',
+      root: 'BABYLON' // indicates global variable
     }
   },
   module: {
