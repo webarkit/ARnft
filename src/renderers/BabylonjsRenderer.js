@@ -38,14 +38,15 @@ export default class BabylonjsRenderer {
     document.addEventListener('getMatrixGL_RH', (ev) => {
       this.root.visible = true
       const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
-      this.root.markerMatrix = matrix
+      //this.root.markerMatrix = matrix
+      this.root.updatePoseMatrix(BABYLON.Matrix.FromArray(matrix))
+      console.log(this.root);
     })
 
     // create a box
     var box = new BABYLON.Mesh.CreateBox('box1', { height: 5 }, this.scene)
-    //box.visible = true;
-    //set the marker object as box parent
-    box.parent = this.root
+    box.visible = true;
+    this.root.addChild(box)
 
     document.addEventListener('nftTrackingLost', () => {
       this.root.visible = false
