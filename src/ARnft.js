@@ -92,7 +92,6 @@ export default class ARnft {
   }
 
   add (obj) {
-    console.log("inside add");
     const root = this.root
     document.addEventListener('getNFTData', (ev) => {
       // console.log(ev)
@@ -155,7 +154,6 @@ export default class ARnft {
   }
 
   dispatchEvent (event) {
-    console.log("dispatch event");
     const listeners = this.listeners[event.name]
     if (listeners) {
       for (let i = 0; i < listeners.length; i++) {
@@ -165,7 +163,6 @@ export default class ARnft {
   }
 
   addEventListener (name, callback) {
-    console.log("add event " + name);
     if (!this.listeners[name]) {
       this.listeners[name] = []
     }
