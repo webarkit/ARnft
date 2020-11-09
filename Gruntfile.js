@@ -7,12 +7,18 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: pkg,
 
-    jshint: [
-      'src/index.js',
-      'src/ARnft.js',
-      'src/utils/Utils.js',
-      'src/utils/html/Container.js'
-    ]
+    jshint: {
+      options: {
+        'esversion': 6
+      },
+      build: [
+        'src/index.js',
+        'src/ARnft.js',
+        'src/utils/Utils.js',
+        'src/utils/html/Container.js'
+      ]
+    }
+
 
   })
 
