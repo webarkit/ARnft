@@ -46,7 +46,7 @@
     "grunt-contrib-jshint": "^3.0.0",
     "grunt-eslint": "^23.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.121.1",
+    "three": "^0.122.0",
     "webpack": "^5.4.0",
     "webpack-cli": "^4.2.0",
     "worker-loader": "^3.0.4"
@@ -62,7 +62,6 @@
     "ecstatic": "^4.1.4"
   },
   "dependencies": {
-    "@babel/runtime": "^7.12.1",
     "http-server": "^0.12.3",
     "terser-webpack-plugin": "^5.0.3"
   }
