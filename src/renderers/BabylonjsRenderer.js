@@ -16,8 +16,7 @@ export default class BabylonjsRenderer {
   }
 
   initRenderer () {
-    this.camera = new BABYLON.Camera('camera1', new BABYLON.Vector3(0, 0, 0), this.scene)
-    // this.camera.matrixAutoUpdate = false
+    this.camera = new BABYLON.UniversalCamera('camera1', new BABYLON.Vector3(0, 0, 0), this.scene)
     this.camera.attachControl(this.canvas, true)
     document.addEventListener('getProjectionMatrix', (ev) => {
       // Utils.setMatrix(this.camera.projectionMatrix, ev.detail.proj)
@@ -29,14 +28,14 @@ export default class BabylonjsRenderer {
 
     this.root = markerRoot
 
-    this.root.wasVisible = false
+    this.root.visibility = 1.0
     this.root.markerMatrix = new Float64Array(12)
 
     // create a basic light, aiming 0,1,0 - meaning, to the sky
     const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene)
 
     document.addEventListener('getMatrixGL_RH', (ev) => {
-      this.root.visible = true
+      this.root.visibility = 1.0
       const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
       //this.root.markerMatrix = matrix
       this.root.updatePoseMatrix(BABYLON.Matrix.FromArray(matrix))
@@ -44,12 +43,12 @@ export default class BabylonjsRenderer {
     })
 
     // create a box
-    var box = new BABYLON.Mesh.CreateBox('box1', { height: 5 }, this.scene)
-    box.visible = true;
+    var box = new BABYLON.Mesh.CreateBox('box1', { height: 100 }, this.scene)
+    //box.isVisible = true;
     this.root.addChild(box)
 
     document.addEventListener('nftTrackingLost', () => {
-      this.root.visible = false
+      this.root.visibility = 1.0
     })
 
     //this.root.visible = false
