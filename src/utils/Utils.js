@@ -228,6 +228,11 @@ export default class Utils {
       }
     }
 
+    document.addEventListener("terminateWorker", function() {
+      worker.postMessage({type: 'stop'})
+      worker.terminate();
+    });
+
     let world
 
     const found = (msg) => {
@@ -263,6 +268,12 @@ export default class Utils {
     load()
     tick()
     process()
+  }
+
+  static terminateWorker () {
+    console.log("terminateWorker");
+    var event = new Event("terminateWorker");
+    document.dispatchEvent(event);
   }
 
   static interpolate (world) {

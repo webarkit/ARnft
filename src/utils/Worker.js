@@ -8,6 +8,11 @@
       case 'process': {
         next = msg.imagedata
         process()
+        break;
+      }
+      case 'stop': {
+        ar= null;
+        break;
       }
     }
   }
