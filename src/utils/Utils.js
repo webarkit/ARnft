@@ -168,6 +168,7 @@ export default class Utils {
       worker = new Worker()
 
       offscreen = new OffscreenCanvas(video.videoWidth, video.videoHeight)
+      console.log(offscreen);
 
       worker.postMessage({
         type: 'load',
