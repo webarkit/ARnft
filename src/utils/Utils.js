@@ -124,7 +124,6 @@ export default class Utils {
     document.addEventListener("stopStreaming", function() {
       const stream = video.srcObject;
       console.log("stop streaming");
-      console.log(stream);
       if (stream !== null && stream !== undefined) {
         const tracks = stream.getTracks();
 
