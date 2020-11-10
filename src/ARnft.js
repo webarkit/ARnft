@@ -88,7 +88,7 @@ export default class ARnft {
   }
 
   stop () {
-    Utils.terminateWorker();
+    Utils.stopNFT();
   }
 
   add (obj) {

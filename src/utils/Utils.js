@@ -121,6 +121,26 @@ export default class Utils {
       }
     }
 
+    document.addEventListener("stopStreaming", function() {
+      const stream = video.srcObject;
+      console.log("stop streaming");
+      console.log(stream);
+      if (stream !== null && stream !== undefined) {
+        const tracks = stream.getTracks();
+
+        tracks.forEach(function(track) {
+          track.stop();
+        });
+  
+        video.srcObject = null;
+
+        let currentAR = document.getElementById("app");
+        if (currentAR !== null && currentAR !== undefined) {
+          currentAR.remove();
+        }
+      }
+    });
+
     return new Promise(resolve => {
       video.onloadedmetadata = () => {
         resolve(video)
@@ -270,9 +290,11 @@ export default class Utils {
     process()
   }
 
-  static terminateWorker () {
-    console.log("terminateWorker");
+  static stopNFT () {
+    console.log("Stop NFT");
     var event = new Event("terminateWorker");
+    document.dispatchEvent(event);
+    var event = new Event("stopStreaming");
     document.dispatchEvent(event);
   }
 
