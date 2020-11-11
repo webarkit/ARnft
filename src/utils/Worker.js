@@ -11,7 +11,7 @@
         break;
       }
       case 'stop': {
-        ar= null;
+        ar = null;
         break;
       }
     }
