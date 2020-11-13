@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "http-server": "^0.12.3",
-    "@kalwalt/jsartoolkit-nft": "https://github.com/kalwalt/jsartoolkitNFT.git#8d2fe19b31e7f5c3b358842ad28634bd581b8ee6",
+    "@kalwalt/jsartoolkit-nft": "^0.8.0",
     "terser-webpack-plugin": "^5.0.3"
   }
 }
