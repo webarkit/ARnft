@@ -79,7 +79,6 @@ export default class Utils {
 
     if (navigator.mediaDevices || window.MediaStreamTrack.getSources) {
       if (navigator.mediaDevices) {
-        console.log('inside mediaDevices')
         try {
           stream = await navigator.mediaDevices.getUserMedia({
             audio: false,
@@ -168,7 +167,6 @@ export default class Utils {
       worker = new Worker()
 
       offscreen = new OffscreenCanvas(video.videoWidth, video.videoHeight)
-      console.log(offscreen);
 
       worker.postMessage({
         type: 'load',
