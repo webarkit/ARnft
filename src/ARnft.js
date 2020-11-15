@@ -13,7 +13,7 @@ export default class ARnft {
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.7.10'
+    this.version = '0.8.0'
     console.log('ARnft ', this.version)
   }
 
@@ -90,7 +90,6 @@ export default class ARnft {
   add (obj) {
     const root = this.root
     document.addEventListener('getNFTData', (ev) => {
-      // console.log(ev)
       var msg = ev.detail
       obj.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
       obj.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
