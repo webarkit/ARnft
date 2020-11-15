@@ -83,7 +83,6 @@ export default class Utils {
 
     if (navigator.mediaDevices || window.MediaStreamTrack.getSources) {
       if (navigator.mediaDevices) {
-        console.log('inside mediaDevices')
         try {
           stream = await navigator.mediaDevices.getUserMedia({
             audio: false,
@@ -140,6 +139,7 @@ export default class Utils {
     let pw, ph
     let ox, oy
     let worker
+    let offscreen
 
     const contextProcess = canvasDraw.getContext('2d')
     console.log(contextProcess);
@@ -173,6 +173,8 @@ export default class Utils {
 
       worker = new Worker()
 
+      offscreen = new OffscreenCanvas(video.videoWidth, video.videoHeight)
+
       worker.postMessage({
         type: 'load',
         pw: pw,
@@ -180,8 +182,9 @@ export default class Utils {
         camera_para: configData.cameraPara,
         marker: markerUrl,
         artoolkitUrl: configData.artoolkitUrl,
-        addPath: configData.addPath
-      })
+        addPath: configData.addPath,
+        canvas: offscreen
+      }, [offscreen])
 
       worker.onmessage = (ev) => {
         const msg = ev.data

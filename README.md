@@ -8,9 +8,7 @@ A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT
 
 :one: &nbsp; Clone the repository:
 
-`git clone --recursive https://github.com/webarkit/ARnft.git`
-
-(Note, this repository contains a submodule for [jsartoolkitNFT](https://github.com/kalwalt/jsartoolkitnFT). If you have already cloned this repository without the `--recursive` option, you can add the submodule using the command `git submodule update --init --recursive`)
+`git clone https://github.com/webarkit/ARnft.git`
 
 :two: &nbsp; Install the npm packages:
 

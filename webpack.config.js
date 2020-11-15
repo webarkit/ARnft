@@ -24,20 +24,6 @@ module.exports = (env, argv) => {
   const module = {
     rules: [
       {
-        test: /\.js?$/,
-        exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: [
-              // @see https://github.com/babel/babel/issues/9849
-              ['@babel/transform-runtime']
-            ]
-          }
-        }]
-      },
-      {
         test: /\worker\.js$/,
         use: {
           loader: 'worker-loader',
