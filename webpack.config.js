@@ -39,7 +39,7 @@ module.exports = (env, argv) => {
     name: 'ARnft-aframe',
     entry: './src/index.aframe.js',
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'dist/aframe'),
       filename: 'ARnft.aframe.js',
       library: 'ARnft.aframe',
       libraryTarget: 'umd',
