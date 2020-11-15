@@ -35,11 +35,6 @@ module.exports = (env, argv) => {
   const resolve = {
     extensions: ['.js']
   };
-  // @see https://stackoverflow.com/questions/59487224/webpack-throws-error-with-emscripten-cant-resolve-fs
-  const node = {
-    // maybe this is not needed for ARmft
-    // 'fs': 'empty'
-  }
   return [{
     name: 'ARnft-aframe',
     entry: './src/index.aframe.js',
