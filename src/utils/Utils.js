@@ -181,7 +181,6 @@ export default class Utils {
         ph: ph,
         camera_para: configData.cameraPara,
         marker: markerUrl,
-        artoolkitUrl: configData.artoolkitUrl,
         addPath: configData.addPath,
         canvas: offscreen
       }, [offscreen])

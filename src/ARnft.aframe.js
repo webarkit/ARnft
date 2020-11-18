@@ -6,10 +6,6 @@ import ARnftSourceAframe from './ARnft-source-aframe'
 
 AFRAME.registerSystem('arnft', {
   schema: {
-    artoolkitUrl: {
-      type: 'string',
-      default: 'libs/jsartoolkitNFT/build/artoolkitNFT_wasm.js'
-    },
     cameraPara: {
       type: 'string',
       default: 'examples/Data/camera_para.dat'
@@ -25,7 +21,6 @@ AFRAME.registerSystem('arnft', {
     markerUrl = this._sourceAframe.markerUrl;
     // trying to jnect configData for now, it will became "schema" parameters
     let configData = {
-      artoolkitUrl: this.data.artoolkitUrl,
       cameraPara: this.data.cameraPara,
       videoSettings: {
         facingMode: "environment"
