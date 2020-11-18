@@ -141,8 +141,8 @@ export default class Utils {
     let worker
     let offscreen
 
-    const contextProcess = canvasDraw.getContext('2d')
-    console.log(contextProcess);
+    const canvasProcess = document.createElement('canvas')
+    const contextProcess = canvasProcess.getContext('2d')
 
     const load = () => {
       vw = inputWidth
