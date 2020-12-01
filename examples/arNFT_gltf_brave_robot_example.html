@@ -23,7 +23,7 @@
 			.then((nft) => {
 				let r = nft.getRenderer()
 				console.log(r);;
-				window.addEventListener('getThreejsRenderer', (ev) => {
+				document.addEventListener('getThreejsRenderer', (ev) => {
 				console.log(ev);
 				let renderer = ev.detail.renderer.renderer
 				let pixelRatio = renderer.getPixelRatio()
