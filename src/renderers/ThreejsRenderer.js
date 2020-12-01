@@ -6,9 +6,14 @@ export default class ThreejsRenderer {
     this.root = root
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvasDraw,
+      context: configData.renderer.context,
       alpha: configData.renderer.alpha,
+      premultipliedAlpha: configData.renderer.premultipliedAlpha,
       antialias: configData.renderer.antialias,
-      precision: configData.renderer.precision
+      stencil: configData.renderer.stencil,
+      precision: configData.renderer.precision,
+      depth: configData.renderer.depth,
+      logarithmicDepthBuffer: configData.renderer.logarithmicDepthBuffer
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.scene = new THREE.Scene()

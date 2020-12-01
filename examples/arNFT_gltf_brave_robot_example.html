@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example with a gltf model</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config_brave_robot.json', true)
+			.then((nft) => {
+				nft.addModel('./Data/models/brave_robot/gLTF/brave_robot.glb', 40, 80, 80, 80);
+			}).catch((error) => {
+				console.log(error);
+			});
+    </script>
+</body>
+
+</html>
