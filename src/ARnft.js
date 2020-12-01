@@ -22,7 +22,12 @@ export default class ARnft {
     console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px')
     const root = this.root
     const config = this.config
-    const data = Utils.jsonParser(config)
+    let data
+    if (typeof(config) == 'object') {
+      data = Utils.jsonObjParser(config)
+    } else {
+      data = Utils.jsonParser(config)
+    }
 
     data.then((configData) => {
       Container.createLoading(configData)
