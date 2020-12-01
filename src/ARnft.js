@@ -10,6 +10,7 @@ export default class ARnft {
     this.width = width
     this.height = height
     this.root = new THREE.Object3D()
+    this.renderer = null
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
@@ -72,6 +73,8 @@ export default class ARnft {
       if (configData.renderer.type === 'three') {
         const renderer = new ThreejsRenderer(configData, canvas, root)
         renderer.initRenderer()
+        this.renderer = renderer
+        console.log(this.renderer);
         const tick = () => {
           renderer.draw()
           window.requestAnimationFrame(tick)
@@ -85,6 +88,12 @@ export default class ARnft {
   static async init (width, height, markerUrl, config, stats) {
     const nft = new ARnft(width, height, config)
     return await nft._initialize(markerUrl, stats)
+  }
+
+  renderer () {
+    const renderer = this.renderer
+    console.log(renderer);
+    return renderer.renderer
   }
 
   add (obj) {
