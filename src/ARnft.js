@@ -74,7 +74,9 @@ export default class ARnft {
         const renderer = new ThreejsRenderer(configData, canvas, root)
         renderer.initRenderer()
         this.renderer = renderer
-        console.log(this.renderer);
+        console.log(renderer);
+        const setRendererEvent = new CustomEvent('getThreejsRenderer', { detail: { renderer: renderer } })
+        window.dispatchEvent(setRendererEvent)
         const tick = () => {
           renderer.draw()
           window.requestAnimationFrame(tick)
@@ -90,10 +92,14 @@ export default class ARnft {
     return await nft._initialize(markerUrl, stats)
   }
 
-  renderer () {
-    const renderer = this.renderer
-    console.log(renderer);
-    return renderer.renderer
+  getRenderer () {
+    var renderUpdate
+    window.addEventListener('getThreejsRenderer', (ev) => {
+      console.log(ev);
+      var rend = ev.detail.renderer
+      renderUpdate = rend
+    })
+    return renderUpdate
   }
 
   add (obj) {
