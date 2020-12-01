@@ -29,6 +29,7 @@
 				let pixelRatio = renderer.getPixelRatio()
 				console.log(pixelRatio);
 				console.log(renderer);
+				renderer.outputEncoding = THREE.sRGBEncoding;
 				})
 				nft.addModel('./Data/models/brave_robot/gLTF/brave_robot.glb', 40, 80, 80, 80);
 			}).catch((error) => {
