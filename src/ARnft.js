@@ -97,15 +97,6 @@ export default class ARnft {
     return await nft._initialize(markerUrl, stats, camera)
   }
 
-  _renderGet(ev) {
-    this.renderer = ev.detail
-    console.log(this.renderer);
-  }
-
-  getRenderer () {
-    document.addEventListener('getThreejsRenderer', this._renderGet)
-  }
-
   add (obj) {
     const root = this.root
     document.addEventListener('getNFTData', (ev) => {
