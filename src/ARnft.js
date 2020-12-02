@@ -103,9 +103,7 @@ export default class ARnft {
   }
 
   getRenderer () {
-    var renderUpdate
     document.addEventListener('getThreejsRenderer', this._renderGet)
-    return renderUpdate
   }
 
   add (obj) {
