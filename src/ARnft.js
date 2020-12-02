@@ -18,7 +18,7 @@ export default class ARnft {
     console.log('ARnft ', this.version)
   }
 
-  _initialize (markerUrl, stats) {
+  _initialize (markerUrl, stats, camera) {
     console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px')
     const root = this.root
     const config = this.config
@@ -76,7 +76,7 @@ export default class ARnft {
       })
 
       if (configData.renderer.type === 'three') {
-        const renderer = new ThreejsRenderer(configData, canvas, root)
+        const renderer = new ThreejsRenderer(configData, canvas, root, camera)
         renderer.initRenderer()
         this.renderer = renderer
         console.log(renderer);
@@ -92,9 +92,9 @@ export default class ARnft {
     return this
   }
 
-  static async init (width, height, markerUrl, config, stats) {
+  static async init (width, height, markerUrl, config, stats, camera) {
     const nft = new ARnft(width, height, config)
-    return await nft._initialize(markerUrl, stats)
+    return await nft._initialize(markerUrl, stats, camera)
   }
 
   /*_renderGet(ev) {

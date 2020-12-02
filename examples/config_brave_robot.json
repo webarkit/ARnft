@@ -29,6 +29,12 @@
       "stencil": true,
       "depth": true,
       "logarithmicDepthBuffer": true
+    },
+    "camera": {
+      "fov": "0.8 * 180 / Math.PI",
+      "ratio": "window.clientWidth / window.clientHeight",
+      "near": 0.01,
+      "far": 1000
     }
   }
   

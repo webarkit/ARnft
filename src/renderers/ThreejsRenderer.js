@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import Utils from '../utils/Utils'
 
 export default class ThreejsRenderer {
-  constructor (configData, canvasDraw, root) {
+  constructor (configData, canvasDraw, root, camera) {
     this.root = root
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvasDraw,
@@ -17,7 +17,11 @@ export default class ThreejsRenderer {
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.scene = new THREE.Scene()
-    this.camera = new THREE.Camera()
+    if (camera === true) {
+      this.camera = new THREE.PerspectiveCamera( configData.camera.fov, configData.camera.ratio, configData.camera.near, configData.camera.far );
+    } else {
+      this.camera = new THREE.Camera()
+    }
   }
 
   initRenderer () {
