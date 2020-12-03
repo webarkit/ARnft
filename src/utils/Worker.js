@@ -82,9 +82,6 @@ const load = (msg) => {
   }
   console.debug('Loading camera at:', cameraParamUrl)
 
-    let options = {
-     canvas: msg.canvas
-    }
     ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
 }
 
