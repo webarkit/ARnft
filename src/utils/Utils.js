@@ -135,7 +135,6 @@ export default class Utils {
     let pw, ph
     let ox, oy
     let worker
-    let offscreen
 
     const canvasProcess = document.createElement('canvas')
     const contextProcess = canvasProcess.getContext('2d')
@@ -166,8 +165,6 @@ export default class Utils {
 
       worker = new Worker()
 
-      offscreen = new OffscreenCanvas(video.videoWidth, video.videoHeight)
-
       worker.postMessage({
         type: 'load',
         pw: pw,
@@ -175,9 +172,8 @@ export default class Utils {
         camera_para: configData.cameraPara,
         marker: markerUrl,
         artoolkitUrl: configData.artoolkitUrl,
-        addPath: configData.addPath,
-        canvas: offscreen
-      }, [offscreen])
+        addPath: configData.addPath
+      })
 
       worker.onmessage = (ev) => {
         const msg = ev.data
