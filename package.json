@@ -63,7 +63,7 @@
   },
   "dependencies": {
     "http-server": "^0.12.3",
-    "@kalwalt/jsartoolkit-nft": "^0.8.0",
+    "@kalwalt/jsartoolkit-nft": "^0.8.1",
     "terser-webpack-plugin": "^5.0.3"
   }
 }
