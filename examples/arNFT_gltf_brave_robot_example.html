@@ -29,15 +29,15 @@
 					console.log(scene);
 					const camera = ev.detail.camera;
 					console.log(camera);
+					renderer.outputEncoding = THREE.sRGBEncoding;
+					renderer.physicallyCorrectLights = true;
 					let directionalLight = new THREE.DirectionalLight('#fff', 0.4);
 					directionalLight.position.set(0.5, 0, 0.866);
 					scene.add(directionalLight)
 				})
 				document.addEventListener('onAfterInitThreejsRendering', (ev) => {			
-				    let renderer = ev.detail.renderer.renderer
-				    renderer.outputEncoding = THREE.sRGBEncoding;
-					renderer.physicallyCorrectLights = true;
-					console.log('setting texture outputEncoding and physicallyCorrectLights after init rendering');
+				    // set here extra rendering settings after onInitThreejsRendering
+					console.log('onAfterInitThreejsRendering is emitted after onInitThreejsRendering!');
 				})
 				nft.addModel('./Data/models/brave_robot/gLTF/brave_robot.glb', 40, 80, 80, 80);
 			}).catch((error) => {
