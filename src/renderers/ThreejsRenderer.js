@@ -51,7 +51,7 @@ export default class ThreejsRenderer {
       this.renderer.setSize(ev.detail.sw, ev.detail.sh)
     })
 
-    const setInitRendererEvent = new CustomEvent('getInitThreejsRenderer', { detail: { renderer: this.renderer, scene: this.scene,  camera: this.camera } })
+    const setInitRendererEvent = new CustomEvent('onInitThreejsRendering', { detail: { renderer: this.renderer, scene: this.scene,  camera: this.camera } })
     document.dispatchEvent(setInitRendererEvent)
   }
 
