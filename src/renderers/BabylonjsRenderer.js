@@ -30,12 +30,9 @@ export default class BabylonjsRenderer {
     this.root = markerRoot
 
     this.root.visibility = 1.0
-    this.root.markerMatrix = new Float64Array(12)
 
     document.addEventListener('getMatrixGL_RH', (ev) => {
-      this.root.visibility = 1.0
       const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
-      //this.root.markerMatrix = matrix
       this.root.updatePoseMatrix(BABYLON.Matrix.FromArray(matrix))
       console.log(this.root);
     })
