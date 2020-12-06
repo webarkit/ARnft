@@ -79,7 +79,6 @@ export default class ARnft {
         const renderer = new ThreejsRenderer(configData, canvas, root, camera)
         renderer.initRenderer()
         this.renderer = renderer
-        console.log(renderer);
         const setRendererEvent = new CustomEvent('onAfterInitThreejsRendering', { detail: { renderer: renderer } })
         document.dispatchEvent(setRendererEvent)
         const tick = () => {
