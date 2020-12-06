@@ -21,21 +21,23 @@
     <script>
 			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config_brave_robot.json', true, true)
 			.then((nft) => {
-				document.addEventListener('getThreejsRenderer', (ev) => {			
-				    let renderer = ev.detail.renderer.renderer
-				    renderer.outputEncoding = THREE.sRGBEncoding;
-					renderer.physicallyCorrectLights = true;
-					console.log('setting texture outputEncoding and physicallyCorrectLights');
-				})
 				document.addEventListener('onInitThreejsRendering', (ev) => {
 					console.log(ev.detail);
 					const renderer = ev.detail.renderer;
 					console.log(renderer);
 					const scene = ev.detail.scene;
 					console.log(scene);
+					const camera = ev.detail.camera;
+					console.log(camera);
 					let directionalLight = new THREE.DirectionalLight('#fff', 0.4);
 					directionalLight.position.set(0.5, 0, 0.866);
 					scene.add(directionalLight)
+				})
+				document.addEventListener('onAfterInitThreejsRendering', (ev) => {			
+				    let renderer = ev.detail.renderer.renderer
+				    renderer.outputEncoding = THREE.sRGBEncoding;
+					renderer.physicallyCorrectLights = true;
+					console.log('setting texture outputEncoding and physicallyCorrectLights after init rendering');
 				})
 				nft.addModel('./Data/models/brave_robot/gLTF/brave_robot.glb', 40, 80, 80, 80);
 			}).catch((error) => {

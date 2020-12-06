@@ -80,7 +80,7 @@ export default class ARnft {
         renderer.initRenderer()
         this.renderer = renderer
         console.log(renderer);
-        const setRendererEvent = new CustomEvent('getThreejsRenderer', { detail: { renderer: renderer } })
+        const setRendererEvent = new CustomEvent('onAfterInitThreejsRendering', { detail: { renderer: renderer } })
         document.dispatchEvent(setRendererEvent)
         const tick = () => {
           renderer.draw()
