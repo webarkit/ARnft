@@ -79,7 +79,6 @@ export default class Utils {
 
     if (navigator.mediaDevices || window.MediaStreamTrack.getSources) {
       if (navigator.mediaDevices) {
-        console.log('inside mediaDevices')
         try {
           stream = await navigator.mediaDevices.getUserMedia({
             audio: false,
@@ -128,7 +127,7 @@ export default class Utils {
     })
   }
 
-  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, root, configData) {
+  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, configData) {
     let vw, vh
     let sw, sh
     let pscale, sscale
@@ -298,6 +297,11 @@ export default class Utils {
     const response = await axios.get(requestURL, { responseType: 'json' })
       .then((res) => { return res.data })
       .catch((error) => { console.error(error) })
+    return response
+  }
+
+  static async jsonObjParser (obj) {
+    const response = await obj
     return response
   }
 }

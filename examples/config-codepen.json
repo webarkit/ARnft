@@ -1,5 +1,4 @@
 {
-  "artoolkitUrl": "https://raw.githack.com/kalwalt/jsartoolkitNFT/master/build/artoolkitNFT_wasm.js",
   "cameraPara": "https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/kalwalt/jsartoolkitNFT/master/examples/Data/camera_para.dat",
   "videoSettings": {
     "width": {

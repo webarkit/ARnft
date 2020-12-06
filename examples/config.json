@@ -1,5 +1,4 @@
 {
-  "artoolkitUrl": "libs/jsartoolkitNFT/build/artoolkitNFT_wasm.js",
   "addPath": "",
   "cameraPara": "examples/Data/camera_para.dat",
   "videoSettings": {

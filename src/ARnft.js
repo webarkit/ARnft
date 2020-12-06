@@ -16,17 +16,23 @@ export default class ARnft {
     } else if (renderType === 'babylon') {
       this.root = null
     }
+    this.renderer = null
     this.config = config
     this.listeners = {}
-    this.version = '0.7.7'
+    this.version = '0.8.1'
     console.log('ARnft ', this.version)
   }
 
-  _initialize (markerUrl, stats) {
+  _initialize (markerUrl, stats, camera) {
     console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px')
     const root = this.root
     const config = this.config
-    const data = Utils.jsonParser(config)
+    let data
+    if (typeof(config) == 'object') {
+      data = Utils.jsonObjParser(config)
+    } else {
+      data = Utils.jsonParser(config)
+    }
 
     data.then((configData) => {
       Container.createLoading(configData)
@@ -71,13 +77,15 @@ export default class ARnft {
               statsObj.statsWorker.update()
             }
           },
-          root,
           configData)
       })
 
       if (configData.renderer.type === 'three') {
-        const renderer = new ThreejsRenderer(configData, canvas, root)
+        const renderer = new ThreejsRenderer(configData, canvas, root, camera)
         renderer.initRenderer()
+        this.renderer = renderer
+        const setRendererEvent = new CustomEvent('onAfterInitThreejsRendering', { detail: { renderer: renderer } })
+        document.dispatchEvent(setRendererEvent)
         const tick = () => {
           renderer.draw()
           window.requestAnimationFrame(tick)
@@ -96,15 +104,14 @@ export default class ARnft {
     return this
   }
 
-  static async init (width, height, markerUrl, config, stats) {
+  static async init (width, height, markerUrl, config, stats, camera) {
     const nft = new ARnft(width, height, config)
-    return await nft._initialize(markerUrl, stats)
+    return await nft._initialize(markerUrl, stats, camera)
   }
 
   add (obj) {
     const root = this.root
     document.addEventListener('getNFTData', (ev) => {
-      // console.log(ev)
       var msg = ev.detail
       obj.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
       obj.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0

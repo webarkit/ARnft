@@ -54,7 +54,6 @@ export default class Container {
     loadingMessage.innerText = configData.loading.loadingMessage
     loader.appendChild(logo)
     loader.appendChild(loadingMessage)
-    // const marker = document.getElementById('marker')
     document.body.insertBefore(loader, document.body.firstChild)
   }
 }
