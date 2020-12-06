@@ -10,6 +10,7 @@ export default class ARnft {
     this.width = width
     this.height = height
     this.root = new THREE.Object3D()
+    this.renderer = null
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
@@ -17,11 +18,16 @@ export default class ARnft {
     console.log('ARnft ', this.version)
   }
 
-  _initialize (markerUrl, stats) {
+  _initialize (markerUrl, stats, camera) {
     console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px')
     const root = this.root
     const config = this.config
-    const data = Utils.jsonParser(config)
+    let data
+    if (typeof(config) == 'object') {
+      data = Utils.jsonObjParser(config)
+    } else {
+      data = Utils.jsonParser(config)
+    }
 
     data.then((configData) => {
       Container.createLoading(configData)
@@ -70,8 +76,11 @@ export default class ARnft {
       })
 
       if (configData.renderer.type === 'three') {
-        const renderer = new ThreejsRenderer(configData, canvas, root)
+        const renderer = new ThreejsRenderer(configData, canvas, root, camera)
         renderer.initRenderer()
+        this.renderer = renderer
+        const setRendererEvent = new CustomEvent('onAfterInitThreejsRendering', { detail: { renderer: renderer } })
+        document.dispatchEvent(setRendererEvent)
         const tick = () => {
           renderer.draw()
           window.requestAnimationFrame(tick)
@@ -82,9 +91,9 @@ export default class ARnft {
     return this
   }
 
-  static async init (width, height, markerUrl, config, stats) {
+  static async init (width, height, markerUrl, config, stats, camera) {
     const nft = new ARnft(width, height, config)
-    return await nft._initialize(markerUrl, stats)
+    return await nft._initialize(markerUrl, stats, camera)
   }
 
   add (obj) {

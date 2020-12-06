@@ -2,17 +2,26 @@ import * as THREE from 'three'
 import Utils from '../utils/Utils'
 
 export default class ThreejsRenderer {
-  constructor (configData, canvasDraw, root) {
+  constructor (configData, canvasDraw, root, camera) {
     this.root = root
     this.renderer = new THREE.WebGLRenderer({
       canvas: canvasDraw,
+      context: configData.renderer.context,
       alpha: configData.renderer.alpha,
+      premultipliedAlpha: configData.renderer.premultipliedAlpha,
       antialias: configData.renderer.antialias,
-      precision: configData.renderer.precision
+      stencil: configData.renderer.stencil,
+      precision: configData.renderer.precision,
+      depth: configData.renderer.depth,
+      logarithmicDepthBuffer: configData.renderer.logarithmicDepthBuffer
     })
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.scene = new THREE.Scene()
-    this.camera = new THREE.Camera()
+    if (camera === true) {
+      this.camera = new THREE.PerspectiveCamera( configData.camera.fov, configData.camera.ratio, configData.camera.near, configData.camera.far );
+    } else {
+      this.camera = new THREE.Camera()
+    }
   }
 
   initRenderer () {
@@ -41,6 +50,9 @@ export default class ThreejsRenderer {
     document.addEventListener('getWindowSize', (ev) => {
       this.renderer.setSize(ev.detail.sw, ev.detail.sh)
     })
+
+    const setInitRendererEvent = new CustomEvent('onInitThreejsRendering', { detail: { renderer: this.renderer, scene: this.scene,  camera: this.camera } })
+    document.dispatchEvent(setInitRendererEvent)
   }
 
   draw () {

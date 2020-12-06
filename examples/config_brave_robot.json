@@ -1,0 +1,40 @@
+{
+    "addPath": "",
+    "cameraPara": "examples/Data/camera_para.dat",
+    "videoSettings": {
+      "width": {
+        "min": 640,
+        "max": 800
+      },
+      "height": {
+        "min": 480,
+        "max": 600
+      },
+      "facingMode": "environment"
+    },
+    "loading": {
+      "logo": {
+        "src": "Data/arNFT-logo.gif",
+        "alt": "arNFT.js logo"
+      },
+      "loadingMessage": "Loading, please wait..."
+    },
+    "renderer": {
+      "type": "three",
+      "alpha": true,
+      "antialias": true,
+      "context": null,
+      "precision": "mediump",
+      "premultipliedAlpha": true,
+      "stencil": true,
+      "depth": true,
+      "logarithmicDepthBuffer": true
+    },
+    "camera": {
+      "fov": "0.8 * 180 / Math.PI",
+      "ratio": "window.clientWidth / window.clientHeight",
+      "near": 0.01,
+      "far": 1000
+    }
+  }
+  

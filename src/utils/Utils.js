@@ -299,4 +299,9 @@ export default class Utils {
       .catch((error) => { console.error(error) })
     return response
   }
+
+  static async jsonObjParser (obj) {
+    const response = await obj
+    return response
+  }
 }
