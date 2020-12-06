@@ -11,12 +11,12 @@ export default class ARnft {
     this.width = width
     this.height = height
     if (renderType === 'three') {
+      this.renderer = null
       this.root = new THREE.Object3D()
       this.root.matrixAutoUpdate = false
     } else if (renderType === 'babylon') {
       this.root = null
     }
-    this.renderer = null
     this.config = config
     this.listeners = {}
     this.version = '0.8.1'
