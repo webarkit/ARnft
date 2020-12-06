@@ -1,4 +1,5 @@
 import * as BABYLON from 'babylonjs'
+import customEvent from 'custom-event'
 import Utils from '../utils/Utils'
 
 export default class BabylonjsRenderer {
@@ -31,9 +32,6 @@ export default class BabylonjsRenderer {
     this.root.visibility = 1.0
     this.root.markerMatrix = new Float64Array(12)
 
-    // create a basic light, aiming 0,1,0 - meaning, to the sky
-    const light = new BABYLON.HemisphericLight('light1', new BABYLON.Vector3(0, 1, 0), this.scene)
-
     document.addEventListener('getMatrixGL_RH', (ev) => {
       this.root.visibility = 1.0
       const matrix = Utils.interpolate(ev.detail.matrixGL_RH)
@@ -42,45 +40,21 @@ export default class BabylonjsRenderer {
       console.log(this.root);
     })
 
-    // create a box
-    var box = new BABYLON.Mesh.CreateBox('box1', { height: 100 }, this.scene)
-    //box.isVisible = true;
-    this.root.addChild(box)
-
     document.addEventListener('nftTrackingLost', () => {
-      this.root.visibility = 1.0
+      this.root.visibility = 0.0
     })
 
-    //this.root.visible = false
-
-    // this.scene.add(this.root)
     document.addEventListener('getWindowSize', (ev) => {
       this.engine.setSize(ev.detail.sw, ev.detail.sh)
     })
+
+    const setInitBabylonjsRenderer = new CustomEvent('onInitBabylonjsRendering', { detail: { engine: this.engine, scene: this.scene,  camera: this.camera, root: this.root } })
+    document.dispatchEvent(setInitBabylonjsRenderer)
   }
 
   draw () {
     this.engine.runRenderLoop(() => {
       this.scene.render()
     })
-  }
-
-  getScene() {
-    return this.scene
-  }
-
-  getRoot() {
-    return this.root
-  }
-
-  static getScene() {
-    // this may kill the app!
-    //return this.getScene()
-
-    return {}
-  }
-
-  static getRoot() {
-    return this.getRoot()
   }
 }
