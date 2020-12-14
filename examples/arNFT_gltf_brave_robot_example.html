@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example with a gltf model</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config_brave_robot.json', true, true)
+			.then((nft) => {
+				document.addEventListener('onInitThreejsRendering', (ev) => {
+					console.log(ev.detail);
+					const renderer = ev.detail.renderer;
+					console.log(renderer);
+					const scene = ev.detail.scene;
+					console.log(scene);
+					const camera = ev.detail.camera;
+					console.log(camera);
+					renderer.outputEncoding = THREE.sRGBEncoding;
+					renderer.physicallyCorrectLights = true;
+					let directionalLight = new THREE.DirectionalLight('#fff', 0.4);
+					directionalLight.position.set(0.5, 0, 0.866);
+					scene.add(directionalLight)
+				})
+				document.addEventListener('onAfterInitThreejsRendering', (ev) => {
+				    // set here extra rendering settings after onInitThreejsRendering
+					console.log('onAfterInitThreejsRendering is emitted after onInitThreejsRendering!');
+				})
+				// gLTF model provided by Brett Alistair Kromkamp https://github.com/brettkromkamp
+				nft.addModel('./Data/models/brave_robot/gLTF/brave_robot.glb', 40, 80, 80, 80);
+			}).catch((error) => {
+				console.log(error);
+			});
+    </script>
+</body>
+
+</html>

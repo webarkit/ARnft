@@ -1,6 +1,6 @@
 {
   "name": "@kalwalt/ar-nft",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "main": "dist/ARnft.js",
   "description": "WebAR Javscript library for markerless AR",
   "keywords": [
@@ -62,8 +62,8 @@
     "ecstatic": "^4.1.4"
   },
   "dependencies": {
-    "http-server": "^0.12.3",
     "@kalwalt/jsartoolkit-nft": "^0.8.1",
+    "http-server": "^0.12.3",
     "terser-webpack-plugin": "^5.0.3"
   }
 }
