@@ -23,14 +23,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kalwalt/ARnft"
+    "url": "https://github.com/webarkit/ARnft"
   },
-  "homepage": "https://github.com/kalwalt/ARnft",
+  "homepage": "https://github.com/webarkit/ARnft",
   "contributors": [
-    "Github Contributors (https://github.com/kalwalt/ARnft/graphs/contributors)"
+    "Github Contributors (https://github.com/webarkit/ARnft/graphs/contributors)"
   ],
   "bugs": {
-    "url": "https://github.com/kalwalt/ARnft/issues"
+    "url": "https://github.com/webarkit/ARnft/issues"
   },
   "devDependencies": {
     "axios": "^0.21.0",
