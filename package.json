@@ -1,6 +1,6 @@
 {
   "name": "@kalwalt/ar-nft",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "main": "dist/ARnft.js",
   "description": "WebAR Javscript library for markerless AR",
   "keywords": [
@@ -46,7 +46,7 @@
     "grunt-contrib-jshint": "^3.0.0",
     "grunt-eslint": "^23.0.0",
     "stats.js": "^0.17.0",
-    "three": "^0.122.0",
+    "three": "^0.124.0",
     "webpack": "^5.4.0",
     "webpack-cli": "^4.2.0",
     "worker-loader": "^3.0.4"
