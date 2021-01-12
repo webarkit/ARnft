@@ -46,10 +46,10 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@kalwalt/jsartoolkit-nft@^0.8.1":
-  version "0.8.1"
-  resolved "https://registry.yarnpkg.com/@kalwalt/jsartoolkit-nft/-/jsartoolkit-nft-0.8.1.tgz#35328f62889e0eceabdc7fa49a2fd64a00756a15"
-  integrity sha512-b5B0z9vcdjUO1px/RF33G4FxPn75juj6bNM2oikozdWSrjSOKb8ptdqjcL254C0c+k9UAtDKePJxKNeoVIHY3w==
+"@kalwalt/jsartoolkit-nft@^0.8.2":
+  version "0.8.2"
+  resolved "https://registry.yarnpkg.com/@kalwalt/jsartoolkit-nft/-/jsartoolkit-nft-0.8.2.tgz#51e1add82d6a4c87f1ced36a6096e34a94bd5361"
+  integrity sha512-Au8PTTlzVpMi7hKqaOE0thq01SRDZP7CuWXj+U+iGWwO3mGp8LDYHjD8SOwXB+b+/tV32UFPYZLs4pUExqO97w==
   dependencies:
     "@babel/runtime" "^7.12.5"
     axios "^0.21.0"
