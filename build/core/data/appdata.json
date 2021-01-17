@@ -1,0 +1,94 @@
+{
+    "name": "InsectaAR",
+    "assetURL": "resources/",
+    "workerURL": "./resources/jsartoolkit5/artoolkit/artoolkit.wasm_worker.js",
+    "cameraDataURL": "../../data/camera_para.dat",
+    "sounds": [
+        {
+            "id": "Hoowdy",
+            "file": "resources/data/sounds/mynameiswoody.wav"
+        }
+    ],
+    "videoSettings": {
+        "width": {
+            "min": 640,
+            "max": 800
+        },
+        "height": {
+            "min": 480,
+            "max": 600
+        },
+        "facingMode": "environment"
+    },
+    "characters": [
+        {
+            "id": "mantis",
+            "modelURL": "resources/data/mantis/",
+            "file": "Mantis.glb",
+            "name": "Mantis",
+            "scale": 250,
+            "offset": {
+                "x": 90,
+                "y": 90
+            },
+            "animations": [],
+            "videoData": {
+                "videoURL": "praying-mantis.mp4"
+            },
+            "markerData": {
+                "width": 1637,
+                "height": 2048,
+                "dpi": 600,
+                "url": "../../data/mantis/mantis-marker",
+                "offsetX": 0,
+                "offsetY": 0
+            }
+        },
+        {
+            "id": "beetle",
+            "modelURL": "resources/data/beetle/",
+            "file": "Beetle.glb",
+            "name": "Beetle",
+            "scale": 330,
+            "offset": {
+                "x": 50,
+                "y": 50
+            },
+            "animations": [],
+            "videoData": {
+                "videoURL": ""
+            },
+            "markerData": {
+                "width": 1637,
+                "height": 2048,
+                "dpi": 600,
+                "url": "../../data/beetle/beetle-marker",
+                "offsetX": 0,
+                "offsetY": 0
+            }
+        },
+        {
+            "id": "spider",
+            "modelURL": "resources/data/spider/",
+            "file": "Spider.glb",
+            "name": "Spider",
+            "scale": 65,
+            "offset": {
+                "x": 100,
+                "y": 100
+            },
+            "animations": [],
+            "videoData": {
+                "videoURL": ""
+            },
+            "markerData": {
+                "width": 1637,
+                "height": 2048,
+                "dpi": 600,
+                "url": "../../data/spider/wolfspider-marker",
+                "offsetX": 0,
+                "offsetY": 0
+            }
+        }
+    ]
+}

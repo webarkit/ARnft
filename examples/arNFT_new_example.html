@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example showing an simple red cube</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<!--<script src="js/third_party/three.js/three.min.js"></script>-->
+		<script type="module" src="../dist/ARnft.js"></script>
+
+    <script>
+
+	async function init() {
+		console.log("init app");
+		let workerURL = './resources/jsartoolkit5/artoolkit/artoolkit.wasm_worker.js';
+		let cameraDataURL = '../../data/camera_para.dat';
+
+		const arnft = new ARNFT.ARnft(cameraDataURL, workerURL);
+		arnft.setFPS(15);
+		await arnft.init();
+
+		console.log("done loading")
+
+		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
+		var tick = () => {
+			arnft.update();
+			setTimeout(tick, 1000 / 60);
+		};
+		tick();
+
+	}
+
+    </script>
+		<body onload="init()" style="background-color:#D4D4D4;margin:0px;">
+		  <div id="inspector">
+		    <div id="app">
+		      <video loop autoplay muted playsinline id="video">
+		      </video>
+		      <canvas id="canvas"></canvas>
+		    </div>
+		  </div>
+		</body>
+
+
+</html>
