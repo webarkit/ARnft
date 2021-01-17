@@ -28,20 +28,11 @@ export class ARnft {
 
     constructor(video: CameraViewRenderer, camData: string, worker: string) {
         this._videoRenderer = video;
-        this._videoRenderer = null;
         this._cameraDataURL = camData;
         this._workerURL = worker;
         // set default fps at 15
         this.setFPS(this._fps);
     }
-
-    /*private async startRenderer() {
-      this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
-      await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
-          console.log(error);
-          return Promise.reject(false);
-      });
-    }*/
 
     public addNFTEntity(entity: INFTEntity, name?: string): INFTEntity {
 
@@ -83,8 +74,6 @@ export class ARnft {
 
     public initialize(): Promise<boolean> {
         console.log("init ARnft");
-        // views
-        //this.startRenderer();
 
         let promises: Promise<boolean>[] = [];
         this._controllers.forEach(element => {

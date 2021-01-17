@@ -13,24 +13,14 @@ export default {
 			format: 'umd',
 			name: 'ARNFT',
 			file: 'dist/ARnft.js',
-			sourcemap: true,
-			globals: {
-				//babylonjs: 'babylonjs',
-			}
+			sourcemap: true
 		}
 	],
-/*external: [
-	...Object.keys(pkg.dependencies || {}),
-	"BABYLON"
-],*/
 	plugins: [
 		typescript({
 			tsconfig: "tsconfig.json",
 			typescript: require('typescript'),
 		}),
-		/*externalGlobals({
-			babylonjs: "BABYLON"
-		}),*/
 		json(),
 		nodeResolve(),
 		terser() // minifies generated bundles
