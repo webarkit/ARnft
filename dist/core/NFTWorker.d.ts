@@ -1,7 +1,8 @@
 import { NFTEntity } from "./NFTEntity";
 export declare class NFTOrientation {
-    position: number[];
-    rotation: number[];
+    position: IterableIterator<number>;
+    rotation: IterableIterator<number>;
+    matrix: IterableIterator<number>;
 }
 export declare class NFTWorker {
     private _dispatcher;
@@ -11,9 +12,10 @@ export declare class NFTWorker {
     private vw;
     private vh;
     constructor(d: NFTEntity, markerURL: string, w: number, h: number);
-    private vector3zero;
+    private position;
+    private rotation;
     initialize(workerURL: string, cameraURL: string): Promise<boolean>;
-    protected getArrayMatrix(value: any): any;
+    private getArrayMatrix;
     process(imageData: ImageData): void;
     protected load(cameraURL: string): Promise<boolean>;
 }

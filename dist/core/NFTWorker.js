@@ -4,7 +4,8 @@ export class NFTOrientation {
 export class NFTWorker {
     constructor(d, markerURL, w, h) {
         this._processing = false;
-        this.vector3zero = vec3.create();
+        this.position = vec3.create();
+        this.rotation = quat.create();
         this._dispatcher = d;
         this.markerURL = markerURL;
         this.vw = w;
@@ -16,18 +17,16 @@ export class NFTWorker {
             this.worker.onmessage = (ev) => {
                 this.load(cameraURL).then(() => {
                     this.worker.onmessage = (ev) => {
-                        let msg = (ev.data.type == "found") ? ev.data : null;
                         let pckg;
-                        if (msg) {
-                            let m = this.getArrayMatrix(JSON.parse(msg.matrixGL_RH));
+                        if (ev.data.type == "found") {
+                            let m = this.getArrayMatrix(JSON.parse(ev.data.matrixGL_RH));
                             let matrix = mat4.fromValues(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
-                            let position = vec3.create();
-                            mat4.getTranslation(position, matrix);
-                            let rotation = quat.create();
-                            mat4.getRotation(rotation, matrix);
+                            mat4.getTranslation(this.position, matrix);
+                            mat4.getRotation(this.rotation, matrix);
                             pckg = new NFTOrientation();
-                            pckg.position = position.values();
-                            pckg.rotation = vec3.transformMat4(vec3.create(), this.vector3zero, matrix);
+                            pckg.matrix = matrix.values();
+                            pckg.position = this.position.values();
+                            pckg.rotation = this.rotation.values();
                         }
                         this._dispatcher.found(pckg);
                         this._processing = false;

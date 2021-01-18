@@ -3,8 +3,12 @@ import { NFTEntity } from "./NFTEntity";
 
 
 export class NFTOrientation {
-    public position: number[];
-    public rotation: number[];
+    // euler vector3
+    public position: IterableIterator<number>;
+    // qauaterion
+    public rotation: IterableIterator<number>;
+
+    public matrix: IterableIterator<number>;
 }
 
 export class NFTWorker {
@@ -27,7 +31,9 @@ export class NFTWorker {
         this.vh = h;
     }
 
-    private vector3zero : vec3= vec3.create();
+    private position: vec3 = vec3.create();
+    private rotation: quat = quat.create();
+
     public initialize(workerURL: string, cameraURL: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker(workerURL);
@@ -35,22 +41,17 @@ export class NFTWorker {
                 this.load(cameraURL).then(() => {
                     // Overwrite load onmessage with search onmessage
                     this.worker.onmessage = (ev) => {
-                        let msg: any = (ev.data.type == "found") ? ev.data : null;
-                        let pckg: NFTOrientation | any;
-                        if (msg) {
-                            let m = this.getArrayMatrix(JSON.parse(msg.matrixGL_RH));
+                        let pckg: NFTOrientation;
+                        if (ev.data.type == "found") {
+                            let m = this.getArrayMatrix(JSON.parse(ev.data.matrixGL_RH));
                             let matrix: mat4 = mat4.fromValues(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
-
-                            let position: vec3 = vec3.create();
-                            mat4.getTranslation(position, matrix);
-
-                            let rotation: quat = quat.create();
-                            mat4.getRotation(rotation, matrix);
+                            mat4.getTranslation(this.position, matrix);
+                            mat4.getRotation(this.rotation, matrix);
 
                             pckg = new NFTOrientation();
-                            pckg.position = position.values();
-                            pckg.rotation = vec3.transformMat4(vec3.create(), this.vector3zero, matrix);
-
+                            pckg.matrix = matrix.values();
+                            pckg.position = this.position.values();
+                            pckg.rotation = this.rotation.values();
                         }
                         this._dispatcher.found(pckg);
                         this._processing = false;
@@ -63,7 +64,7 @@ export class NFTWorker {
         });
     }
 
-    protected getArrayMatrix(value: any): any {
+    private getArrayMatrix(value: any): any {
         var array: any = [];
         for (var key in value) {
             array[key] = value[key]; //.toFixed(4);

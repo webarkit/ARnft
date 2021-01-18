@@ -2,6 +2,7 @@
   "name": "@kalwalt/ar-nft",
   "version": "0.8.4",
   "main": "dist/ARnft.js",
+  "types": "dist/index.d.ts",
   "description": "WebAR Javscript library for markerless AR",
   "keywords": [
     "ARToolKit",
@@ -69,6 +70,7 @@
     "rollup-plugin-external-globals": "^0.6.1",
     "rollup-plugin-sourcemaps": "^0.6.3",
     "rollup-plugin-terser": "^7.0.2",
-    "rollup-plugin-typescript2": "^0.29.0"
+    "rollup-plugin-typescript2": "^0.29.0",
+    "typedoc": "^0.20.1"
   }
 }
