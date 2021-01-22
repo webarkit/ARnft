@@ -17,3 +17,18 @@ export function isIOS(): boolean {
     }
     return false;
 }
+
+export function getConfig(configData: string, callback(data: object) => object): boolean {
+  fetch(configData)
+  .then(function(response) {
+      if (!response.ok) {
+        throw new Error("HTTP error, status = " + response.status);
+      }
+      return response.json();
+    })
+    .then((data) => callback(data))
+    .catch(function(error) {
+        console.error(error);
+      });
+  return true;
+}
