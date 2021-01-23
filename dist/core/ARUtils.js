@@ -13,22 +13,21 @@ export function isIOS() {
     }
     return false;
 }
-(data) => ;
-Promise < boolean > {
-    return: fetch(configData)
+export function getConfig(configData, data) {
+    fetch(configData)
         .then(response => {
         if (!response.ok) {
             throw new Error("HTTP error, status = " + response.status);
         }
         return response.json();
     })
-        .then((data) => {
-        callback(data);
+        .then((response) => {
+        data = response;
     })
         .catch(function (error) {
         console.error(error);
         return Promise.reject(false);
-    }),
-    return: true
-};
+    });
+    return true;
+}
 //# sourceMappingURL=ARUtils.js.map

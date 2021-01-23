@@ -18,16 +18,16 @@ export function isIOS(): boolean {
     return false;
 }
 
-export function getConfig(configData: string, callback(data: object)): Promise<boolean> {
-  return fetch(configData)
+export function getConfig(configData: string, data: object): boolean {
+ fetch(configData)
   .then(response => {
       if (!response.ok) {
         throw new Error("HTTP error, status = " + response.status);
       }
       return response.json();
     })
-    .then((data: object) => {
-      callback(data);
+    .then((response) => {
+      data = response;
     })
     .catch(function(error) {
         console.error(error);
