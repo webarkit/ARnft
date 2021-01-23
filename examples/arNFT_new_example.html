@@ -34,6 +34,13 @@
 
 		const arnft = new ARNFT.ARnft(cameraDataURL, workerURL);
 		arnft.setFPS(15);
+		let videoData = {
+			"marker": "./data/pinball",
+			"video": "./data/test.mp4"
+		}
+		// let video = await ARNFT.BasicVideoLoaderBJS.load(videoMarker.video, renderer.getScene());
+		//let videoMarker = new ARNFT.NFTVideoBJS(video);
+		//arnft.addNFTEnity(videoMarker, videoData.marker);
 		await arnft.init();
 
 		console.log("done loading")

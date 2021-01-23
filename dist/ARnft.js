@@ -1,6 +1,5 @@
 import { CameraViewRenderer } from "./core/renderers/CamerViewRenderer";
 import appdata from "./core/data/appdata.json";
-import { getConfig } from "./core/ARUtils";
 export class ARnft {
     constructor(video, camData, worker) {
         this.count = 0;
@@ -30,20 +29,20 @@ export class ARnft {
     setFPS(value) {
         this._fps = 1000 / value;
     }
-    async init(camData, workerURL) {
-        const config = getConfig('config.json', function (data) {
+    async init(configData, camData, workerURL) {
+        await getConfig(configData, async (data) => {
             this._videoRenderer = new CameraViewRenderer(document.getElementById("video"));
-            await this._videoRenderer.initialize(data.videoSettings).catch((error) => {
+            await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
                 console.log(error);
                 return Promise.reject(false);
             });
+            const arnft = new ARnft(this._videoRenderer, camData, workerURL);
+            await arnft.initialize().catch((error) => {
+                console.log(error);
+                return Promise.reject(false);
+            });
+            return true;
         });
-        const arnft = new ARnft(this._videoRenderer, camData, workerURL);
-        await arnft.initialize().catch((error) => {
-            console.log(error);
-            return Promise.reject(false);
-        });
-        return true;
     }
     initialize() {
         console.log("init ARnft");
