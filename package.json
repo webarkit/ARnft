@@ -62,7 +62,6 @@
   "dependencies": {
     "@kalwalt/jsartoolkit-nft": "^0.8.2",
     "http-server": "^0.12.3",
-    "terser-webpack-plugin": "^5.0.3",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "gl-matrix": "^3.3.0",
