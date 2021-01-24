@@ -22,6 +22,7 @@ export function getConfig(configData, data) {
         return response.json();
     })
         .then((response) => {
+        console.log(response);
         data = response;
     })
         .catch(function (error) {

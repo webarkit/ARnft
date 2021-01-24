@@ -41,9 +41,9 @@
 		// let video = await ARNFT.BasicVideoLoaderBJS.load(videoMarker.video, renderer.getScene());
 		//let videoMarker = new ARNFT.NFTVideoBJS(video);
 		//arnft.addNFTEnity(videoMarker, videoData.marker);
-		await arnft.init();
+		await arnft.init("config.json",);
 
-		console.log("done loading")
+		console.log("done loading", workerURL)
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
 		var tick = () => {

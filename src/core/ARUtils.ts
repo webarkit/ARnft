@@ -27,6 +27,8 @@ export function getConfig(configData: string, data: object): boolean {
       return response.json();
     })
     .then((response) => {
+      // printing the response only for testing
+      console.log(response);
       data = response;
     })
     .catch(function(error) {
