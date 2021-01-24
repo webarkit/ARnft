@@ -2,7 +2,6 @@ import { INFTEntity } from "./core/NFTEntity";
 import { CameraViewRenderer } from "./core/renderers/CamerViewRenderer";
 import { AppJson } from "./core/data/AppData";
 import appdata from "./core/data/appdata.json";
-import fs from 'fs';
 import { getConfig } from "./core/ARUtils";
 
 export class ARnft {
