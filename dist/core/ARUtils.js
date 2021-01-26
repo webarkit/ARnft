@@ -24,6 +24,7 @@ export function getConfig(configData, data) {
         .then((response) => {
         console.log(response);
         data = response;
+        console.log(data);
     })
         .catch(function (error) {
         console.error(error);
