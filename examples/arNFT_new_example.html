@@ -40,7 +40,9 @@
 		}
 		// let video = await ARNFT.BasicVideoLoaderBJS.load(videoMarker.video, renderer.getScene());
 		//let videoMarker = new ARNFT.NFTVideoBJS(video);
-		//arnft.addNFTEnity(videoMarker, videoData.marker);
+		let marker = "./data/pinball";
+		arnft.addNFTEntity(marker, "marker");
+
 		await arnft.init("config.json",);
 
 		console.log("done loading", workerURL)
