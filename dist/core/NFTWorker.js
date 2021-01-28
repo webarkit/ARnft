@@ -1,4 +1,5 @@
 import { mat4, quat, vec3 } from "gl-matrix";
+import Worker from 'web-worker:./ARnftWorker.ts';
 export class NFTOrientation {
 }
 export class NFTWorker {
@@ -13,7 +14,7 @@ export class NFTWorker {
     }
     initialize(workerURL, cameraURL) {
         return new Promise((resolve, reject) => {
-            this.worker = new Worker(workerURL);
+            this.worker = new Worker();
             this.worker.onmessage = (ev) => {
                 this.load(cameraURL).then(() => {
                     this.worker.onmessage = (ev) => {

@@ -80,6 +80,7 @@
     }
   },
   "lib": [
+    "WebWorker",
     "esNext",
     "dom",
     "es5"

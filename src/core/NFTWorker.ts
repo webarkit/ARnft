@@ -1,5 +1,7 @@
 import { mat4, quat, vec3 } from "gl-matrix";
 import { NFTEntity } from "./NFTEntity";
+// @ts-ignore
+import Worker from 'web-worker:./ARnftWorker.ts';
 
 
 export class NFTOrientation {
@@ -36,11 +38,11 @@ export class NFTWorker {
 
     public initialize(workerURL: string, cameraURL: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.worker = new Worker(workerURL);
-            this.worker.onmessage = (ev) => {
+            this.worker = new Worker();
+            this.worker.onmessage = (ev: any) => {
                 this.load(cameraURL).then(() => {
                     // Overwrite load onmessage with search onmessage
-                    this.worker.onmessage = (ev) => {
+                    this.worker.onmessage = (ev: any) => {
                         let pckg: NFTOrientation;
                         if (ev.data.type == "found") {
                             let m = this.getArrayMatrix(JSON.parse(ev.data.matrixGL_RH));
@@ -102,7 +104,7 @@ export class NFTWorker {
                 marker: this.markerURL
             });
 
-            this.worker.onmessage = (ev) => {
+            this.worker.onmessage = (ev: any) => {
                 var msg = ev.data;
                 switch (msg.type) {
                     case 'loaded': {

@@ -34,6 +34,7 @@
     "url": "https://github.com/webarkit/ARnft/issues"
   },
   "devDependencies": {
+    "@types/node": "^14.14.10",
     "custom-event": "^1.0.1",
     "eslint": "^7.13.0",
     "eslint-config-standard": "^16.0.1",
@@ -45,9 +46,9 @@
     "grunt-cli": "^1.3.2",
     "grunt-contrib-jshint": "^3.0.0",
     "grunt-eslint": "^23.0.0",
-    "stats.js": "^0.17.0",
-    "@types/node": "^14.14.10",
     "rimraf": "^3.0.2",
+    "rollup-plugin-web-worker-loader": "^1.6.0",
+    "stats.js": "^0.17.0",
     "typescript": "^4.1.2"
   },
   "scripts": {
@@ -61,10 +62,10 @@
   },
   "dependencies": {
     "@kalwalt/jsartoolkit-nft": "^0.8.2",
-    "http-server": "^0.12.3",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "gl-matrix": "^3.3.0",
+    "http-server": "^0.12.3",
     "rollup": "^2.34.2",
     "rollup-plugin-external-globals": "^0.6.1",
     "rollup-plugin-sourcemaps": "^0.6.3",

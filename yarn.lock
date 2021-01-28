@@ -2498,6 +2498,11 @@ rollup-plugin-typescript2@^0.29.0:
     resolve "1.17.0"
     tslib "2.0.1"
 
+rollup-plugin-web-worker-loader@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/rollup-plugin-web-worker-loader/-/rollup-plugin-web-worker-loader-1.6.0.tgz#1bf0707736e4a40065ee5ee4071f41730cd5fd90"
+  integrity sha512-VpZuLVBUJsih/rCRieElw9Cv8Uxnv8yeA2ZD7zC1Z5uP18LN3kVUMQYGaCwnPs4oNp6iQMuHrOlpMiZQnxwcaQ==
+
 rollup@^2.34.2:
   version "2.36.2"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-2.36.2.tgz#883fc793c70c8481ad604f1065cd79ab0a4e9c49"
