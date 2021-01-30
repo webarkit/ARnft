@@ -31,8 +31,9 @@
 		console.log("init app");
 		let workerURL = './resources/jsartoolkit5/artoolkit/artoolkit.wasm_worker.js';
 		let cameraDataURL = '../../data/camera_para.dat';
+		let video = document.getElementById('video');
 
-		const arnft = new ARNFT.ARnft(cameraDataURL, workerURL);
+		const arnft = new ARNFT.ARnft(video, cameraDataURL, workerURL);
 		arnft.setFPS(15);
 		let videoData = {
 			"marker": "./data/pinball",
@@ -42,6 +43,7 @@
 		//let videoMarker = new ARNFT.NFTVideoBJS(video);
 
 		console.log(ARnftBabylonjs);
+		console.log(arnft);
 
 		let canvas = document.getElementById('canvas');
 		let sceneBabylonjs = new ARnftBabylonjs.SceneRendererBJS(canvas);

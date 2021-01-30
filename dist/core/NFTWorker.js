@@ -12,7 +12,7 @@ export class NFTWorker {
         this.vw = w;
         this.vh = h;
     }
-    initialize(workerURL, cameraURL) {
+    initialize(cameraURL) {
         return new Promise((resolve, reject) => {
             this.worker = new Worker();
             this.worker.onmessage = (ev) => {

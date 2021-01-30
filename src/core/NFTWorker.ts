@@ -36,7 +36,7 @@ export class NFTWorker {
     private position: vec3 = vec3.create();
     private rotation: quat = quat.create();
 
-    public initialize(workerURL: string, cameraURL: string): Promise<boolean> {
+    public initialize(cameraURL: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker();
             this.worker.onmessage = (ev: any) => {

@@ -8,7 +8,7 @@ export interface IMediaNode {
 export interface INFTEntity {
     update(): void;
     found(msg: NFTOrientation): void;
-    initialize(workerURL: string, cameraData: string): Promise<boolean>;
+    initialize(cameraData: string): Promise<boolean>;
     process(imageData: ImageData): void;
     destroy(): void;
 }
@@ -19,8 +19,6 @@ export class NFTEntity implements INFTEntity {
     private _nodes: IMediaNode[] = [];
 
     private _worker: NFTWorker;
-
-    private _workerURL: string;
 
     private _cameraURL: string;
 
@@ -35,10 +33,9 @@ export class NFTEntity implements INFTEntity {
         this._nodes.push(node);
     }
 
-    public initialize(workerURL: string, cameraData: string): Promise<boolean> {
-        this._workerURL = workerURL;
+    public initialize(cameraData: string): Promise<boolean> {
         this._cameraURL = cameraData;
-        return this._worker.initialize(this._workerURL, this._cameraURL);
+        return this._worker.initialize(this._cameraURL);
     }
 
     public found(msg: NFTOrientation): void {

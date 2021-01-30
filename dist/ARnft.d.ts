@@ -6,14 +6,13 @@ export declare class ARnft {
     private _controllers;
     private _videoRenderer;
     private _cameraDataURL;
-    private _workerURL;
     private _fps;
     private _lastTime;
     appData: AppJson;
     static readonly EVENT_SET_CAMERA: string;
     static readonly EVENT_FOUND_MARKER: string;
     static readonly EVENT_LOST_MARKER: string;
-    constructor(video: CameraViewRenderer, camData: string, worker: string);
+    constructor(video: CameraViewRenderer, camData: string);
     addNFTEntity(entity: INFTEntity, name?: string): INFTEntity;
     getEntityByName(name: string): INFTEntity;
     getCameraView(): CameraViewRenderer;

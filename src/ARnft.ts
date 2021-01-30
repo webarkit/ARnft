@@ -14,8 +14,6 @@ export class ARnft {
 
     private _cameraDataURL: string;
 
-    private _workerURL: string;
-
     private _fps: number = 15;
 
     private _lastTime: number = 0;
@@ -27,10 +25,9 @@ export class ARnft {
     public static readonly EVENT_FOUND_MARKER: string = "ARNFT_FOUND_MARKER_EVENT";
     public static readonly EVENT_LOST_MARKER: string = "ARNFT_LOST_MARKER_EVENT";
 
-    constructor(video: CameraViewRenderer, camData: string, worker: string) {
+    constructor(video: CameraViewRenderer, camData: string) {
         this._videoRenderer = video;
         this._cameraDataURL = camData;
-        this._workerURL = worker;
         // set default fps at 15
         this.setFPS(this._fps);
     }
@@ -66,7 +63,7 @@ export class ARnft {
              console.log(error);
              return Promise.reject(false);
          });
-      const arnft = new ARnft(this._videoRenderer, camData, workerURL);
+      const arnft = new ARnft(this._videoRenderer, camData);
       await arnft.initialize().catch((error) => {
         console.log(error);
         return Promise.reject(false);
@@ -80,7 +77,7 @@ export class ARnft {
 
         let promises: Promise<boolean>[] = [];
         this._controllers.forEach(element => {
-            promises.push(element.initialize(this._workerURL, this._cameraDataURL));
+            promises.push(element.initialize(this._cameraDataURL));
         });
 
         return Promise.all(promises).then(() => {

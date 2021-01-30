@@ -6,10 +6,9 @@ export class NFTEntity {
         this._worker = new NFTWorker(this, this._markerURL, w, h);
         this._nodes.push(node);
     }
-    initialize(workerURL, cameraData) {
-        this._workerURL = workerURL;
+    initialize(cameraData) {
         this._cameraURL = cameraData;
-        return this._worker.initialize(this._workerURL, this._cameraURL);
+        return this._worker.initialize(this._cameraURL);
     }
     found(msg) {
         this._nodes.forEach(element => {
