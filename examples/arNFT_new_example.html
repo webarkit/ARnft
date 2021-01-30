@@ -45,11 +45,12 @@
 
 		let canvas = document.getElementById('canvas');
 		let sceneBabylonjs = new ARnftBabylonjs.SceneRendererBJS(canvas);
+		let entityRoot = new ARnftBabylonjs.NFTNodeBJS();
 
 		let marker = "./data/pinball";
-		arnft.addNFTEntity(marker, "marker");
+		arnft.addNFTEntity(entityRoot, "marker");
 
-		await arnft.init("config.json");
+		await arnft.init("config.json", cameraDataURL, );
 
 		console.log("done loading", workerURL)
 
