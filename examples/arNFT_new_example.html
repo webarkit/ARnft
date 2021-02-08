@@ -48,6 +48,8 @@
 		let canvas = document.getElementById('canvas');
 		let sceneBabylonjs = new ARnftBabylonjs.SceneRendererBJS(canvas);
 		let entityRoot = new ARnftBabylonjs.NFTNodeBJS();
+		let imageMarker = new ARnftBabylonjs.NFTImageBJS();
+		imageMarker.addNFTImage("examples/Data/aframe-k.png", 120, 120, sceneBabylonjs.scene)
 
 		let marker = "./data/pinball";
 		arnft.addNFTEntity(entityRoot, "marker");
