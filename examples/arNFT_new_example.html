@@ -29,11 +29,11 @@
 
 	async function init() {
 		console.log("init app");
-		let workerURL = './resources/jsartoolkit5/artoolkit/artoolkit.wasm_worker.js';
+	
 		let cameraDataURL = '../../data/camera_para.dat';
 		let video = document.getElementById('video');
 
-		const arnft = new ARNFT.ARnft(video, cameraDataURL, workerURL);
+		const arnft = new ARNFT.ARnft(video, cameraDataURL);
 		arnft.setFPS(15);
 		let videoData = {
 			"marker": "./data/pinball",
@@ -48,17 +48,20 @@
 		let canvas = document.getElementById('canvas');
 		let sceneBabylonjs = new ARnftBabylonjs.SceneRendererBJS(canvas);
 		let entityRoot = new ARnftBabylonjs.NFTNodeBJS();
-		let imageMarker = new ARnftBabylonjs.NFTImageBJS();
-		imageMarker.addNFTImage("examples/Data/aframe-k.png", 120, 120, sceneBabylonjs.scene)
-
+		
 		let marker = "./data/pinball";
 		arnft.addNFTEntity(entityRoot, "marker");
 
 		await arnft.init("config.json", cameraDataURL, );
-
-		console.log("done loading", workerURL)
+		
+		console.log("done loading")
 
 		await sceneBabylonjs.initialize();
+	
+		console.log(sceneBabylonjs.scene)
+		let imageMarker = new ARnftBabylonjs.NFTImageBJS();
+		
+		imageMarker.addNFTImage("./Data/aframe-k.png", 120, 120, sceneBabylonjs.scene)
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
 		var tick = () => {
