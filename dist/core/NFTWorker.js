@@ -1,5 +1,5 @@
 import { mat4, quat, vec3 } from "gl-matrix";
-import Worker from 'web-worker:./ARnftWorker.ts';
+import Worker from 'web-worker:./ARnftWorker';
 export class NFTOrientation {
 }
 export class NFTWorker {
