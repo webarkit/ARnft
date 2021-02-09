@@ -1,4 +1,4 @@
-import { INFTEntity } from "./core/NFTEntity";
+import { NFTEntity, INFTEntity, IMediaNode } from "./core/NFTEntity";
 import { CameraViewRenderer } from "./core/renderers/CamerViewRenderer";
 import { AppJson } from "./core/data/AppData";
 import appdata from "./core/data/appdata.json";
@@ -39,6 +39,16 @@ export class ARnft {
 
         this._controllers.set(name, entity);
         return entity;
+    }
+
+    public addNFTEntity2(node: IMediaNode, markerUrl: string, name?: string) {
+
+        if (!name)
+            name = "entity-" + this.count++;
+    
+        let entity = new NFTEntity(node, markerUrl, 120, 120);
+
+        this._controllers.set(name, entity);
     }
 
     public getEntityByName(name: string): INFTEntity {

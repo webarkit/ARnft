@@ -1,2 +1,87 @@
-!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?e(exports):"function"==typeof define&&define.amd?define(["exports"],e):e((t="undefined"!=typeof globalThis?globalThis:t||self).ARNFT={})}(this,(function(t){"use strict";class e{constructor(t){this.canvas_process=document.createElement("canvas"),this.context_process=this.canvas_process.getContext("2d"),this.video=t}getHeight(){return this.vh}getWidth(){return this.vw}getImage(){return this.context_process.drawImage(this.video,0,0,this.vw,this.vh,this.ox,this.oy,this.w,this.h),this.context_process.getImageData(0,0,this.pw,this.ph)}initialize(t){return this._facing=t.facingMode||"environment",new Promise((async(t,e)=>{if(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia){var i={audio:!1,video:{facingMode:this._facing,width:{min:480,max:640}}};navigator.mediaDevices.getUserMedia(i).then((async i=>{this.video.srcObject=i,this.video=await new Promise(((t,e)=>{this.video.onloadedmetadata=()=>t(this.video)})).then((e=>{this.vw=this.video.videoWidth,this.vh=this.video.videoHeight;var i=320/Math.max(this.vw,this.vh/3*4);return this.w=this.vw*i,this.h=this.vh*i,this.pw=Math.max(this.w,this.h/3*4),this.ph=Math.max(this.h,this.w/4*3),this.ox=(this.pw-this.w)/2,this.oy=(this.ph-this.h)/2,this.canvas_process.width=this.pw,this.canvas_process.height=this.ph,this.context_process.fillStyle="black",this.context_process.fillRect(0,0,this.pw,this.ph),t(!0),e})).catch((t=>(console.log(t),e(t),null)))})).catch((t=>{console.error(t),e(t)}))}else e("Sorry, Your device does not support this experince.")}))}}var i={name:"ARnft",assetURL:"resources/",workerURL:"./resources/jsartoolkit5/artoolkit/artoolkit.wasm_worker.js",cameraDataURL:"../../data/camera_para.dat",videoSettings:{width:{min:640,max:800},height:{min:480,max:600},facingMode:"environment"}};class s{constructor(t,e){this.count=0,this._controllers=new Map,this._fps=15,this._lastTime=0,this.appData=i,this._videoRenderer=t,this._cameraDataURL=e,this.setFPS(this._fps)}addNFTEntity(t,e){return e||(e="entity-"+this.count++),this._controllers.set(e,t),t}getEntityByName(t){return this._controllers.has(t)?this._controllers.get(t):null}getCameraView(){return this._videoRenderer}setFPS(t){this._fps=1e3/t}async init(t,i,o){await function(t,e){return fetch(t).then((t=>{if(!t.ok)throw new Error("HTTP error, status = "+t.status);return t.json()})).then((t=>{console.log(t),e=t,console.log(e)})).catch((function(t){return console.error(t),Promise.reject(!1)})),!0}(t,this.appData),this._videoRenderer=new e(document.getElementById("video")),await this._videoRenderer.initialize(this.appData.videoSettings).catch((t=>(console.log(t),Promise.reject(!1))));const r=new s(this._videoRenderer,i);return await r.initialize().catch((t=>(console.log(t),Promise.reject(!1)))),!0}initialize(){console.log("init ARnft");let t=[];return this._controllers.forEach((e=>{t.push(e.initialize(this._cameraDataURL))})),Promise.all(t).then((()=>!0))}update(){let t,e=Date.now();e-this._lastTime>this._fps&&(t=this._videoRenderer.getImage(),this._lastTime=e),this._controllers.forEach((e=>{e.update(),t&&e.process(t)}))}destroy(){this._controllers.forEach((t=>{t.destroy()})),this._controllers.clear(),this._videoRenderer=null}}s.EVENT_SET_CAMERA="ARNFT_SET_CAMERA_EVENT",s.EVENT_FOUND_MARKER="ARNFT_FOUND_MARKER_EVENT",s.EVENT_LOST_MARKER="ARNFT_LOST_MARKER_EVENT",t.ARnft=s,Object.defineProperty(t,"__esModule",{value:!0})}));
+import { NFTEntity } from "./core/NFTEntity";
+import { CameraViewRenderer } from "./core/renderers/CamerViewRenderer";
+import appdata from "./core/data/appdata.json";
+import { getConfig } from "./core/ARUtils";
+export class ARnft {
+    constructor(video, camData) {
+        this.count = 0;
+        this._controllers = new Map();
+        this._fps = 15;
+        this._lastTime = 0;
+        this.appData = appdata;
+        this._videoRenderer = video;
+        this._cameraDataURL = camData;
+        this.setFPS(this._fps);
+    }
+    addNFTEntity(entity, name) {
+        if (!name)
+            name = "entity-" + this.count++;
+        this._controllers.set(name, entity);
+        return entity;
+    }
+    addNFTEntity2(node, markerUrl, name) {
+        if (!name)
+            name = "entity-" + this.count++;
+        let entity = new NFTEntity(node, markerUrl, 120, 120);
+        this._controllers.set(name, entity);
+    }
+    getEntityByName(name) {
+        if (!this._controllers.has(name))
+            return null;
+        return this._controllers.get(name);
+    }
+    getCameraView() {
+        return this._videoRenderer;
+    }
+    setFPS(value) {
+        this._fps = 1000 / value;
+    }
+    async init(configData, camData, workerURL) {
+        await getConfig(configData, this.appData);
+        this._videoRenderer = new CameraViewRenderer(document.getElementById("video"));
+        await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
+            console.log(error);
+            return Promise.reject(false);
+        });
+        const arnft = new ARnft(this._videoRenderer, camData);
+        await arnft.initialize().catch((error) => {
+            console.log(error);
+            return Promise.reject(false);
+        });
+        return true;
+    }
+    initialize() {
+        console.log("init ARnft");
+        let promises = [];
+        this._controllers.forEach(element => {
+            promises.push(element.initialize(this._cameraDataURL));
+        });
+        return Promise.all(promises).then(() => {
+            return true;
+        });
+    }
+    update() {
+        let time = Date.now();
+        let imageData;
+        if ((time - this._lastTime) > this._fps) {
+            imageData = this._videoRenderer.getImage();
+            this._lastTime = time;
+        }
+        this._controllers.forEach(element => {
+            element.update();
+            if (imageData)
+                element.process(imageData);
+        });
+    }
+    destroy() {
+        this._controllers.forEach(entity => {
+            entity.destroy();
+        });
+        this._controllers.clear();
+        this._videoRenderer = null;
+    }
+}
+ARnft.EVENT_SET_CAMERA = "ARNFT_SET_CAMERA_EVENT";
+ARnft.EVENT_FOUND_MARKER = "ARNFT_FOUND_MARKER_EVENT";
+ARnft.EVENT_LOST_MARKER = "ARNFT_LOST_MARKER_EVENT";
 //# sourceMappingURL=ARnft.js.map
