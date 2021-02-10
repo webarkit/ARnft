@@ -48,9 +48,6 @@
 		let canvas = document.getElementById('canvas');
 		let sceneBabylonjs = new ARnftBabylonjs.SceneRendererBJS(canvas);
 		let entityRoot = new ARnftBabylonjs.NFTNodeBJS();
-		
-		let marker = "./data/pinball";
-		arnft.addNFTEntity(entityRoot, "marker");
 
 		await arnft.init("config.json", cameraDataURL, );
 		
@@ -61,9 +58,13 @@
 		console.log(sceneBabylonjs.scene)
 
 		let root = new BABYLON.AbstractMesh('root', sceneBabylonjs.scene);
-		let imageMarker = new ARnftBabylonjs.NFTImageBJS(root);
+		let imageMarker = new ARnftBabylonjs.NFTImageBJS(entityRoot.root);
 		
-		imageMarker.addNFTImage("./Data/aframe-k.png", 120, 120, sceneBabylonjs.scene)
+		imageMarker.addNFTImage("./Data/aframe-k.png", 120, 120, sceneBabylonjs.scene);
+
+		let marker = "./DataNFT/pinball";
+
+		arnft.addNFTEntity2(entityRoot, marker, "pinball");
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
 		var tick = () => {
