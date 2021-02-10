@@ -20,7 +20,7 @@
   <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
   <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
   <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
-  <script type="module" src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+  <script src=https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js></script>
   <script type="module" src="https://raw.githack.com/kalwalt/ARnft-babylonjs/main/dist/ARnftBabylonjs.js"></script>
 	<script type="module" src="../dist/ARnft.js"></script>
 
@@ -59,13 +59,16 @@
 		await sceneBabylonjs.initialize();
 	
 		console.log(sceneBabylonjs.scene)
-		let imageMarker = new ARnftBabylonjs.NFTImageBJS();
+
+		let root = new BABYLON.AbstractMesh('root', sceneBabylonjs.scene);
+		let imageMarker = new ARnftBabylonjs.NFTImageBJS(root);
 		
 		imageMarker.addNFTImage("./Data/aframe-k.png", 120, 120, sceneBabylonjs.scene)
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
 		var tick = () => {
 			arnft.update();
+			sceneBabylonjs.update();
 			setTimeout(tick, 1000 / 60);
 		};
 		tick();
