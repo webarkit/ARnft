@@ -61,7 +61,7 @@
     "ecstatic": "^4.1.4"
   },
   "dependencies": {
-    "@kalwalt/jsartoolkit-nft": "^0.8.2",
+    "@kalwalt/jsartoolkit-nft": "https://github.com/webarkit/jsartoolkitNFT.git/#ead7058a0c57c6aec7025aa413d3080e5fdf1307",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "gl-matrix": "^3.3.0",
