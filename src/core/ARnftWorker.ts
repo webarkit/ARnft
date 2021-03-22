@@ -1,6 +1,5 @@
 /* eslint-env worker */
-//@ts-ignore
-import { ARControllerNFT } from '@kalwalt/jsartoolkit-nft'
+import AR from "@kalwalt/jsartoolkit-nft"
 
 onmessage = (e) => {
   const msg = e.data
@@ -83,7 +82,9 @@ const load = (msg: any) => {
   }
   console.debug('Loading camera at:', cameraParamUrl)
 
-    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
+  const options = {}
+
+    AR.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl, options).then(onLoad).catch(onError)
 }
 
 const process = () => {

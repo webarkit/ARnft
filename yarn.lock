@@ -30,10 +30,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@babel/runtime@^7.12.5":
-  version "7.12.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
-  integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+"@babel/runtime@^7.13.10":
+  version "7.13.10"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
+  integrity sha512-4QPkjJq6Ns3V/RgpEahRk+AGfL0eO6RHHtTWoNNr5mO49G6B5+X6d6THgWEAvTrznU5xYpbAlVKRYcsCgh/Akw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -53,12 +53,13 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@kalwalt/jsartoolkit-nft@https://github.com/webarkit/jsartoolkitNFT.git/#ead7058a0c57c6aec7025aa413d3080e5fdf1307":
-  version "0.8.2"
-  resolved "https://github.com/webarkit/jsartoolkitNFT.git/#ead7058a0c57c6aec7025aa413d3080e5fdf1307"
+"@kalwalt/jsartoolkit-nft@^0.9.0":
+  version "0.9.0"
+  resolved "https://registry.yarnpkg.com/@kalwalt/jsartoolkit-nft/-/jsartoolkit-nft-0.9.0.tgz#b5383a772418dce9fd49a6a30928c69a48c6bc77"
+  integrity sha512-22UAs8vBaYX3GeZC280pWuMx6lIQeYhKT8BcsIUnNfIfUbjfy+9ZobS+/P8RXqPyDmp5SJliyaylMpsCVSaIkw==
   dependencies:
-    "@babel/runtime" "^7.12.5"
-    axios "^0.21.0"
+    "@babel/runtime" "^7.13.10"
+    axios "^0.21.1"
 
 "@rollup/plugin-json@^4.1.0":
   version "4.1.0"
@@ -271,7 +272,7 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-axios@^0.21.0:
+axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==

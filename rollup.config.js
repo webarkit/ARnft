@@ -24,7 +24,8 @@ export default {
 		}),
 		webWorkerLoader(	
 		{
-			external: true
+			external: true,
+			preserveSource: true
 		}
 		),
 		json(),
