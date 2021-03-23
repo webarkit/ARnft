@@ -1,8 +1,9 @@
 import { NFTEntity, INFTEntity, IMediaNode } from "./core/NFTEntity";
-import { CameraViewRenderer } from "./core/renderers/CamerViewRenderer";
+import { CameraViewRenderer } from "./core/renderers/CameraViewRenderer";
 import { AppJson } from "./core/data/AppData";
 import appdata from "./core/data/appdata.json";
-import { getConfig } from "./core/ARUtils";
+import { getConfig, getConfig2 } from "./core/ARUtils";
+import { config } from "process";
 
 export class ARnft {
 
@@ -18,7 +19,7 @@ export class ARnft {
 
     private _lastTime: number = 0;
 
-    public appData: AppJson = appdata as AppJson;
+    public appData: AppJson;
 
     // events
     public static readonly EVENT_SET_CAMERA: string = "ARNFT_SET_CAMERA_EVENT";
@@ -67,20 +68,85 @@ export class ARnft {
     }
 
     public async init(configData: string, camData: string, workerURL: string): Promise<boolean> {
-      await getConfig(configData, this.appData);
-         this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
-         await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
-             console.log(error);
-             return Promise.reject(false);
-         });
-      const arnft = new ARnft(this._videoRenderer, camData);
-      await arnft.initialize().catch((error) => {
-        console.log(error);
-        return Promise.reject(false);
-      });
-      return true;
+        getConfig(configData, this.appData);
+        console.log(this.appData);
+      
+        this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+        if (this.appData !== null) {
+            await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
+            console.log(error);
+            return Promise.reject(false);
+        }); 
+        }
+        const arnft = new ARnft(this._videoRenderer, camData);
+        await arnft.initialize().catch((error) => {
+            console.log(error);
+            return Promise.reject(false);
+        });
+        return true;
 
     }
+
+    public async init2(configData: string, camData: string, workerURL: string): Promise<boolean> {
+        this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+        let data;
+        getConfig2(configData, (res: any) => {
+            data = res
+            console.log(this.appData);
+            
+            
+            /*/if (this.appData !== null) {
+                 () => {
+                    await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
+                        console.log(error);
+                        return Promise.reject(false);
+                    }); 
+                } 
+           // }*/
+        })
+        this.appData=data
+        console.log(this.appData);
+        await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
+            console.log(error);
+            return Promise.reject(false);
+        }); 
+        const arnft = new ARnft(this._videoRenderer, camData);
+        await arnft.initialize().catch((error) => {
+            console.log(error);
+            return Promise.reject(false);
+        });
+        return true;
+
+    }
+
+    public async init3(configData: string, camData: string, workerURL: string): Promise<boolean> {
+        this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+        fetch(configData).then(response => {
+            if (!response.ok) {
+              throw new Error("HTTP error, status = " + response.status);
+            }
+            return response.json();
+          })
+          .then(async (response) => {
+            // printing the response only for testing
+            console.log(response);
+            
+            this.appData = response
+            await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
+                console.log(error);
+                return Promise.reject(false);
+            }); 
+          })
+        const arnft = new ARnft(this._videoRenderer, camData);
+        await arnft.initialize().catch((error) => {
+            console.log(error);
+            return Promise.reject(false);
+        });
+        return true;
+
+    }
+
+
 
     public initialize(): Promise<boolean> {
         console.log("init ARnft");

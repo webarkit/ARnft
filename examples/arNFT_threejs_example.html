@@ -88,7 +88,7 @@
         sceneThreejs.initRenderer();
         sceneThreejs.draw()
 
-		await arnft.init("config.json", cameraDataURL, );
+		await arnft.init3("config.json", cameraDataURL, );
 		
 		console.log("done loading")
 	
@@ -104,7 +104,7 @@
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
 		var tick = () => {
-			arnft.update();
+			//arnft.update();
 			//sceneThreejs.update();
 			setTimeout(tick, 1000 / 60);
 		};

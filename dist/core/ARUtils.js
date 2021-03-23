@@ -25,6 +25,25 @@ export function getConfig(configData, data) {
         console.log(response);
         data = response;
         console.log(data);
+        return (response);
+    })
+        .catch(function (error) {
+        console.error(error);
+        return Promise.reject(false);
+    });
+    return true;
+}
+export function getConfig2(configData, callback) {
+    fetch(configData)
+        .then(response => {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+        .then((response) => {
+        console.log(response);
+        callback(response);
     })
         .catch(function (error) {
         console.error(error);

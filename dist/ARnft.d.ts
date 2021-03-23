@@ -1,5 +1,5 @@
 import { INFTEntity, IMediaNode } from "./core/NFTEntity";
-import { CameraViewRenderer } from "./core/renderers/CamerViewRenderer";
+import { CameraViewRenderer } from "./core/renderers/CameraViewRenderer";
 import { AppJson } from "./core/data/AppData";
 export declare class ARnft {
     private count;
@@ -19,6 +19,8 @@ export declare class ARnft {
     getCameraView(): CameraViewRenderer;
     setFPS(value: number): void;
     init(configData: string, camData: string, workerURL: string): Promise<boolean>;
+    init2(configData: string, camData: string, workerURL: string): Promise<boolean>;
+    init3(configData: string, camData: string, workerURL: string): Promise<boolean>;
     initialize(): Promise<boolean>;
     update(): void;
     destroy(): void;
