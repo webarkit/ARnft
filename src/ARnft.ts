@@ -68,19 +68,25 @@ export class ARnft {
 
     public  getConf(config: string): void {
         getConfig3(config);
+        document.addEventListener('getConfig', (ev: any) => {
+            this.appData = ev.detail.config
+        })
+        console.log(this.appData);
+        
     }
 
-    public async init(configData: string, camData: string, workerURL: string): Promise<boolean> {
-        getConfig(configData, this.appData);
+    public async init(camData: string): Promise<boolean> {
         console.log(this.appData);
-      
-        this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
-        if (this.appData !== null) {
-            await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
-            console.log(error);
-            return Promise.reject(false);
-        }); 
-        }
+        document.addEventListener('getConfig', async(ev: any) => {
+            console.log(this.appData);
+            this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+            if (this.appData !== null) {
+                await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
+                console.log(error);
+                return Promise.reject(false);
+                }); 
+            }
+        })
         const arnft = new ARnft(this._videoRenderer, camData);
         await arnft.initialize().catch((error) => {
             console.log(error);
