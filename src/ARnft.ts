@@ -137,30 +137,27 @@ export class ARnft {
             console.log(response);
             
             this.appData = response    
-            
-            /*let arnftPromise: boolean = await arnft.initialize().catch((error) => {
-                console.log(error);
-                return Promise.reject(false);
-            });*/
 
-            await this._videoRenderer.initialize(this.appData.videoSettings).then(async() => {
-                await arnft.initialize().catch((error) => {
+            await arnft.initialize().
+            then(async() => {
+                console.log(this.appData);
+                
+                await this._videoRenderer.initialize(this.appData.videoSettings)
+                .catch((error: any) => {
                     console.log(error);
                     return Promise.reject(false);
-                });
-            })
-            .catch((error: any) => {
+                }); 
+            }).catch((error) => {
                 console.log(error);
                 return Promise.reject(false);
-            }); 
+            });
+
+            
             console.log(this._videoRenderer);
 
            
 
           })
-          //let g = getConfig2(configData, ()=>{})
-          //console.log(g);
-          
 
         return true;
 
