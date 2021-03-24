@@ -3,7 +3,6 @@ import { CameraViewRenderer } from "./core/renderers/CameraViewRenderer";
 import { AppJson } from "./core/data/AppData";
 import appdata from "./core/data/appdata.json";
 import { getConfig, getConfig2, getConfig3 } from "./core/ARUtils";
-import { config } from "process";
 
 export class ARnft {
 
@@ -67,8 +66,8 @@ export class ARnft {
         this._fps = 1000 / value;
     }
 
-    public  getConf(config: string): Promise<any> {
-        return JSON.parse( getConfig3(config));
+    public  getConf(config: string): void {
+        getConfig3(config);
     }
 
     public async init(configData: string, camData: string, workerURL: string): Promise<boolean> {
@@ -138,16 +137,16 @@ export class ARnft {
             
             this.appData = response    
 
-            await arnft.initialize().
+            
+            await this._videoRenderer.initialize(this.appData.videoSettings).
             then(async() => {
                 console.log(this.appData);
-                
-                await this._videoRenderer.initialize(this.appData.videoSettings)
+                await arnft.initialize()
                 .catch((error: any) => {
                     console.log(error);
                     return Promise.reject(false);
                 }); 
-            }).catch((error) => {
+            }).catch((error: any) => {
                 console.log(error);
                 return Promise.reject(false);
             });

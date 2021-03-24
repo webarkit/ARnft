@@ -18,7 +18,7 @@ export declare class ARnft {
     getEntityByName(name: string): INFTEntity;
     getCameraView(): CameraViewRenderer;
     setFPS(value: number): void;
-    getConf(config: string): Promise<any>;
+    getConf(config: string): void;
     init(configData: string, camData: string, workerURL: string): Promise<boolean>;
     init2(configData: string, camData: string, workerURL: string): Promise<boolean>;
     init3(configData: string, camData: string, workerURL: string): Promise<boolean>;

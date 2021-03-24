@@ -1,5 +1,3 @@
-import { readFileSync } from "fs";
-import path from 'path';
 export function degreesToRadians(degrees) {
     return degrees * (Math.PI / 180);
 }
@@ -38,6 +36,7 @@ export function getConfig(configData, data) {
 export function getConfig2(configData, callback) {
     fetch(configData)
         .then(response => {
+        console.log(response);
         if (!response.ok) {
             throw new Error("HTTP error, status = " + response.status);
         }
@@ -54,9 +53,23 @@ export function getConfig2(configData, callback) {
     return true;
 }
 export function getConfig3(configData) {
-    let reqPath = path.join(__dirname, configData);
-    const data = readFileSync(reqPath, { encoding: 'utf8' });
-    console.log(data);
-    return data;
+    fetch(configData)
+        .then(response => {
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    })
+        .then((response) => {
+        console.log(response);
+        const eventData = new CustomEvent('getConfig', { detail: { config: response } });
+        document.dispatchEvent(eventData);
+        return (response);
+    })
+        .catch(function (error) {
+        console.error(error);
+        return Promise.reject(false);
+    });
+    return true;
 }
 //# sourceMappingURL=ARUtils.js.map

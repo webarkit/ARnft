@@ -87,8 +87,15 @@
         console.log(entityRoot);
         sceneThreejs.initRenderer();
         sceneThreejs.draw()
+        
 
-		await arnft.init3("config.json", cameraDataURL );
+        let data;
+        arnft.getConf("./config.json", data)
+        document.addEventListener('getConfig', (ev) => {
+            console.log(ev.detail);
+        })
+
+		await arnft.init2("config.json", cameraDataURL );
 		
 		console.log("done loading")
 	
@@ -99,8 +106,7 @@
 		imageMarker.addNFTImage("./Data/aframe-k.png", 120, 120);
 	
 		let marker = "./DataNFT/pinball";
-        //let g = await arnft.getConf("./config.json")
-        //console.log(g);
+       
 
 		arnft.addNFTEntity2(entityRoot, marker, "pinball");
 
