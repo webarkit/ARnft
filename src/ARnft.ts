@@ -136,18 +136,23 @@ export class ARnft {
             // printing the response only for testing
             console.log(response);
             
-            this.appData = response
-            await this._videoRenderer.initialize(this.appData.videoSettings).catch((error: any) => {
+            this.appData = response    
+            
+            let arnftPromise: boolean = await arnft.initialize().catch((error) => {
+                console.log(error);
+                return Promise.reject(false);
+            });
+
+            let videoPromise: boolean = await this._videoRenderer.initialize(this.appData.videoSettings).catch((error: any) => {
                 console.log(error);
                 return Promise.reject(false);
             }); 
             console.log(this._videoRenderer);
-            
-            //const arnft = new ARnft(this._videoRenderer, camData);
-            await arnft.initialize().catch((error) => {
-                console.log(error);
-                return Promise.reject(false);
+
+            return Promise.all([arnftPromise, videoPromise]).then(() => {
+                return true;
             });
+
           })
           let g = getConfig2(configData, ()=>{})
           console.log(g);
