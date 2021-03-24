@@ -99,12 +99,14 @@
 		imageMarker.addNFTImage("./Data/aframe-k.png", 120, 120);
 	
 		let marker = "./DataNFT/pinball";
+        let g = await arnft.getConf("./config.json")
+        console.log(g);
 
 		arnft.addNFTEntity2(entityRoot, marker, "pinball");
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
 		var tick = () => {
-			//arnft.update();
+			arnft.update();
 			//sceneThreejs.update();
 			setTimeout(tick, 1000 / 60);
 		};

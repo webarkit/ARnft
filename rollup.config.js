@@ -14,7 +14,10 @@ export default {
 			format: 'umd',
 			name: 'ARNFT',
 			file: 'dist/ARnft.js',
-			sourcemap: true
+			sourcemap: true,
+			globals: {
+				"web-worker:./ARnftWorker": "Worker"
+			}
 		}
 	],
 	plugins: [

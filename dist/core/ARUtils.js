@@ -1,3 +1,5 @@
+import { readFileSync } from "fs";
+import path from 'path';
 export function degreesToRadians(degrees) {
     return degrees * (Math.PI / 180);
 }
@@ -50,5 +52,11 @@ export function getConfig2(configData, callback) {
         return Promise.reject(false);
     });
     return true;
+}
+export function getConfig3(configData) {
+    let reqPath = path.join(__dirname, configData);
+    const data = readFileSync(reqPath, { encoding: 'utf8' });
+    console.log(data);
+    return data;
 }
 //# sourceMappingURL=ARUtils.js.map

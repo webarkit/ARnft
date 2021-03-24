@@ -2,7 +2,7 @@ import { NFTEntity, INFTEntity, IMediaNode } from "./core/NFTEntity";
 import { CameraViewRenderer } from "./core/renderers/CameraViewRenderer";
 import { AppJson } from "./core/data/AppData";
 import appdata from "./core/data/appdata.json";
-import { getConfig, getConfig2 } from "./core/ARUtils";
+import { getConfig, getConfig2, getConfig3 } from "./core/ARUtils";
 import { config } from "process";
 
 export class ARnft {
@@ -67,6 +67,10 @@ export class ARnft {
         this._fps = 1000 / value;
     }
 
+    public  getConf(config: string): Promise<any> {
+        return JSON.parse( getConfig3(config));
+    }
+
     public async init(configData: string, camData: string, workerURL: string): Promise<boolean> {
         getConfig(configData, this.appData);
         console.log(this.appData);
@@ -121,6 +125,7 @@ export class ARnft {
 
     public async init3(configData: string, camData: string, workerURL: string): Promise<boolean> {
         this._videoRenderer = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+        const arnft = new ARnft(this._videoRenderer, camData);
         fetch(configData).then(response => {
             if (!response.ok) {
               throw new Error("HTTP error, status = " + response.status);
@@ -132,16 +137,22 @@ export class ARnft {
             console.log(response);
             
             this.appData = response
-            await this._videoRenderer.initialize(this.appData.videoSettings).catch((error) => {
+            await this._videoRenderer.initialize(this.appData.videoSettings).catch((error: any) => {
                 console.log(error);
                 return Promise.reject(false);
             }); 
+            console.log(this._videoRenderer);
+            
+            //const arnft = new ARnft(this._videoRenderer, camData);
+            await arnft.initialize().catch((error) => {
+                console.log(error);
+                return Promise.reject(false);
+            });
           })
-        const arnft = new ARnft(this._videoRenderer, camData);
-        await arnft.initialize().catch((error) => {
-            console.log(error);
-            return Promise.reject(false);
-        });
+          let g = getConfig2(configData, ()=>{})
+          console.log(g);
+          
+
         return true;
 
     }

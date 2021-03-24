@@ -79,9 +79,6 @@
       ]
     }
   },
-  "types": [
-    "babylonjs"
-  ],
   "lib": [
     "WebWorker",
     "esNext",

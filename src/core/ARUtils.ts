@@ -1,3 +1,7 @@
+import { PathLike, readFileSync } from "fs";
+import path from 'path'
+import { readFile } from "fs/promises"
+
 export function degreesToRadians(degrees: number): number {
     return degrees * (Math.PI / 180);
 }
@@ -51,7 +55,7 @@ export function getConfig2(configData: string, callback: (res: any) => void): bo
      .then((response) => {
        // printing the response only for testing
        console.log(response);
-       callback(response)
+       callback(response);
      })
      .catch(function(error) {
          console.error(error);
@@ -60,3 +64,14 @@ export function getConfig2(configData: string, callback: (res: any) => void): bo
    return true;
  }
  
+ export  function getConfig3(configData: string): any {
+  //try {
+    let reqPath = path.join(__dirname, configData);
+
+    const data: string =  readFileSync(reqPath, { encoding: 'utf8' })
+    console.log(data)
+    return data
+  //} catch (error) {
+    //console.error(error.message)
+  //}
+ }
