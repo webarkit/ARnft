@@ -86,12 +86,13 @@ export class ARnft {
                 return Promise.reject(false);
                 }); 
             }
-        })
-        const arnft = new ARnft(this._videoRenderer, camData);
-        await arnft.initialize().catch((error) => {
+            const arnft = new ARnft(this._videoRenderer, camData);
+            await arnft.initialize().catch((error) => {
             console.log(error);
             return Promise.reject(false);
         });
+        })
+        
         return true;
 
     }
