@@ -53,10 +53,9 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@kalwalt/jsartoolkit-nft@^0.9.0":
+"@kalwalt/jsartoolkit-nft@https://github.com/webarkit/jsartoolkitNFT.git#3897311b2f0d5d36f887f8407a7c8de9995c4daa":
   version "0.9.0"
-  resolved "https://registry.yarnpkg.com/@kalwalt/jsartoolkit-nft/-/jsartoolkit-nft-0.9.0.tgz#b5383a772418dce9fd49a6a30928c69a48c6bc77"
-  integrity sha512-22UAs8vBaYX3GeZC280pWuMx6lIQeYhKT8BcsIUnNfIfUbjfy+9ZobS+/P8RXqPyDmp5SJliyaylMpsCVSaIkw==
+  resolved "https://github.com/webarkit/jsartoolkitNFT.git#3897311b2f0d5d36f887f8407a7c8de9995c4daa"
   dependencies:
     "@babel/runtime" "^7.13.10"
     axios "^0.21.1"

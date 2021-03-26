@@ -77,8 +77,7 @@ const load = (msg) => {
         }
     }
     console.debug('Loading camera at:', cameraParamUrl);
-    const options = {};
-    AR.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl, options).then(onLoad).catch(onError);
+    AR.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 const process = () => {
     markerResult = null;
