@@ -87,15 +87,11 @@
         console.log(entityRoot);
         sceneThreejs.initRenderer();
         sceneThreejs.draw()
-        
 
         let data;
         arnft.getConf("./config.json", data)
-        document.addEventListener('getConfig', (ev) => {
-            console.log(ev.detail);
-        })
 
-		await arnft.init( cameraDataURL );
+		await arnft.initialize();
 		
 		console.log("done loading")
 	

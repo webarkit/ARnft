@@ -1,5 +1,5 @@
 import { INFTEntity, IMediaNode } from "./core/NFTEntity";
-import { CameraViewRenderer } from "./core/renderers/CameraViewRenderer";
+import { ICameraViewRenderer } from "./core/renderers/CameraViewRenderer";
 import { AppJson } from "./core/data/AppData";
 export declare class ARnft {
     private count;
@@ -12,16 +12,13 @@ export declare class ARnft {
     static readonly EVENT_SET_CAMERA: string;
     static readonly EVENT_FOUND_MARKER: string;
     static readonly EVENT_LOST_MARKER: string;
-    constructor(video: CameraViewRenderer, camData: string);
+    constructor(video: ICameraViewRenderer, camData: string);
     addNFTEntity(entity: INFTEntity, name?: string): INFTEntity;
     addNFTEntity2(node: IMediaNode, markerUrl: string, name?: string): void;
     getEntityByName(name: string): INFTEntity;
-    getCameraView(): CameraViewRenderer;
+    getCameraView(): ICameraViewRenderer;
     setFPS(value: number): void;
     getConf(config: string): void;
-    init(camData: string): Promise<boolean>;
-    init2(configData: string, camData: string, workerURL: string): Promise<boolean>;
-    init3(configData: string, camData: string, workerURL: string): Promise<boolean>;
     initialize(): Promise<boolean>;
     update(): void;
     destroy(): void;
