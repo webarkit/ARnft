@@ -17,51 +17,8 @@ export function isIOS(): boolean {
     }
     return false;
 }
-
-export function getConfig(configData: string, data: object): boolean {
- fetch(configData)
-  .then(response => {
-      if (!response.ok) {
-        throw new Error("HTTP error, status = " + response.status);
-      }
-      return response.json();
-    })
-    .then((response) => {
-      // printing the response only for testing
-      console.log(response);
-      data = response;
-      console.log(data);
-      return(response)
-    })
-    .catch(function(error) {
-        console.error(error);
-        return Promise.reject(false);
-      });
-  return true;
-}
-
-export function getConfig2(configData: string, callback: (res: any) => void): boolean {
-  fetch(configData)
-   .then(response => {
-    console.log(response);
-       if (!response.ok) {
-         throw new Error("HTTP error, status = " + response.status);
-       }
-       return response.json();
-     })
-     .then((response) => {
-       // printing the response only for testing
-       console.log(response);
-       callback(response);
-     })
-     .catch(function(error) {
-         console.error(error);
-         return Promise.reject(false);
-       });
-   return true;
- }
  
- export function getConfig3(configData: string): boolean {
+ export function getConfig(configData: string): boolean {
   fetch(configData)
    .then(response => {
        if (!response.ok) {

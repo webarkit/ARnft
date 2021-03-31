@@ -29,8 +29,8 @@
 		let cameraDataURL = '../../data/camera_para.dat';
 		let video = document.getElementById('video');
 
-		const arnft = new ARNFT.ARnft(video, cameraDataURL);
-		arnft.setFPS(15);
+		const arnft = new ARNFT.ARnft('config.json', cameraDataURL);
+		//arnft.setFPS(15);
 		let videoData = {
 			"marker": "./data/pinball",
 			"video": "./data/test.mp4"
@@ -89,7 +89,7 @@
         sceneThreejs.draw()
 
         let data;
-        arnft.getConf("./config.json", data)
+        //arnft.getConf("config.json", data)
 
 		await arnft.initialize();
 		
@@ -104,11 +104,11 @@
 		let marker = "./DataNFT/pinball";
        
 
-		arnft.addNFTEntity2(entityRoot, marker, "pinball");
+		//arnft.addNFTEntity2(entityRoot, marker, "pinball");
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?
 		var tick = () => {
-			arnft.update();
+			//arnft.update();
 			//sceneThreejs.update();
 			setTimeout(tick, 1000 / 60);
 		};
