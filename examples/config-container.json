@@ -2,7 +2,9 @@
   "addPath": "",
   "cameraPara": "examples/Data/camera_para.dat",
   "container": {
-    "create": true
+    "create": false,
+    "containerName": "app",
+    "canvasName": "canvas"
   },
   "videoSettings": {
     "width": {

@@ -32,7 +32,7 @@ export default class ARnft {
     data.then((configData) => {
       Container.createLoading(configData)
       Container.createStats(stats)
-      const containerObj = Container.createContainer()
+      const containerObj = Container.createContainer(configData)
       const container = containerObj.container
       const canvas = containerObj.canvas
 
