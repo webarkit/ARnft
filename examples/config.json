@@ -16,6 +16,7 @@
     "facingMode": "environment"
   },
   "loading": {
+    "create": true,
     "logo": {
       "src": "Data/arNFT-logo.gif",
       "alt": "arNFT.js logo"
