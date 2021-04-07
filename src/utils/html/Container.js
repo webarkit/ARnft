@@ -18,7 +18,6 @@ export default class Container {
     } else {
       const container = document.getElementById(configData.container.containerName)
       const canvas = document.getElementById(configData.container.canvasName)
-      console.log(canvas);
       return { container: container, canvas: canvas }
     }
   }
@@ -50,16 +49,18 @@ export default class Container {
   }
 
   static createLoading (configData) {
-    const loader = document.createElement('div')
-    loader.id = 'loading'
-    const logo = document.createElement('img')
-    logo.src = configData.loading.logo.src
-    logo.alt = configData.loading.logo.alt
-    const loadingMessage = document.createElement('span')
-    loadingMessage.setAttribute('class', 'loading-text')
-    loadingMessage.innerText = configData.loading.loadingMessage
-    loader.appendChild(logo)
-    loader.appendChild(loadingMessage)
-    document.body.insertBefore(loader, document.body.firstChild)
+    if (configData.container.create) {
+      const loader = document.createElement('div')
+      loader.id = 'loading'
+      const logo = document.createElement('img')
+      logo.src = configData.loading.logo.src
+      logo.alt = configData.loading.logo.alt
+      const loadingMessage = document.createElement('span')
+      loadingMessage.setAttribute('class', 'loading-text')
+      loadingMessage.innerText = configData.loading.loadingMessage
+      loader.appendChild(logo)
+      loader.appendChild(loadingMessage)
+      document.body.insertBefore(loader, document.body.firstChild)
+    }
   }
 }
