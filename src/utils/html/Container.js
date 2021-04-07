@@ -1,20 +1,26 @@
 export default class Container {
-  static createContainer () {
-    const container = document.createElement('div')
-    container.id = 'app'
-    const canvas = document.createElement('canvas')
-    canvas.id = 'canvas'
-    const video = document.createElement('video')
-    video.id = 'video'
-    video.setAttribute('autoplay', '')
-    video.setAttribute('muted', '')
-    video.setAttribute('playsinline', '')
-    container.appendChild(video)
-    container.appendChild(canvas)
-    const loading = document.getElementById('loading')
-    document.body.insertBefore(container, loading)
-    const obj = { container: container, canvas: canvas, video: video }
-    return obj
+  static createContainer (configData) {
+    if (configData.container.create) {
+      const container = document.createElement('div')
+      container.id = 'app'
+      const canvas = document.createElement('canvas')
+      canvas.id = 'canvas'
+      const video = document.createElement('video')
+      video.id = 'video'
+      video.setAttribute('autoplay', '')
+      video.setAttribute('muted', '')
+      video.setAttribute('playsinline', '')
+      container.appendChild(video)
+      container.appendChild(canvas)
+      const loading = document.getElementById('loading')
+      document.body.insertBefore(container, loading)
+      return { container: container, canvas: canvas, video: video }
+    } else {
+      const container = document.getElementById(configData.container.containerName)
+      const canvas = document.getElementById(configData.container.canvasName)
+      console.log(canvas);
+      return { container: container, canvas: canvas }
+    }
   }
 
   static createStats (create) {
