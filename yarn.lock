@@ -23,10 +23,10 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@babel/runtime@^7.12.5":
-  version "7.12.5"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
-  integrity sha512-plcc+hbExy3McchJCEQG3knOsuh3HH+Prx1P6cLIkET/0dLuQDEnrT+s27Axgc9bqfsmNUNHfscgMUdBpC9xfg==
+"@babel/runtime@^7.13.10":
+  version "7.13.10"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.13.10.tgz#47d42a57b6095f4468da440388fdbad8bebf0d7d"
+  integrity sha512-4QPkjJq6Ns3V/RgpEahRk+AGfL0eO6RHHtTWoNNr5mO49G6B5+X6d6THgWEAvTrznU5xYpbAlVKRYcsCgh/Akw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -51,13 +51,13 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
-"@kalwalt/jsartoolkit-nft@^0.8.2":
-  version "0.8.2"
-  resolved "https://registry.yarnpkg.com/@kalwalt/jsartoolkit-nft/-/jsartoolkit-nft-0.8.2.tgz#51e1add82d6a4c87f1ced36a6096e34a94bd5361"
-  integrity sha512-Au8PTTlzVpMi7hKqaOE0thq01SRDZP7CuWXj+U+iGWwO3mGp8LDYHjD8SOwXB+b+/tV32UFPYZLs4pUExqO97w==
+"@kalwalt/jsartoolkit-nft@^0.9.1":
+  version "0.9.1"
+  resolved "https://registry.yarnpkg.com/@kalwalt/jsartoolkit-nft/-/jsartoolkit-nft-0.9.1.tgz#d59747a11decb0bfe083f5147fd75e018c5569c4"
+  integrity sha512-ZW0ZmkkE2tOXIZhdNvOCMFHmoyeUotS4KFUcxiQxt9FtMUBS5nkGb+uTvqqXW5J8+CstdUkOHQgrVaIW0B0JVw==
   dependencies:
-    "@babel/runtime" "^7.12.5"
-    axios "^0.21.0"
+    "@babel/runtime" "^7.13.10"
+    axios "^0.21.1"
 
 "@types/eslint-scope@^3.7.0":
   version "3.7.0"
@@ -415,7 +415,7 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-axios@^0.21.0, axios@^0.21.1:
+axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
@@ -3060,10 +3060,10 @@ text-table@^0.2.0:
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
 
-three@^0.126.1:
-  version "0.126.1"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.126.1.tgz#cf4e4e52060fd952f6f0d5440cbd422c66bc4be7"
-  integrity sha512-eOEXnZeE1FDV0XgL1u08auIP13jxdN9LQBAEmlErYzMxtIIfuGIAZbijOyookALUhqVzVOx0Tywj6n192VM+nQ==
+three@^0.127.0:
+  version "0.127.0"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.127.0.tgz#c463f4d41b2c735dcf8e9e51a388815e80cd3791"
+  integrity sha512-wtgrn+mhYUbobxT7QN3GPdu3SRpSBQvwY6uOzLChWS7QE//f7paDU/+wlzbg+ngeIvBBqjBHSRuywTh8A99Jng==
 
 to-object-path@^0.3.0:
   version "0.3.0"
