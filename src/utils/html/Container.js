@@ -49,7 +49,7 @@ export default class Container {
   }
 
   static createLoading (configData) {
-    if (configData.container.create) {
+    if (configData.loading.create) {
       const loader = document.createElement('div')
       loader.id = 'loading'
       const logo = document.createElement('img')
