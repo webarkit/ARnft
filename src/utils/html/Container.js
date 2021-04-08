@@ -22,8 +22,8 @@ export default class Container {
     }
   }
 
-  static createStats (create) {
-    if (create) {
+  static createStats (create, configData) {
+    if (create && configData.stats.createHtml) {
       const stats = document.createElement('div')
       stats.id = 'stats'
       stats.className = 'ui stats'
