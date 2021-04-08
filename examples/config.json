@@ -2,7 +2,9 @@
   "addPath": "",
   "cameraPara": "examples/Data/camera_para.dat",
   "container": {
-    "create": true
+    "create": true,
+    "containerName": "",
+    "canvasName": ""
   },
   "videoSettings": {
     "width": {
@@ -28,5 +30,8 @@
     "alpha": true,
     "antialias": true,
     "precision": "mediump"
+  },
+  "stats": {
+    "createHtml": true
   }
 }
