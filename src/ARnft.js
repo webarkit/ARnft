@@ -14,7 +14,7 @@ export default class ARnft {
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.8.5'
+    this.version = '0.8.6'
     console.log('ARnft ', this.version)
   }
 

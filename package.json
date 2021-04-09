@@ -1,6 +1,6 @@
 {
   "name": "@kalwalt/ar-nft",
-  "version": "0.8.5",
+  "version": "0.8.6",
   "main": "dist/ARnft.js",
   "description": "WebAR Javscript library for markerless AR",
   "keywords": [
