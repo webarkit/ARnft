@@ -2,9 +2,9 @@
   "addPath": "",
   "cameraPara": "examples/Data/camera_para.dat",
   "container": {
-    "create": true,
-    "containerName": "",
-    "canvasName": ""
+    "create": false,
+    "containerName": "app",
+    "canvasName": "canvas"
   },
   "videoSettings": {
     "width": {
@@ -18,7 +18,7 @@
     "facingMode": "environment"
   },
   "loading": {
-    "create": true,
+    "create": false,
     "logo": {
       "src": "Data/arNFT-logo.gif",
       "alt": "arNFT.js logo"
@@ -32,6 +32,6 @@
     "precision": "mediump"
   },
   "stats": {
-    "createHtml": true
+    "createHtml": false
   }
 }

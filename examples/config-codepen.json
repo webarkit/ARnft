@@ -1,5 +1,10 @@
 {
   "cameraPara": "https://arjs-cors-proxy.herokuapp.com/https://raw.githack.com/kalwalt/jsartoolkitNFT/master/examples/Data/camera_para.dat",
+  "container": {
+    "create": true,
+    "containerName": "",
+    "canvasName": ""
+  },
   "videoSettings": {
     "width": {
       "min": 640,
@@ -23,5 +28,8 @@
     "alpha": true,
     "antialias": true,
     "precision": "mediump"
+  },
+  "stats": {
+    "createHtml": true
   }
 }

@@ -14,7 +14,7 @@ export default class ARnft {
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.8.5'
+    this.version = '0.8.6'
     console.log('ARnft ', this.version)
   }
 
@@ -31,8 +31,8 @@ export default class ARnft {
 
     data.then((configData) => {
       Container.createLoading(configData)
-      Container.createStats(stats)
-      const containerObj = Container.createContainer()
+      Container.createStats(stats, configData)
+      const containerObj = Container.createContainer(configData)
       const container = containerObj.container
       const canvas = containerObj.canvas
 
