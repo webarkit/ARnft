@@ -5,6 +5,7 @@ import json from '@rollup/plugin-json';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import { terser } from "rollup-plugin-terser";
 import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+import replace from '@rollup/plugin-replace';
 
 export default {
 	input: 'src/ARnft.ts', // our source file
@@ -21,6 +22,9 @@ export default {
 		}
 	],
 	plugins: [
+		replace({
+            "process.env.NODE_ENV": JSON.stringify("development")
+        }),
 		typescript({
 			tsconfig: "tsconfig.json",
 			typescript: require('typescript'),
@@ -28,7 +32,10 @@ export default {
 		webWorkerLoader(	
 		{
 			external: true,
-			preserveSource: true
+			//preserveSource: true,
+			preserveFileNames: true,
+			forceInline: true,
+			inline: true
 		}
 		),
 		json(),

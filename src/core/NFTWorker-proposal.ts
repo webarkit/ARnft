@@ -1,6 +1,8 @@
-//import { ARnft } from "../ARnft";
+import { mat4, quat, vec3 } from "gl-matrix";
 import { NFTEntity } from "./NFTEntity";
+
 import Worker from 'web-worker:./ARnftWorker.ts';
+
 
 export class NFTOrientation {
     // euler vector3
@@ -31,35 +33,55 @@ export class NFTWorker {
         this.vh = h;
     }
 
+    private position: vec3 = vec3.create();
+    private rotation: quat = quat.create();
+
     public initialize(cameraURL: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker();
-            //this.worker.onmessage = (ev) => {
+            this.worker.onmessage = (ev: any) => {
                 this.load(cameraURL).then(() => {
                     // Overwrite load onmessage with search onmessage
-                    /*this.worker.onmessage = (ev) => {
+                    this.worker.onmessage = (ev: any) => {
+                        let pckg: NFTOrientation;
+                        if (ev.data.type == "found") {
+                            let m = this.getArrayMatrix(JSON.parse(ev.data.matrixGL_RH));
+                            let matrix: mat4 = mat4.fromValues(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
+                            mat4.getTranslation(this.position, matrix);
+                            mat4.getRotation(this.rotation, matrix);
 
-                        // console.log("response found = " + (ev.data.type == "found"));
-                        let msg: any = (ev.data.type == "found") ? ev.data : null;
-                        this._dispatcher.found(msg);
+                            pckg = new NFTOrientation();
+                            pckg.matrix = matrix.values();
+                            pckg.position = this.position.values();
+                            pckg.rotation = this.rotation.values();
+                        }
+                        this._dispatcher.found(pckg);
                         this._processing = false;
-                    };*/
+                    };
                     //
                     resolve(true);
                 });
-            //};
+            };
 
         });
+    }
+
+    private getArrayMatrix(value: any): any {
+        var array: any = [];
+        for (var key in value) {
+            array[key] = value[key]; //.toFixed(4);
+        }
+        return array;
     }
 
     public process(imageData: ImageData) {
 
         if (this._processing) {
+            // console.log("because i am sooooooooooooo slow")
             return;
         }
         this._processing = true;
 
-        //this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
         this.worker.postMessage({ type: 'process', imagedata: imageData });
     }
 
@@ -82,7 +104,7 @@ export class NFTWorker {
                 marker: this.markerURL
             });
 
-            this.worker.onmessage = (ev) => {
+            this.worker.onmessage = (ev: any) => {
                 var msg = ev.data;
                 switch (msg.type) {
                     case 'loaded': {
@@ -100,9 +122,5 @@ export class NFTWorker {
             };
         });
     };
-
-    public destroy(): void {
-
-    }
 
 }

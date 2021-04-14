@@ -12,8 +12,10 @@ export declare class NFTWorker {
     private vw;
     private vh;
     constructor(d: NFTEntity, markerURL: string, w: number, h: number);
+    private position;
+    private rotation;
     initialize(cameraURL: string): Promise<boolean>;
+    private getArrayMatrix;
     process(imageData: ImageData): void;
     protected load(cameraURL: string): Promise<boolean>;
-    destroy(): void;
 }

@@ -47,6 +47,7 @@ export class ARnftCore {
         let imageData;
         if ((time - this._lastTime) > this._fps) {
             imageData = this._videoRenderer.getImage();
+            console.log(imageData);
             this._lastTime = time;
         }
         this._controllers.forEach(element => {

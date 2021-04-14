@@ -1,9 +1,12 @@
+import { mat4, quat, vec3 } from "gl-matrix";
 import Worker from 'web-worker:./ARnftWorker.ts';
 export class NFTOrientation {
 }
 export class NFTWorker {
     constructor(d, markerURL, w, h) {
         this._processing = false;
+        this.position = vec3.create();
+        this.rotation = quat.create();
         this._dispatcher = d;
         this.markerURL = markerURL;
         this.vw = w;
@@ -12,10 +15,34 @@ export class NFTWorker {
     initialize(cameraURL) {
         return new Promise((resolve, reject) => {
             this.worker = new Worker();
-            this.load(cameraURL).then(() => {
-                resolve(true);
-            });
+            this.worker.onmessage = (ev) => {
+                this.load(cameraURL).then(() => {
+                    this.worker.onmessage = (ev) => {
+                        let pckg;
+                        if (ev.data.type == "found") {
+                            let m = this.getArrayMatrix(JSON.parse(ev.data.matrixGL_RH));
+                            let matrix = mat4.fromValues(m[0], m[1], m[2], m[3], m[4], m[5], m[6], m[7], m[8], m[9], m[10], m[11], m[12], m[13], m[14], m[15]);
+                            mat4.getTranslation(this.position, matrix);
+                            mat4.getRotation(this.rotation, matrix);
+                            pckg = new NFTOrientation();
+                            pckg.matrix = matrix.values();
+                            pckg.position = this.position.values();
+                            pckg.rotation = this.rotation.values();
+                        }
+                        this._dispatcher.found(pckg);
+                        this._processing = false;
+                    };
+                    resolve(true);
+                });
+            };
         });
+    }
+    getArrayMatrix(value) {
+        var array = [];
+        for (var key in value) {
+            array[key] = value[key];
+        }
+        return array;
     }
     process(imageData) {
         if (this._processing) {
@@ -56,7 +83,5 @@ export class NFTWorker {
         });
     }
     ;
-    destroy() {
-    }
 }
-//# sourceMappingURL=NFTWorker.js.map
+//# sourceMappingURL=NFTWorker-proposal.js.map
