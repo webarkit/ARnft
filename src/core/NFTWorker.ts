@@ -1,7 +1,5 @@
-//import { ARnft } from "../ARnft";
 import { NFTEntity } from "./NFTEntity";
-//import Worker from 'web-worker:./ARnftWorker.ts';
-import Worker from "worker-loader!./ARnft.worker";
+import Worker from "worker-loader!./Worker";
 
 export class NFTOrientation {
     // euler vector3

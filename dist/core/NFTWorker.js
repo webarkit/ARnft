@@ -1,4 +1,4 @@
-import Worker from "worker-loader!./ARnft.worker";
+import Worker from "worker-loader!./Worker";
 export class NFTOrientation {
 }
 export class NFTWorker {

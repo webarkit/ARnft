@@ -12,7 +12,7 @@ module.exports = {
     libraryExport: 'default',
     // @see: https://github.com/webpack/webpack/issues/6522
     globalObject: 'this',
-    publicPath: '/'
+    //publicPath: '/'
   },
   externals: {
     three: {
