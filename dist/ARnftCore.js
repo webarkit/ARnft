@@ -1,5 +1,5 @@
 import { NFTEntity } from "./core/NFTEntity";
-export default class ARnftCore {
+export class ARnftCore {
     constructor(video, camData) {
         this.count = 0;
         this._controllers = new Map();

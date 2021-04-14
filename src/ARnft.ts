@@ -1,4 +1,4 @@
-import ARnftCore from './ARnftCore'
+import { ARnftCore } from './core/ARnftCore'
 import { NFTEntity, INFTEntity, IMediaNode } from "./core/NFTEntity";
 import { ARControllerComponent } from "./core/components/ARControllerComponent"
 import { AppJson } from "./core/data/AppData";
