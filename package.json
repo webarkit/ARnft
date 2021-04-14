@@ -2,6 +2,7 @@
   "name": "@kalwalt/ar-nft",
   "version": "0.8.6",
   "main": "dist/ARnft.js",
+  "types": "dist/types/ARnft.d.ts",
   "description": "WebAR Javscript library for markerless AR",
   "keywords": [
     "ARToolKit",
@@ -33,6 +34,11 @@
     "url": "https://github.com/webarkit/ARnft/issues"
   },
   "devDependencies": {
+    "@babel/core": "^7.13.10",
+    "@babel/plugin-transform-runtime": "^7.13.10",
+    "@babel/preset-env": "^7.13.10",
+    "babel-loader": "^8.2.2",
+    "@types/node": "^14.14.10",
     "axios": "^0.21.1",
     "custom-event": "^1.0.1",
     "eslint": "^7.13.0",
@@ -48,13 +54,18 @@
     "stats.js": "^0.17.0",
     "three": "^0.127.0",
     "webpack": "^5.4.0",
-    "webpack-cli": "^4.5.0",
-    "worker-loader": "^3.0.8"
+    "webpack-cli": "^4.6.0",
+    "worker-loader": "^3.0.8",
+    "rimraf": "^3.0.2",
+    "typescript": "^4.1.2",
+    "ts-loader": "^8.1.0"
   },
   "scripts": {
     "dev-es6": "webpack --mode development --progress --watch",
     "build-es6": "webpack --mode production",
     "build-jshint": "grunt jshint --force",
+    "dev-ts": "rimraf ./build && tsc && webpack --mode development --progress --watch",
+    "build-ts": "rimraf ./build && tsc && webpack --mode production",
     "watch": "./node_modules/.bin/watch 'npm run build' ./js/"
   },
   "license": "LGPL-3.0",
@@ -62,7 +73,9 @@
     "ecstatic": "^4.1.4"
   },
   "dependencies": {
+    "@babel/runtime": "^7.13.10",
     "@kalwalt/jsartoolkit-nft": "^0.9.1",
+    "gl-matrix": "^3.3.0",
     "http-server": "^0.12.3",
     "terser-webpack-plugin": "^5.1.1"
   }

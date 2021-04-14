@@ -1,7 +1,9 @@
 /* eslint-env worker */
-import { ARControllerNFT } from '@kalwalt/jsartoolkit-nft'
+import ARToolkitNFT from "@kalwalt/jsartoolkit-nft"
 
-onmessage = (e) => {
+const ctx: Worker = self as any;
+
+ctx.onmessage = (e) => {
   const msg = e.data
   switch (msg.type) {
     case 'load': {
@@ -15,19 +17,19 @@ onmessage = (e) => {
   }
 }
 
-let next = null
-let ar = null
+let next: any = null
+let ar: any = null
 let markerResult = null
 
-const load = (msg) => {
+const load = (msg: any) => {
   const basePath = self.origin
-  let cameraParamUrl, nftMarkerUrl
+  let cameraParamUrl: string, nftMarkerUrl: string
   console.debug('Base path:', basePath)
-  const onLoad = (arController) => {
+  const onLoad = (arController: any) => {
     ar = arController
     const cameraMatrix = ar.getCameraMatrix()
 
-    ar.addEventListener('getNFTMarker', (ev) => {
+    ar.addEventListener('getNFTMarker', (ev: any) => {
       markerResult = { type: 'found', matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH) }
     })
     // after the ARController is set up, we load the NFT Marker
@@ -49,20 +51,20 @@ const load = (msg) => {
     console.debug('Loading NFT marker at: ', nftMarkerUrl)
 
     ar.loadNFTMarker(nftMarkerUrl).then(
-      (nft) => {
-        postMessage({ type: 'nftData', nft: JSON.stringify(nft) })
+      (nft: any) => {
+        ctx.postMessage({ type: 'nftData', nft: JSON.stringify(nft) })
         ar.trackNFTMarkerId(nft.id)
         console.log('loadNFTMarker -> ', nft.id)
         console.log(nft)
-        postMessage({ type: 'endLoading', end: true })
-      }).catch((err) => {
+        ctx.postMessage({ type: 'endLoading', end: true })
+      }).catch((err: any) => {
       console.error('Error in loading marker on Worker', err)
     })
 
-    postMessage({ type: 'loaded', proj: JSON.stringify(cameraMatrix) })
+    ctx.postMessage({ type: 'loaded', proj: JSON.stringify(cameraMatrix) })
   }
 
-  const onError = (error) => {
+  const onError = (error: any) => {
     console.error(error)
   }
   const regexC = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm
@@ -82,7 +84,7 @@ const load = (msg) => {
   }
   console.debug('Loading camera at:', cameraParamUrl)
 
-    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
+  ARToolkitNFT.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError)
 }
 
 const process = () => {
@@ -93,9 +95,9 @@ const process = () => {
   }
 
   if (markerResult) {
-    postMessage(markerResult)
+    ctx.postMessage(markerResult)
   } else {
-    postMessage({ type: 'not found' })
+    ctx.postMessage({ type: 'not found' })
   }
 
   next = null
