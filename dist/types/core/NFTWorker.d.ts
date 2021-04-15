@@ -1,9 +1,4 @@
 import { NFTEntity } from "./NFTEntity";
-export declare class NFTOrientation {
-    position: IterableIterator<number>;
-    rotation: IterableIterator<number>;
-    matrix: IterableIterator<number>;
-}
 export declare class NFTWorker {
     private _dispatcher;
     private worker;

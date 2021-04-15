@@ -1,6 +1,4 @@
 import Worker from "worker-loader!./Worker";
-export class NFTOrientation {
-}
 export class NFTWorker {
     constructor(d, markerURL, w, h) {
         this._processing = false;

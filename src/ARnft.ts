@@ -5,7 +5,7 @@ import { AppJson } from "./core/data/AppData";
 import { CameraViewRenderer } from "./core/renderers/CameraViewRenderer";
 import { getConfig } from "./core/ARUtils";
 
-export class ARnft {
+export default class ARnft {
     public cameraView: CameraViewRenderer;
     public appData: AppJson;
     public configUrl: string;
@@ -58,7 +58,7 @@ export class ARnft {
 
     private update(): void {
         console.log(this._arnftCore);
-        
+
         this._arnftCore.update();
     }
 }

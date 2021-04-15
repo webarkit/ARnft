@@ -1,4 +1,4 @@
-import { NFTOrientation } from "./NFTWorker";
+import { NFTOrientation } from './NFTOrientation';
 export interface IMediaNode {
     update(): void;
     found(value: NFTOrientation): void;

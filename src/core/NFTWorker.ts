@@ -1,14 +1,6 @@
 import { NFTEntity } from "./NFTEntity";
+import { NFTOrientation } from "./NFTOrientation"
 import Worker from "worker-loader!./Worker";
-
-export class NFTOrientation {
-    // euler vector3
-    public position: IterableIterator<number>;
-    // qauaterion
-    public rotation: IterableIterator<number>;
-
-    public matrix: IterableIterator<number>;
-}
 
 export class NFTWorker {
 

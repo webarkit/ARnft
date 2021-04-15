@@ -1,4 +1,5 @@
-import { NFTOrientation, NFTWorker } from "./NFTWorker";
+import NFTWorker from "./NFTWorker";
+import { NFTOrientation } from './NFTOrientation';
 
 export interface IMediaNode {
     update(): void;
@@ -18,7 +19,7 @@ export class NFTEntity implements INFTEntity {
 
     private _nodes: IMediaNode[] = [];
 
-    private _worker: NFTWorker;
+    private _worker: typeof NFTWorker;
 
     private _cameraURL: string;
 

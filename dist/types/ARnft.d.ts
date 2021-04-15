@@ -1,7 +1,7 @@
 import { INFTEntity } from "./core/NFTEntity";
 import { AppJson } from "./core/data/AppData";
 import { CameraViewRenderer } from "./core/renderers/CameraViewRenderer";
-export declare class ARnft {
+export default class ARnft {
     cameraView: CameraViewRenderer;
     appData: AppJson;
     configUrl: string;

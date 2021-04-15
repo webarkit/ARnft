@@ -1,4 +1,4 @@
-import { NFTWorker } from "./NFTWorker";
+import NFTWorker from "./NFTWorker";
 export class NFTEntity {
     constructor(node, markerURL, w, h) {
         this._nodes = [];
