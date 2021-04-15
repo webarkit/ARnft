@@ -20,7 +20,7 @@
 
     <script>
 		console.log(ARnft);
-		var ar = new ARnft.ARnft("./Data/camera_para.dat", "config.json", "examples/DataNFT/pinball");
+		var ar = new ARnft.ARnft("config.json","./Data/camera_para.dat", "examples/DataNFT/pinball");
     console.log(ar);
 		var init = async () => {
 			await ar.initialize()
