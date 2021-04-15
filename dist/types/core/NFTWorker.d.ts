@@ -1,5 +1,5 @@
 import { NFTEntity } from "./NFTEntity";
-export declare class NFTWorker {
+export default class NFTWorker {
     private _dispatcher;
     private worker;
     private markerURL;
@@ -12,5 +12,3 @@ export declare class NFTWorker {
     protected load(cameraURL: string): Promise<boolean>;
     destroy(): void;
 }
-declare const _default: any;
-export default _default;

@@ -19,7 +19,7 @@ export class NFTEntity implements INFTEntity {
 
     private _nodes: IMediaNode[] = [];
 
-    private _worker: typeof NFTWorker;
+    private _worker: NFTWorker;
 
     private _cameraURL: string;
 

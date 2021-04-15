@@ -2,7 +2,7 @@ import { NFTEntity } from "./NFTEntity";
 import { NFTOrientation } from "./NFTOrientation"
 import Worker from "worker-loader!./Worker";
 
-export class NFTWorker {
+export default class NFTWorker {
 
     private _dispatcher: NFTEntity;
 
@@ -98,4 +98,4 @@ export class NFTWorker {
 
 }
 
-export default null as any;
+//export default null as any;
