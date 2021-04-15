@@ -1,5 +1,5 @@
 import Worker from "worker-loader!./Worker";
-export class NFTWorker {
+export default class NFTWorker {
     constructor(d, markerURL, w, h) {
         this._processing = false;
         this._dispatcher = d;
@@ -57,5 +57,4 @@ export class NFTWorker {
     destroy() {
     }
 }
-export default null;
 //# sourceMappingURL=NFTWorker.js.map
