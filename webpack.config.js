@@ -12,7 +12,7 @@ module.exports = {
     libraryExport: 'default',
     // @see: https://github.com/webpack/webpack/issues/6522
     globalObject: 'this',
-    //publicPath: '/'
+    publicPath: "/"
   },
   externals: {
     three: {
@@ -31,7 +31,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\worker\.ts$/,
+        test: /\worker\.js$/,
         use: {
           loader: 'worker-loader',
           options: { inline: 'no-fallback' }
