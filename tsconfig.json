@@ -30,7 +30,10 @@
     "forceConsistentCasingInFileNames": true,  /* Disallow inconsistently-cased references to the same file. */
     "paths": {
       "*": [
-        "../node_modules/*"
+        "../node_modules/*",
+      ],
+      "jsartoolkitnft": [
+        "./node_modules/@kalwalt/jsartoolkit-nft"
       ]
     }
   },

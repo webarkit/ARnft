@@ -1,4 +1,5 @@
-import ARToolkitNFT from "@kalwalt/jsartoolkit-nft";
+import jsartoolkitnft from 'jsartoolkitnft';
+const { ARControllerNFT } = jsartoolkitnft;
 const ctx = self;
 ctx.onmessage = (e) => {
     const msg = e.data;
@@ -78,7 +79,7 @@ const load = (msg) => {
         }
     }
     console.debug('Loading camera at:', cameraParamUrl);
-    ARToolkitNFT.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
+    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 const process = () => {
     markerResult = null;
