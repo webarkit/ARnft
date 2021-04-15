@@ -1,7 +1,7 @@
 const path = require('path')
 
 module.exports = {
-  entry: './src/ARnft.ts',
+  entry: './src/index.ts',
   devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
