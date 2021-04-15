@@ -50,6 +50,8 @@ export default class ARnft {
     public createEntity(cameraData: string, markerUrl: string, w: number, h: number) {
         //let nftEntity: NFTEntity = new NFTEntity(markerUrl, w, h);
         //return nftEntity;
+        console.log("fake entity created...");
+
     }
 
     public addNFTEntity(entity: INFTEntity, name?: string): INFTEntity {

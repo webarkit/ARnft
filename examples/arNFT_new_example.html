@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example showing a simple red cube</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+		console.log(ARnft);
+		var ar = new ARnft.ARnft("./Data/camera_para.dat", "config.json", "examples/DataNFT/pinball");
+    console.log(ar);
+		var init = async () => {
+			await ar.initialize()
+		}
+		init()
+
+		ar.createEntity()
+    </script>
+</body>
+
+</html>
