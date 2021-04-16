@@ -31,30 +31,17 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\worker\.js$/,
+        test: /\.worker\.(c|m)?js$/i,
         use: {
           loader: 'worker-loader',
           options: { inline: 'no-fallback' }
         }
       },
-      {
-        test: /\.tsx?$/,
-        exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: ['@babel/preset-env'],
-            plugins: [
-              // @see https://github.com/babel/babel/issues/9849
-              ['@babel/transform-runtime']
-            ]
-          }
-        },
-        {
-          loader: 'ts-loader'
-        }
-      ]
-      }
+    {
+      test: /\.tsx?$/,
+      exclude: /node_modules/,
+      loader: 'ts-loader'
+    }
     ]
   },
   resolve: {
