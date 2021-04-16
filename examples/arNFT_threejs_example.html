@@ -18,14 +18,14 @@
 
   <script src="js/third_party/three.js/three.min.js"></script>
   <!--<script type="module" src="https://raw.githack.com/kalwalt/ARnft-threejs/main/dist/ARnftThreejs.js"></script>-->
-	<script type="module" src="../dist/ARnft.js"></script>
+	<script src="../dist/ARnft.js"></script>
 
 
     <script>
 
 	async function init() {
 		console.log("init app");
-	
+
 		let cameraDataURL = '../../data/camera_para.dat';
 		let video = document.getElementById('video');
         console.log( ARnft);
@@ -93,15 +93,15 @@
         //arnft.getConf("config.json", data)
 
 		await arnft.initialize();
-		
+
 		console.log("done loading")
-	
+
 		//console.log(sceneThreejs.scene)
-        
+
 		//let imageMarker = new ARnftThreejs.NFTImageTJS(root);
-		
+
 		//imageMarker.addNFTImage("./Data/aframe-k.png", 120, 120);
-	
+
 		//let marker = "./DataNFT/pinball";
 
 		//  update loop taken out of ARnft for ease of dev use.   i.e.  What if i wanted to pause the experince?

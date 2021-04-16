@@ -1,4 +1,4 @@
-import Worker from "worker-loader!./Worker";
+import Worker from 'worker-loader?inline=no-fallback!./Worker';
 export default class NFTWorker {
     constructor(d, markerURL, w, h) {
         this._processing = false;

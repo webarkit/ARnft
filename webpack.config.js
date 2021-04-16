@@ -31,7 +31,7 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.worker\.(c|m)?js$/i,
+        test: /\.worker\.(c|m)?ts$/i,
         use: {
           loader: 'worker-loader',
           options: { inline: 'no-fallback' }

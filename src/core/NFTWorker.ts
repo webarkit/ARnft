@@ -1,6 +1,6 @@
 import { NFTEntity } from "./NFTEntity";
 import { NFTOrientation } from "./NFTOrientation"
-import Worker from "worker-loader!./Worker";
+import Worker from 'worker-loader?inline=no-fallback!./Worker';
 
 export default class NFTWorker {
 
