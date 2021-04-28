@@ -77,7 +77,7 @@ export default class ARnft {
 
       if (configData.renderer.type === 'three') {
         const renderer = new ThreejsRenderer(configData, canvas, root, camera)
-        renderer.initRenderer(true)
+        renderer.initRenderer(configData.renderer.objVisibility)
         this.renderer = renderer
         const setRendererEvent = new CustomEvent('onAfterInitThreejsRendering', { detail: { renderer: renderer } })
         document.dispatchEvent(setRendererEvent)
