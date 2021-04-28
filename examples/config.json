@@ -29,7 +29,8 @@
     "type": "three",
     "alpha": true,
     "antialias": true,
-    "precision": "mediump"
+    "precision": "mediump",
+    "objVisibility": false
   },
   "stats": {
     "createHtml": true
