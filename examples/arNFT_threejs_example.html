@@ -26,24 +26,22 @@
 	async function init() {
 		console.log("init app");
 
-		let cameraDataURL = '../../data/camera_para.dat';
+		let cameraDataURL = './examples/Data/camera_para.dat';
 		let video = document.getElementById('video');
         console.log( ARnft);
 
-		const arnft = new ARnft.ARnft('config.json', cameraDataURL, "./DataNFT/pinball");
+		const arnft = new ARnft.ARnft('config.json', cameraDataURL, "./examples/DataNFT/pinball");
 		//arnft.setFPS(15);
 		let videoData = {
 			"marker": "./data/pinball",
 			"video": "./data/test.mp4"
 		}
-		// let video = await ARNFT.BasicVideoLoaderBJS.load(videoMarker.video, renderer.getScene());
-		//let videoMarker = new ARNFT.NFTVideoBJS(video);
 
-		console.log(ARnftThreejs);
+		//console.log(ARnftThreejs);
 		console.log(arnft);
         let config = {
             "addPath": "",
-            "cameraPara": "examples/Data/camera_para.dat",
+            "cameraPara": "./examples/Data/camera_para.dat",
             "videoSettings": {
                 "width": {
                     "min": 640,
@@ -86,8 +84,8 @@
 		//let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, camera);
 		//let entityRoot = new ARnftThreejs.NFTNodeTJS();
         //console.log(entityRoot);
-        sceneThreejs.initRenderer();
-        sceneThreejs.draw()
+        //sceneThreejs.initRenderer();
+        //sceneThreejs.draw()
 
         let data;
         //arnft.getConf("config.json", data)
