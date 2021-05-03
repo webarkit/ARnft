@@ -143,6 +143,8 @@ export default class ARnft {
   addVideo (id, scale) {
     const root = this.root
     var ARVideo = document.getElementById(id)
+    ARVideo.preload = 'auto'
+    ARVideo.autoload = true
     var texture = new THREE.VideoTexture(ARVideo)
     var mat = new THREE.MeshLambertMaterial({ color: 0xbbbbff, map: texture })
     ARVideo.play()
