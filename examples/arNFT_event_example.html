@@ -27,6 +27,11 @@
 				cube.position.z = 90;
 				cube.scale.set(180,180,180);
 				nft.add(cube);
+				// we add a rotation to the cube onto the z axis
+				requestAnimationFrame(function animate(){
+					cube.rotation.z += 0.02;
+				    requestAnimationFrame( animate );
+				}) 
                 document.addEventListener('nftTrackingLost', function(ev) {
                     console.log(ev);
                     console.log("lost marker");
