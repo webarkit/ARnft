@@ -23,7 +23,34 @@
 		var ar = new ARnft.ARnft("config.json","./examples/Data/camera_para.dat", "examples/DataNFT/pinball");
     console.log(ar);
 		var init = async () => {
-			await ar.initialize()
+			const charachterData = [{
+				id: 0,
+				modelUrl: "path",
+				file: "char.txt",
+                name: "name",
+                markerData: { 
+					width: 220,
+                    height: 440,
+                    dpi: 300,
+                    url: "examples/DataNFT/pinball",
+					offsetX: 2,
+					offsetY: 2,
+				},
+                videoData: {
+					videoUrl: "url"
+				},
+                scale: 20,
+                offset: {
+					x: 20,
+					y: 20
+				},
+                animations: {
+					file: "",
+					modelURL: "",
+					type: "",
+				}
+			}]
+			await ar.initialize(charachterData)
 		}
 		init()
 
