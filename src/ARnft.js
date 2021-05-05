@@ -140,19 +140,32 @@ export default class ARnft {
     root.add(plane)
   }
 
-  addVideo (id, scale) {
+  addVideo (url, scale) {
     const root = this.root
-    var ARVideo = document.getElementById(id)
-    ARVideo.preload = 'auto'
-    ARVideo.autoload = true
-    ARVideo.play()
-    var texture = new THREE.VideoTexture(ARVideo)
+    var ARVideo = document.createElement('video');
+    ARVideo.muted = true
+    ARVideo.src = url;
+    ARVideo.load();
+    ARVideo.setAttribute('playsInline', true)
+    ARVideo.playsInline = true;
+    ARVideo.autoplay = false;
+    ARVideo.addEventListener('canplaythrough',() => {
+      ARVideo.autoplay = true;
+    })
+    window.ARVideo = ARVideo
+
+    var texture = new THREE.VideoTexture( ARVideo );
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.format = THREE.RGBFormat;
+    
     texture.needsUpdate = true;
     var mat = THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
     //mat.needsUpdate = true;
     var planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
     var plane = new THREE.Mesh(planeGeom, mat)
     plane.scale.set(scale, scale, scale)
+    ARvideo.play();
     document.addEventListener('getNFTData', (ev) => {
       var msg = ev.detail
       plane.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
