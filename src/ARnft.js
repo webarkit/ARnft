@@ -143,8 +143,8 @@ export default class ARnft {
   addVideo (id, scale) {
     const root = this.root
     var ARVideo = document.getElementById(id)
-    //ARVideo.preload = 'auto'
-    //ARVideo.autoload = true
+    ARVideo.preload = 'auto'
+    ARVideo.autoload = true
     ARVideo.play()
     var texture = new THREE.VideoTexture(ARVideo)
     texture.needsUpdate = true;
