@@ -148,7 +148,7 @@ export default class ARnft {
     ARVideo.play()
     var texture = new THREE.VideoTexture(ARVideo)
     texture.needsUpdate = true;
-    var mat = new THREE.MeshLambertMaterial({ color: 0xbbbbff, map: texture })
+    var mat = THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
     //mat.needsUpdate = true;
     var planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
     var plane = new THREE.Mesh(planeGeom, mat)
