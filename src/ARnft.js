@@ -145,11 +145,11 @@ export default class ARnft {
     var ARVideo = document.getElementById(id)
     ARVideo.preload = 'auto'
     ARVideo.autoload = true
+    ARVideo.play()
     var texture = new THREE.VideoTexture(ARVideo)
     texture.needsUpdate = true;
     var mat = new THREE.MeshLambertMaterial({ color: 0xbbbbff, map: texture })
     material.needsUpdate = true;
-    ARVideo.play()
     var planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
     var plane = new THREE.Mesh(planeGeom, mat)
     plane.scale.set(scale, scale, scale)
