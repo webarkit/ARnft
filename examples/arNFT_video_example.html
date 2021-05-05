@@ -14,16 +14,6 @@
           target="_blank">
           🖼 Marker Image
       </a>
-			<video
-				loop
-				autoplay
-				muted
-				webkit-playsinline
-				playsinline
-				crossOrigin="anonymous"
-				id="arvideo">
-				<source src="https://avo-content-dev.s3.amazonaws.com/videos/bg_1588085276090.mp4" type='video/mp4'>
-			</video>
 
 		<script src="js/third_party/three.js/three.min.js"></script>
 		<script src="../dist/ARnft.js"></script>
@@ -31,7 +21,7 @@
     <script>
 			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
 			.then((nft) => {
-				nft.addVideo('arvideo', 180);
+				nft.addVideo('https://avo-content-dev.s3.amazonaws.com/videos/bg_1588085276090.mp4', 180);
 			}).catch((error) => {
 				console.log(error);
 			});

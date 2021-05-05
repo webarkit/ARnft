@@ -144,6 +144,7 @@ export default class ARnft {
     const root = this.root
     var ARVideo = document.createElement('video');
     ARVideo.muted = true
+    ARVideo.crossOrigin = "anonymous"
     ARVideo.src = url;
     ARVideo.load();
     ARVideo.setAttribute('playsInline', true)
@@ -152,6 +153,7 @@ export default class ARnft {
     ARVideo.addEventListener('canplaythrough',() => {
       ARVideo.autoplay = true;
     })
+
     window.ARVideo = ARVideo
 
     var texture = new THREE.VideoTexture( ARVideo );
@@ -160,12 +162,12 @@ export default class ARnft {
     texture.format = THREE.RGBFormat;
     
     texture.needsUpdate = true;
-    var mat = THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
+    var mat = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
     //mat.needsUpdate = true;
     var planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
     var plane = new THREE.Mesh(planeGeom, mat)
     plane.scale.set(scale, scale, scale)
-    ARvideo.play();
+    ARVideo.play();
     document.addEventListener('getNFTData', (ev) => {
       var msg = ev.detail
       plane.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
