@@ -17,7 +17,7 @@
       </a>
 
   <script src="js/third_party/three.js/three.min.js"></script>
-  <!--<script type="module" src="https://raw.githack.com/kalwalt/ARnft-threejs/main/dist/ARnftThreejs.js"></script>-->
+  <script type="module" src="https://raw.githack.com/kalwalt/ARnft-threejs/main/dist/ARnftThreejs.js"></script>
 	<script src="../dist/ARnft.js"></script>
 
 
@@ -31,7 +31,34 @@
         console.log( ARnft);
 
 		const arnft = new ARnft.ARnft('config.json', cameraDataURL, "./examples/DataNFT/pinball");
-		//arnft.setFPS(15);
+		const charachterData = [{
+				id: 0,
+				modelUrl: "path",
+				file: "char.txt",
+                name: "name",
+                markerData: { 
+					width: 220,
+                    height: 440,
+                    dpi: 300,
+                    url: "examples/DataNFT/pinball",
+					offsetX: 2,
+					offsetY: 2,
+				},
+                videoData: {
+					videoUrl: "url"
+				},
+                scale: 20,
+                offset: {
+					x: 20,
+					y: 20
+				},
+                animations: {
+					file: "",
+					modelURL: "",
+					type: "",
+				}
+			}]
+        //arnft.setFPS(15);
 		let videoData = {
 			"marker": "./data/pinball",
 			"video": "./data/test.mp4"
@@ -81,7 +108,7 @@
 		let canvas = document.getElementById('canvas');
         let root = new THREE.Object3D()
         let camera = new THREE.Camera()
-		//let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, camera);
+		let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, camera);
 		//let entityRoot = new ARnftThreejs.NFTNodeTJS();
         //console.log(entityRoot);
         //sceneThreejs.initRenderer();
@@ -90,11 +117,11 @@
         let data;
         //arnft.getConf("config.json", data)
 
-		await arnft.initialize();
+		await arnft.initialize(charachterData);
 
 		console.log("done loading")
 
-		//console.log(sceneThreejs.scene)
+		console.log(sceneThreejs.scene)
 
 		//let imageMarker = new ARnftThreejs.NFTImageTJS(root);
 
