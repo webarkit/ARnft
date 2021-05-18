@@ -14,7 +14,7 @@ export default class ARnft {
     this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.8.6'
+    this.version = '0.8.7'
     console.log('ARnft ', this.version)
   }
 
@@ -77,7 +77,7 @@ export default class ARnft {
 
       if (configData.renderer.type === 'three') {
         const renderer = new ThreejsRenderer(configData, canvas, root, camera)
-        renderer.initRenderer()
+        renderer.initRenderer(configData.renderer.objVisibility)
         this.renderer = renderer
         const setRendererEvent = new CustomEvent('onAfterInitThreejsRendering', { detail: { renderer: renderer } })
         document.dispatchEvent(setRendererEvent)

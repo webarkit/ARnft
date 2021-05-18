@@ -24,7 +24,7 @@ export default class ThreejsRenderer {
     }
   }
 
-  initRenderer () {
+  initRenderer (objVisibility) {
     this.camera.matrixAutoUpdate = false
     document.addEventListener('getProjectionMatrix', (ev) => {
       Utils.setMatrix(this.camera.projectionMatrix, ev.detail.proj)
@@ -41,7 +41,7 @@ export default class ThreejsRenderer {
     })
 
     document.addEventListener('nftTrackingLost', () => {
-      this.root.visible = false
+      this.root.visible = objVisibility
     })
 
     this.root.visible = false
