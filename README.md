@@ -28,7 +28,7 @@ http://localhost:8000/examples/arNFT_example.html
 
 ## Usage
 
-Download the zipped dist lib package fron the releases page: [webarkit/ARnft/releases](https://github.com/webarkit/ARnft/releases)
+Download the zipped dist lib package from the releases page: [webarkit/ARnft/releases](https://github.com/webarkit/ARnft/releases)
 and use it in a script tag:
 ```html
 <script src="path/to/dist/ARnft.js"></script>
