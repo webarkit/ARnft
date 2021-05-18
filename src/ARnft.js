@@ -2,6 +2,7 @@ import Utils from './utils/Utils'
 import Container from './utils/html/Container'
 import Stats from 'stats.js'
 import ThreejsRenderer from './renderers/ThreejsRenderer'
+import CameraViewRenderer from './renderers/CameraViewRenderer'
 import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
 
@@ -54,7 +55,7 @@ export default class ARnft {
         stats: stats
       }
 
-      Utils.getUserMedia(configData).then((video) => {
+      CameraViewRenderer.getUserMedia(configData).then((video) => {
         Utils._startWorker(
           container,
           markerUrl,
