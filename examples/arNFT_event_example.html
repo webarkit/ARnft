@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft event example showing a simple red cube</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config-event.json', true)
+			.then((nft) => {
+				let mat = new THREE.MeshLambertMaterial({color: 0xff0000});
+				let boxGeom = new THREE.BoxGeometry(1,1,1);
+				let cube = new THREE.Mesh(boxGeom, mat);
+				cube.position.z = 90;
+				cube.scale.set(180,180,180);
+				nft.add(cube);
+				// we add a rotation to the cube onto the z axis
+				requestAnimationFrame(function animate(){
+					cube.rotation.z += 0.02;
+				    requestAnimationFrame( animate );
+				}) 
+                document.addEventListener('nftTrackingLost', function(ev) {
+                    console.log(ev);
+                    console.log("lost marker");
+                })
+			}).catch((error) => {
+				console.log(error);
+			});
+    </script>
+</body>
+
+</html>
