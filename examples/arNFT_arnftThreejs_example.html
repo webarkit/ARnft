@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>ARnft example showing a simple red cube</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+	<link rel="stylesheet" href="css/nft-style.css">
+</head>
+<body>
+    <div id="stats" class="ui stats">
+		<div id="stats1" class="stats-item">
+            <p class="stats-item-title">Main</p>
+		</div>
+		<div id="stats2" class="stats-item">
+            <p class="stats-item-title">Worker</p>
+		</div>
+	</div>
+
+    <div id="loading">
+      <img src="Data/arNFT-logo.gif" alt="arNFT.js logo">
+      <span class="loading-text">Loading, please wait...</span>
+    </div>
+    <div id="app">
+        <canvas id="canvas" width="640" height="480"></canvas>
+        <video id="video" muted playsinline autoplay></video>
+    </div>
+
+      <a
+          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+          class="ui marker"
+          target="_blank">
+          🖼 Marker Image
+      </a>
+
+		<script src="js/third_party/three.js/three.min.js"></script>
+        <script src="https://raw.githack.com/kalwalt/ARnft-threejs/dev/dist/ARnftThreejs.js"></script>
+		<script src="../dist/ARnft.js"></script>
+
+    <script>
+			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config-container.json', true)
+			.then((nft) => {                
+				let mat = new THREE.MeshLambertMaterial({color: 0xff0000});
+				let boxGeom = new THREE.BoxGeometry(1,1,1);
+				let cube = new THREE.Mesh(boxGeom, mat);
+				cube.position.z = 90;
+				cube.scale.set(180,180,180);
+               
+                let root = new THREE.Object3D();
+                root.matrixAutoUpdate = false
+
+                let canvas = document.getElementById('canvas');
+                let fov = 0.8 * 180 / Math.PI;
+                let ratio = window.clientWidth / window.clientHeight;
+                let config = {
+           
+                    "renderer": {
+                        "alpha": true,
+                        "antialias": true,
+                        "context": null,
+                        "precision": "mediump",
+                        "premultipliedAlpha": true,
+                        "stencil": true,
+                        "depth": true,
+                        "logarithmicDepthBuffer": true
+                    },
+                    "camera": {
+                        "fov": fov,
+                        "ratio": ratio,
+                        "near": 0.01,
+                        "far": 1000
+                    }
+                }
+               
+                let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, true);
+                sceneThreejs.initRenderer();
+                
+                const tick = () => {
+                    sceneThreejs.draw();
+                    window.requestAnimationFrame(tick)
+                }
+                tick()
+
+                document.addEventListener('getNFTData', (ev) => {
+                    var msg = ev.detail
+                    cube.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
+                    cube.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
+                })
+                root.add(cube)
+			}).catch((error) => {
+				console.log(error);
+			});
+    </script>
+    
+</body>
+
+</html>
