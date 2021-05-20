@@ -1,3 +1,4 @@
+import CustomEvent from 'custom-event'
 export default class Container {
   static createContainer (configData) {
     if (configData.container.create) {
@@ -14,10 +15,14 @@ export default class Container {
       container.appendChild(canvas)
       const loading = document.getElementById('loading')
       document.body.insertBefore(container, loading)
-      return { container: container, canvas: canvas, video: video }
+      var containerEvent = new CustomEvent('containerEvent')
+      document.dispatchEvent(containerEvent)
+      return { container: container, canvas: canvas, video: video }   
     } else {
       const container = document.getElementById(configData.container.containerName)
       const canvas = document.getElementById(configData.container.canvasName)
+      var containerEvent = new CustomEvent('containerEvent')
+      document.dispatchEvent(containerEvent)
       return { container: container, canvas: canvas }
     }
   }
