@@ -19,7 +19,7 @@ const trackedMatrix = {
 }
 
 export default class Utils {
-  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, configData) {
+  static _startWorker (container, markerUrl, video, inputWidth, inputHeight, canvasDraw, renderUpdate, trackUpdate, configData, uuid) {
     let vw, vh
     let sw, sh
     let pscale, sscale
@@ -130,7 +130,7 @@ export default class Utils {
         }
       } else {
         world = JSON.parse(msg.matrixGL_RH)
-        const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH', { detail: { matrixGL_RH: world } })
+        const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + uuid, { detail: { matrixGL_RH: world } })
         document.dispatchEvent(matrixGLrhEvent)
       }
     }

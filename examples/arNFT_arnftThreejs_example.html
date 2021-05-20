@@ -16,7 +16,7 @@
       </a>
 
 		<script src="js/third_party/three.js/three.min.js"></script>
-        <script src="https://raw.githack.com/kalwalt/ARnft-threejs/dev/dist/ARnftThreejs.js"></script>
+        <script src="https://raw.githack.com/kalwalt/ARnft-threejs/uuid/dist/ARnftThreejs.js"></script>
 		<script src="../dist/ARnft.js"></script>
 
     <script>
@@ -55,7 +55,7 @@
                         }
                     }
                
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, true);
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid, true);
                     sceneThreejs.initRenderer();
                 
                     const tick = () => {

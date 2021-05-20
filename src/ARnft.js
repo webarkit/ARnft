@@ -1,6 +1,7 @@
 import Utils from './utils/Utils'
 import Container from './utils/html/Container'
 import Stats from 'stats.js'
+import { v4 as uuidv4 } from 'uuid'
 import CameraViewRenderer from './renderers/CameraViewRenderer'
 
 export default class ARnft {
@@ -10,6 +11,7 @@ export default class ARnft {
     this.renderer = null
     this.config = config
     this.listeners = {}
+    this.uuid = uuidv4()
     this.version = '0.8.7'
     console.log('ARnft ', this.version)
   }
@@ -68,7 +70,8 @@ export default class ARnft {
               statsObj.statsWorker.update()
             }
           },
-          configData)
+          configData,
+          this.uuid)
       })
     })
     return this
