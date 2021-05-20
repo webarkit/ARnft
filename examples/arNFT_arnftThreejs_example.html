@@ -16,7 +16,7 @@
       </a>
 
 		<script src="js/third_party/three.js/three.min.js"></script>
-        <script src="https://raw.githack.com/kalwalt/ARnft-threejs/dev/dist/ARnftThreejs.js"></script>
+        <script src="https://raw.githack.com/kalwalt/ARnft-threejs/markermedia-feature/dist/ARnftThreejs.js"></script>
 		<script src="../dist/ARnft.js"></script>
 
     <script>
@@ -63,12 +63,9 @@
                     }
                     tick()
 
-                    document.addEventListener('getNFTData', (ev) => {
-                        var msg = ev.detail
-                        cube.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
-                        cube.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
-                    })
-                    root.add(cube)
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
+                    nftAddTJS.addModel(cube);
+
                 })
 			}).catch((error) => {
 				console.log(error);
