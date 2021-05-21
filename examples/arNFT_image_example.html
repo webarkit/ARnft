@@ -16,15 +16,53 @@
       </a>
 
 		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="https://raw.githack.com/kalwalt/ARnft-threejs/markermedia-feature/dist/ARnftThreejs.js"></script>
 		<script src="../dist/ARnft.js"></script>
 
     <script>
 			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
 			.then((nft) => {
-				nft.addImage('./Data/aframe-k.png', 0xbbbbff, 180);
-			}).catch((error) => {
+				let root = new THREE.Object3D();
+                root.matrixAutoUpdate = false;
+                document.addEventListener('containerEvent', function(ev) {
+         
+                    let canvas = document.getElementById('canvas');
+                    let fov = 0.8 * 180 / Math.PI;
+                    let ratio = window.clientWidth / window.clientHeight;
+                    let config = {          
+                        "renderer": {
+                            "alpha": true,
+                            "antialias": true,
+                            "context": null,
+                            "precision": "mediump",
+                            "premultipliedAlpha": true,
+                            "stencil": true,
+                            "depth": true,
+                            "logarithmicDepthBuffer": true
+                        },
+                        "camera": {
+                            "fov": fov,
+                            "ratio": ratio,
+                            "near": 0.01,
+                            "far": 1000
+                        }
+                    }
+               
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid, true);
+                    sceneThreejs.initRenderer();
+
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
+					nftAddTJS.addImage('./Data/aframe-k.png', 0xbbbbff, 180);
+
+                    const tick = () => {
+                        sceneThreejs.draw();
+                        window.requestAnimationFrame(tick)
+                    }
+                    tick()
+				})
+            }).catch((error) => {
 				console.log(error);
-			});
+		    });
     </script>
 </body>
 
