@@ -3,6 +3,8 @@ import Container from './utils/html/Container'
 import Stats from 'stats.js'
 import { v4 as uuidv4 } from 'uuid'
 import CameraViewRenderer from './renderers/CameraViewRenderer'
+import packageJson from '../package.json'
+const { version } = packageJson
 
 export default class ARnft {
   constructor (width, height, config) {
@@ -11,7 +13,7 @@ export default class ARnft {
     this.config = config
     this.listeners = {}
     this.uuid = uuidv4()
-    this.version = '0.8.7'
+    this.version = version
     console.log('ARnft ', this.version)
   }
 
