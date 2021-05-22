@@ -16,7 +16,7 @@
       </a>
 
 		<script src="js/third_party/three.js/three.min.js"></script>
-        <script src="https://raw.githack.com/kalwalt/ARnft-threejs/markermedia-feature/dist/ARnftThreejs.js"></script>
+        <script src="https://raw.githack.com/kalwalt/ARnft-threejs/dev/dist/ARnftThreejs.js"></script>
 		<script src="../dist/ARnft.js"></script>
 
     <script>
@@ -56,15 +56,15 @@
                
                     let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid, true);
                     sceneThreejs.initRenderer();
-                
+
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
+                    nftAddTJS.add(cube);
+
                     const tick = () => {
                         sceneThreejs.draw();
                         window.requestAnimationFrame(tick)
                     }
                     tick()
-
-                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
-                    nftAddTJS.addModel(cube);
 
                 })
 			}).catch((error) => {
