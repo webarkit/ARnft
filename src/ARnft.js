@@ -8,7 +8,6 @@ export default class ARnft {
   constructor (width, height, config) {
     this.width = width
     this.height = height
-    this.renderer = null
     this.config = config
     this.listeners = {}
     this.uuid = uuidv4()
