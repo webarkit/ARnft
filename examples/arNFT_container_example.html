@@ -16,6 +16,7 @@
       </a>
 
 		<script src="js/third_party/three.js/three.min.js"></script>
+		<script src="https://raw.githack.com/kalwalt/ARnft-threejs/dev/dist/ARnftThreejs.js"></script>
 		<script src="../dist/ARnft.js"></script>
 
     <script>
@@ -28,7 +29,46 @@
 				let cube = new THREE.Mesh(boxGeom, mat);
 				cube.position.z = 90;
 				cube.scale.set(180,180,180);
-				nft.add(cube);
+               
+                let root = new THREE.Object3D();
+                root.matrixAutoUpdate = false;
+                document.addEventListener('containerEvent', function(ev) {
+         
+                    let canvas = document.getElementById('canvas');
+                    let fov = 0.8 * 180 / Math.PI;
+                    let ratio = window.clientWidth / window.clientHeight;
+                    let config = {          
+                        "renderer": {
+                            "alpha": true,
+                            "antialias": true,
+                            "context": null,
+                            "precision": "mediump",
+                            "premultipliedAlpha": true,
+                            "stencil": true,
+                            "depth": true,
+                            "logarithmicDepthBuffer": true
+                        },
+                        "camera": {
+                            "fov": fov,
+                            "ratio": ratio,
+                            "near": 0.01,
+                            "far": 1000
+                        }
+                    }
+               
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid, true);
+                    sceneThreejs.initRenderer();
+
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
+                    nftAddTJS.add(cube);
+
+                    const tick = () => {
+                        sceneThreejs.draw();
+                        window.requestAnimationFrame(tick)
+                    }
+                    tick()
+				})
+
 			}).catch((error) => {
 				console.log(error);
 			});
