@@ -51,6 +51,14 @@
                     let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid, true);
                     sceneThreejs.initRenderer();
 
+					const renderer = sceneThreejs.getRenderer();
+					const scene = sceneThreejs.getScene();
+					renderer.outputEncoding = THREE.sRGBEncoding;
+					renderer.physicallyCorrectLights = true;
+					let directionalLight = new THREE.DirectionalLight('#fff', 0.4);
+					directionalLight.position.set(0.5, 0, 0.866);
+					scene.add(directionalLight)
+
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
 					nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb', 40, 80, 80, 80);
 
