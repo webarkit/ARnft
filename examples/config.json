@@ -25,13 +25,6 @@
     },
     "loadingMessage": "Loading, please wait..."
   },
-  "renderer": {
-    "type": "three",
-    "alpha": true,
-    "antialias": true,
-    "precision": "mediump",
-    "objVisibility": false
-  },
   "stats": {
     "createHtml": true
   }

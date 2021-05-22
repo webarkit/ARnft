@@ -24,11 +24,6 @@
     },
     "loadingMessage": "Loading, please wait..."
   },
-  "renderer": {
-    "alpha": true,
-    "antialias": true,
-    "precision": "mediump"
-  },
   "stats": {
     "createHtml": true
   }
