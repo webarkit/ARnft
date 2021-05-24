@@ -1,20 +1,19 @@
 import Utils from './utils/Utils'
 import Container from './utils/html/Container'
 import Stats from 'stats.js'
-import ThreejsRenderer from './renderers/ThreejsRenderer'
-import * as THREE from 'three'
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader'
+import { v4 as uuidv4 } from 'uuid'
+import CameraViewRenderer from './renderers/CameraViewRenderer'
+import packageJson from '../package.json'
+const { version } = packageJson
 
 export default class ARnft {
   constructor (width, height, config) {
     this.width = width
     this.height = height
-    this.root = new THREE.Object3D()
-    this.renderer = null
-    this.root.matrixAutoUpdate = false
     this.config = config
     this.listeners = {}
-    this.version = '0.8.7'
+    this.uuid = uuidv4()
+    this.version = version
     console.log('ARnft ', this.version)
   }
 
@@ -54,7 +53,7 @@ export default class ARnft {
         stats: stats
       }
 
-      Utils.getUserMedia(configData).then((video) => {
+      CameraViewRenderer.getUserMedia(configData).then((video) => {
         Utils._startWorker(
           container,
           markerUrl,
@@ -72,21 +71,9 @@ export default class ARnft {
               statsObj.statsWorker.update()
             }
           },
-          configData)
+          configData,
+          this.uuid)
       })
-
-      if (configData.renderer.type === 'three') {
-        const renderer = new ThreejsRenderer(configData, canvas, root, camera)
-        renderer.initRenderer(configData.renderer.objVisibility)
-        this.renderer = renderer
-        const setRendererEvent = new CustomEvent('onAfterInitThreejsRendering', { detail: { renderer: renderer } })
-        document.dispatchEvent(setRendererEvent)
-        const tick = () => {
-          renderer.draw()
-          window.requestAnimationFrame(tick)
-        }
-        tick()
-      }
     })
     return this
   }
@@ -94,67 +81,6 @@ export default class ARnft {
   static async init (width, height, markerUrl, config, stats, camera) {
     const nft = new ARnft(width, height, config)
     return await nft._initialize(markerUrl, stats, camera)
-  }
-
-  add (obj) {
-    const root = this.root
-    document.addEventListener('getNFTData', (ev) => {
-      var msg = ev.detail
-      obj.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
-      obj.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
-    })
-    root.add(obj)
-  }
-
-  addModel (url, x, y, z, scale) {
-    const root = this.root
-    let model
-
-    /* Load Model */
-    const threeGLTFLoader = new GLTFLoader()
-
-    threeGLTFLoader.load(url, gltf => {
-      model = gltf.scene
-      model.scale.set(scale, scale, scale)
-      model.rotation.x = Math.PI / 2
-      model.position.x = x
-      model.position.y = y
-      model.position.z = z
-
-      root.add(model)
-    })
-  }
-
-  addImage (url, color, scale) {
-    const root = this.root
-    const texture = new THREE.TextureLoader().load(url)
-    const mat = new THREE.MeshLambertMaterial({ color: color, map: texture })
-    const planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
-    const plane = new THREE.Mesh(planeGeom, mat)
-    plane.scale.set(scale, scale, scale)
-    document.addEventListener('getNFTData', (ev) => {
-      var msg = ev.detail
-      plane.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
-      plane.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
-    })
-    root.add(plane)
-  }
-
-  addVideo (id, scale) {
-    const root = this.root
-    var ARVideo = document.getElementById(id)
-    var texture = new THREE.VideoTexture(ARVideo)
-    var mat = new THREE.MeshLambertMaterial({ color: 0xbbbbff, map: texture })
-    ARVideo.play()
-    var planeGeom = new THREE.PlaneGeometry(1, 1, 1, 1)
-    var plane = new THREE.Mesh(planeGeom, mat)
-    plane.scale.set(scale, scale, scale)
-    document.addEventListener('getNFTData', (ev) => {
-      var msg = ev.detail
-      plane.position.y = (msg.height / msg.dpi * 2.54 * 10) / 2.0
-      plane.position.x = (msg.width / msg.dpi * 2.54 * 10) / 2.0
-    })
-    root.add(plane)
   }
 
   dispatchEvent (event) {

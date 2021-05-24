@@ -1,30 +1,78 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<title>ARnft example with a gltf model</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-	<link rel="stylesheet" href="css/nft-style.css">
+    <meta charset="utf-8">
+    <title>ARnft example with a gltf model</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+    <link rel="stylesheet" href="css/nft-style.css">
 </head>
+
 <body>
 
-      <a
-          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-          class="ui marker"
-          target="_blank">
-          🖼 Marker Image
-      </a>
+    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+        class="ui marker" target="_blank">
+        🖼 Marker Image
+    </a>
 
-		<script src="js/third_party/three.js/three.min.js"></script>
-		<script src="../dist/ARnft.js"></script>
+    <script src="js/third_party/three.js/three.min.js"></script>
+    <script src="js/ARnftThreejs.js"></script>
+    <script src="../dist/ARnft.js"></script>
 
     <script>
-			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
-			.then((nft) => {
-				nft.addModel('./Data/models/Duck/glTF/Duck.glb', 40, 80, 80, 80);
-			}).catch((error) => {
-				console.log(error);
-			});
+        ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
+            .then((nft) => {
+                let root = new THREE.Object3D();
+                root.matrixAutoUpdate = false;
+                document.addEventListener('containerEvent', function (ev) {
+
+                    let canvas = document.getElementById('canvas');
+                    let fov = 0.8 * 180 / Math.PI;
+                    let ratio = window.clientWidth / window.clientHeight;
+                    let config = {
+                        "renderer": {
+                            "alpha": true,
+                            "antialias": true,
+                            "context": null,
+                            "precision": "mediump",
+                            "premultipliedAlpha": true,
+                            "stencil": true,
+                            "depth": true,
+                            "logarithmicDepthBuffer": true,
+                            "objVisibility": false
+                        },
+                        "camera": {
+                            "fov": fov,
+                            "ratio": ratio,
+                            "near": 0.01,
+                            "far": 1000
+                        }
+                    }
+
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid,
+                        true);
+                    sceneThreejs.initRenderer();
+
+                    const renderer = sceneThreejs.getRenderer();
+                    const scene = sceneThreejs.getScene();
+                    renderer.outputEncoding = THREE.sRGBEncoding;
+                    renderer.physicallyCorrectLights = true;
+                    let directionalLight = new THREE.DirectionalLight('#fff', 0.4);
+                    directionalLight.position.set(0.5, 0, 0.866);
+                    scene.add(directionalLight)
+
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
+                    nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb', 40, 80, 80, 80);
+
+                    const tick = () => {
+                        sceneThreejs.draw();
+                        window.requestAnimationFrame(tick)
+                    }
+                    tick()
+                })
+            }).catch((error) => {
+                console.log(error);
+            });
     </script>
 </body>
 

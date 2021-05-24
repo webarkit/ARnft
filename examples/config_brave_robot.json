@@ -25,23 +25,6 @@
       },
       "loadingMessage": "Loading, please wait..."
     },
-    "renderer": {
-      "type": "three",
-      "alpha": true,
-      "antialias": true,
-      "context": null,
-      "precision": "mediump",
-      "premultipliedAlpha": true,
-      "stencil": true,
-      "depth": true,
-      "logarithmicDepthBuffer": true
-    },
-    "camera": {
-      "fov": "0.8 * 180 / Math.PI",
-      "ratio": "window.clientWidth / window.clientHeight",
-      "near": 0.01,
-      "far": 1000
-    },
     "stats": {
       "createHtml": true
     }

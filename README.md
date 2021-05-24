@@ -71,5 +71,6 @@ You can try also a live example with React at this link: [kalwalt.github.io/ARnf
 ```
 npm i @kalwalt/ar-nft
 ```
+❗️👉️ from 0.9.0 version npm package updates only from Webarkit npmjs package profile !!
 
 - Configuration data in an External .json file.
