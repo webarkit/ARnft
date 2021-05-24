@@ -2,7 +2,7 @@
 
 <img src="examples/Data/arNFT-logo.gif" width="250px"/>
 
-A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/kalwalt/jsartoolkitnFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology.
+A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/kalwalt/jsartoolkitnFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It use [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
 
 ## Start using it !
 
@@ -48,7 +48,7 @@ or raw.cdn (for production, you need to add the hash):
 or if you want to import as a module with npm:
 
 ```javascript
-import { ARnft } from '@kalwalt/ar-nft';
+import { ARnft } from '@webarkit/ar-nft';
 ```
 
 ## Examples
@@ -69,8 +69,7 @@ You can try also a live example with React at this link: [kalwalt.github.io/ARnf
 - **ES6** standard. You can install it as a npm package and use it as a module (experimental). Install it with:
 
 ```
-npm i @kalwalt/ar-nft
+npm i @webarkit/ar-nft
 ```
-❗️👉️ from 0.9.0 version npm package updates only from Webarkit npmjs package profile !!
 
 - Configuration data in an External .json file.
