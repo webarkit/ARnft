@@ -1,41 +1,43 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<title>ARnft event example showing a simple red cube</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-	<link rel="stylesheet" href="css/nft-style.css">
+    <meta charset="utf-8">
+    <title>ARnft event example showing a simple red cube</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+    <link rel="stylesheet" href="css/nft-style.css">
 </head>
+
 <body>
 
-      <a
-          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-          class="ui marker"
-          target="_blank">
-          🖼 Marker Image
-      </a>
+    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+        class="ui marker" target="_blank">
+        🖼 Marker Image
+    </a>
 
-		<script src="js/third_party/three.js/three.min.js"></script>
-		<script src="https://raw.githack.com/kalwalt/ARnft-threejs/main/dist/ARnftThreejs.js"></script>
-		<script src="../dist/ARnft.js"></script>
+    <script src="js/third_party/three.js/three.min.js"></script>
+    <script src="js/ARnftThreejs.js"></script>
+    <script src="../dist/ARnft.js"></script>
 
     <script>
-			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config-event.json', true)
-			.then((nft) => {
-				let mat = new THREE.MeshLambertMaterial({color: 0xff0000});
-				let boxGeom = new THREE.BoxGeometry(1,1,1);
-				let cube = new THREE.Mesh(boxGeom, mat);
-				cube.position.z = 90;
-				cube.scale.set(180,180,180);
+        ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config-event.json', true)
+            .then((nft) => {
+                let mat = new THREE.MeshLambertMaterial({
+                    color: 0xff0000
+                });
+                let boxGeom = new THREE.BoxGeometry(1, 1, 1);
+                let cube = new THREE.Mesh(boxGeom, mat);
+                cube.position.z = 90;
+                cube.scale.set(180, 180, 180);
 
-				let root = new THREE.Object3D();
+                let root = new THREE.Object3D();
                 root.matrixAutoUpdate = false;
-                document.addEventListener('containerEvent', function(ev) {
-         
+                document.addEventListener('containerEvent', function (ev) {
+
                     let canvas = document.getElementById('canvas');
                     let fov = 0.8 * 180 / Math.PI;
                     let ratio = window.clientWidth / window.clientHeight;
-                    let config = {          
+                    let config = {
                         "renderer": {
                             "alpha": true,
                             "antialias": true,
@@ -45,7 +47,7 @@
                             "stencil": true,
                             "depth": true,
                             "logarithmicDepthBuffer": true,
-							"objVisibility": true
+                            "objVisibility": true
                         },
                         "camera": {
                             "fov": fov,
@@ -54,8 +56,9 @@
                             "far": 1000
                         }
                     }
-               
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid, true);
+
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid,
+                        true);
                     sceneThreejs.initRenderer();
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
@@ -63,19 +66,19 @@
 
                     const tick = () => {
                         sceneThreejs.draw();
-						cube.rotation.z += 0.02;
+                        cube.rotation.z += 0.02;
                         window.requestAnimationFrame(tick)
                     }
                     tick()
-				})
+                })
 
-                document.addEventListener('nftTrackingLost', function(ev) {
+                document.addEventListener('nftTrackingLost', function (ev) {
                     console.log(ev);
                     console.log("lost marker");
                 })
-			}).catch((error) => {
-				console.log(error);
-			});
+            }).catch((error) => {
+                console.log(error);
+            });
     </script>
 </body>
 

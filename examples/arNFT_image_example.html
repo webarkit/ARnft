@@ -1,35 +1,35 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-	<meta charset="utf-8">
-	<title>ARnft example showing an image</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-	<link rel="stylesheet" href="css/nft-style.css">
+    <meta charset="utf-8">
+    <title>ARnft example showing an image</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+    <link rel="stylesheet" href="css/nft-style.css">
 </head>
+
 <body>
 
-      <a
-          href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-          class="ui marker"
-          target="_blank">
-          🖼 Marker Image
-      </a>
+    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+        class="ui marker" target="_blank">
+        🖼 Marker Image
+    </a>
 
-		<script src="js/third_party/three.js/three.min.js"></script>
-		<script src="https://raw.githack.com/kalwalt/ARnft-threejs/main/dist/ARnftThreejs.js"></script>
-		<script src="../dist/ARnft.js"></script>
+    <script src="js/third_party/three.js/three.min.js"></script>
+    <script src="js/ARnftThreejs.js"></script>
+    <script src="../dist/ARnft.js"></script>
 
     <script>
-			ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
-			.then((nft) => {
-				let root = new THREE.Object3D();
+        ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config.json', true)
+            .then((nft) => {
+                let root = new THREE.Object3D();
                 root.matrixAutoUpdate = false;
-                document.addEventListener('containerEvent', function(ev) {
-         
+                document.addEventListener('containerEvent', function (ev) {
+
                     let canvas = document.getElementById('canvas');
                     let fov = 0.8 * 180 / Math.PI;
                     let ratio = window.clientWidth / window.clientHeight;
-                    let config = {          
+                    let config = {
                         "renderer": {
                             "alpha": true,
                             "antialias": true,
@@ -48,22 +48,23 @@
                             "far": 1000
                         }
                     }
-               
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid, true);
+
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid,
+                        true);
                     sceneThreejs.initRenderer();
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
-					nftAddTJS.addImage('./Data/aframe-k.png', 0xbbbbff, 180);
+                    nftAddTJS.addImage('./Data/aframe-k.png', 0xbbbbff, 180);
 
                     const tick = () => {
                         sceneThreejs.draw();
                         window.requestAnimationFrame(tick)
                     }
                     tick()
-				})
+                })
             }).catch((error) => {
-				console.log(error);
-		    });
+                console.log(error);
+            });
     </script>
 </body>
 
