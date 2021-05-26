@@ -1,7 +1,8 @@
 const path = require('path')
 
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/index.ts',
+  devtool: 'inline-source-map',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'ARnft.js',
@@ -10,7 +11,8 @@ module.exports = {
     // @see: https://github.com/webpack/webpack/issues/3929
     libraryExport: 'default',
     // @see: https://github.com/webpack/webpack/issues/6522
-    globalObject: 'this'
+    globalObject: 'this',
+    publicPath: "/"
   },
   externals: {
     three: {
@@ -29,12 +31,23 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\worker\.js$/,
+        test: /\.worker\.(c|m)?ts$/i,
         use: {
           loader: 'worker-loader',
           options: { inline: 'no-fallback' }
         }
-      }
+      },
+    {
+      test: /\.tsx?$/,
+      exclude: /node_modules/,
+      loader: 'ts-loader'
+    }
     ]
-  }
+  },
+  resolve: {
+    alias: {
+      jsartoolkitnft: '@kalwalt/jsartoolkit-nft'
+    },
+    extensions: ['.tsx', '.ts', '.js'],
+  },
 }
