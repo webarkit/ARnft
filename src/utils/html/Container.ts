@@ -1,6 +1,6 @@
-import CustomEvent from 'custom-event'
+import { ConfigData } from "../../config/ConfigData"
 export default class Container {
-  static createContainer (configData) {
+  static createContainer (configData: ConfigData) {
     if (configData.container.create) {
       const container = document.createElement('div')
       container.id = 'app'
@@ -15,19 +15,19 @@ export default class Container {
       container.appendChild(canvas)
       const loading = document.getElementById('loading')
       document.body.insertBefore(container, loading)
-      var containerEvent = new CustomEvent('containerEvent')
+      var containerEvent = new Event('containerEvent')
       document.dispatchEvent(containerEvent)
       return { container: container, canvas: canvas, video: video }   
     } else {
       const container = document.getElementById(configData.container.containerName)
       const canvas = document.getElementById(configData.container.canvasName)
-      var containerEvent = new CustomEvent('containerEvent')
+      var containerEvent = new Event('containerEvent')
       document.dispatchEvent(containerEvent)
       return { container: container, canvas: canvas }
     }
   }
 
-  static createStats (create, configData) {
+  static createStats (create: boolean, configData: ConfigData) {
     if (create && configData.stats.createHtml) {
       const stats = document.createElement('div')
       stats.id = 'stats'
@@ -53,7 +53,7 @@ export default class Container {
     }
   }
 
-  static createLoading (configData) {
+  static createLoading (configData: ConfigData) {
     if (configData.loading.create) {
       const loader = document.createElement('div')
       loader.id = 'loading'
