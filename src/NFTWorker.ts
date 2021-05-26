@@ -11,7 +11,6 @@ export default class NFTWorker {
     private vw: number;
     private vh: number;
 
-    //constructor(d: NFTEntity, markerURL: string, w: number, h: number) {
     constructor(markerURL: string, w: number, h: number) {
         //this._dispatcher = d;
         this.markerURL = markerURL;
