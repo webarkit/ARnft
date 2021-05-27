@@ -1,7 +1,7 @@
 import Container from './utils/html/Container'
 import { ConfigData } from "./config/ConfigData";
 import Stats from 'stats.js'
-import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
+import { ICameraViewRenderer, CameraViewRenderer } from "./renderers/CameraViewRenderer";
 import { getConfig } from "./utils/ARUtils";
 import NFTWorker from './NFTWorker'
 import { v4 as uuidv4 } from 'uuid'
@@ -18,6 +18,9 @@ export default class ARnft {
     public camData: string;
     private uuid: string;
     private version: string;
+    private _videoRenderer: ICameraViewRenderer;
+    private _fps: number = 15;
+    private _lastTime: number = 0;
     constructor(width: number, height: number,configUrl: string){
         this.width = width
         this.height = height
@@ -63,10 +66,28 @@ export default class ARnft {
                 return Promise.reject(false);
             });
         const worker = new NFTWorker(markerUrl, this.width, this.height);
-        worker.initialize(this.appData.cameraPara)
+        worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {})
+        console.log(this.cameraView.getImage());
+        
         worker.process(this.cameraView.getImage())
+        this.update(worker)
         })
         return Promise.resolve(this)
+    }
+
+    public update(worker: NFTWorker): void {
+        let time: number = Date.now();
+        let imageData: ImageData;
+        if ((time - this._lastTime) > this._fps) {
+            imageData = this.cameraView.getImage();
+            console.log(imageData);
+            
+            this._lastTime = time;
+        }
+            //element.update();
+            if (imageData)
+            worker.process(imageData);
+        
     }
 
 }
