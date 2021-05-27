@@ -9,7 +9,6 @@ ctx.onmessage = (e) => {
             return;
         }
         case 'process': {
-            console.log(msg.imagedata);
             next = msg.imagedata;
             process(next);
         }
@@ -26,7 +25,6 @@ const load = (msg) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
         ar.addEventListener('getNFTMarker', (ev) => {
-            console.log(ev);
             markerResult = { type: 'found', matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH) };
         });
         const regexM = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/igm;
@@ -84,11 +82,8 @@ const load = (msg) => {
     ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 const process = (next) => {
-    console.log('inside worker process: ', next);
     markerResult = null;
-    console.log(ar);
     if (ar && ar.process) {
-        console.log('ar.process...');
         ar.process(next);
     }
     if (markerResult) {
