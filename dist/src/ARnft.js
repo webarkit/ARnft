@@ -2,6 +2,7 @@ import Container from './utils/html/Container';
 import Stats from 'stats.js';
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
 import { getConfig } from "./utils/ARUtils";
+import NFTWorker from './NFTWorker';
 import { v4 as uuidv4 } from 'uuid';
 import packageJson from '../package.json';
 const { version } = packageJson;
@@ -44,6 +45,9 @@ export default class ARnft {
                 console.error(error);
                 return Promise.reject(false);
             });
+            const worker = new NFTWorker(markerUrl, this.width, this.height);
+            worker.initialize(this.appData.cameraPara);
+            worker.process(this.cameraView.getImage());
         });
         return Promise.resolve(this);
     }

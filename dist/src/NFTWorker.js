@@ -19,7 +19,7 @@ export default class NFTWorker {
             return;
         }
         this._processing = true;
-        this.worker.postMessage({ type: 'process', imagedata: imageData });
+        this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
     }
     load(cameraURL) {
         return new Promise((resolve, reject) => {
