@@ -9,6 +9,5 @@ export default class NFTWorker {
     process(imageData: ImageData): void;
     protected load(cameraURL: string, imageData: ImageData): Promise<boolean>;
     found(msg: any): void;
-    tick: () => void;
     destroy(): void;
 }
