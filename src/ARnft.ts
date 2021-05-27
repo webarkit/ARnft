@@ -67,10 +67,15 @@ export default class ARnft {
             });
         const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height);
         worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {})
-        console.log(this.cameraView.getImage());
+        //console.log(this.cameraView.getImage());
         
         worker.process(this.cameraView.getImage())
-        this.update(worker)
+        let update = () => {
+            worker.process(this.cameraView.getImage());
+            requestAnimationFrame(update);
+        }
+        update()
+        //this.update(worker)
         })
         return Promise.resolve(this)
     }
@@ -85,9 +90,12 @@ export default class ARnft {
             this._lastTime = time;
         }
             //element.update();
-            if (imageData)
-            worker.process(imageData);
-        
+            if (imageData) {
+                let update = () => {
+                    worker.process(imageData);
+                    requestAnimationFrame(update);
+                }
+                update()
+            }
     }
-
 }
