@@ -1,13 +1,11 @@
 import Worker from 'worker-loader?inline=no-fallback!./Worker';
 export default class NFTWorker {
-    constructor(markerURL, w, h) {
+    constructor(markerURL, w, h, uuid) {
         this._processing = false;
-        this.tick = () => {
-            window.requestAnimationFrame(this.tick);
-        };
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
+        this.uuid = uuid;
     }
     initialize(cameraURL, imageData, renderUpdate) {
         return new Promise((resolve, reject) => {
@@ -81,7 +79,6 @@ export default class NFTWorker {
                     }
                 }
             };
-            this.tick();
             this.process(imageData);
         });
     }
@@ -97,7 +94,7 @@ export default class NFTWorker {
         }
         else {
             world = JSON.parse(msg.matrixGL_RH);
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH', { detail: { matrixGL_RH: world } });
+            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid, { detail: { matrixGL_RH: world } });
             document.dispatchEvent(matrixGLrhEvent);
         }
     }

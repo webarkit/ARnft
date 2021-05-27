@@ -4,7 +4,8 @@ export default class NFTWorker {
     private _processing;
     private vw;
     private vh;
-    constructor(markerURL: string, w: number, h: number);
+    private uuid;
+    constructor(markerURL: string, w: number, h: number, uuid: string);
     initialize(cameraURL: string, imageData: ImageData, renderUpdate: () => void): Promise<boolean>;
     process(imageData: ImageData): void;
     protected load(cameraURL: string, imageData: ImageData): Promise<boolean>;

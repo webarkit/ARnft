@@ -11,10 +11,13 @@ export default class NFTWorker {
     private vw: number;
     private vh: number;
 
-    constructor(markerURL: string, w: number, h: number) {
+    private uuid: string;
+
+    constructor(markerURL: string, w: number, h: number,  uuid: string) {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
+        this.uuid = uuid
     }
 
     public initialize(cameraURL: string, imageData: ImageData, renderUpdate: () => void): Promise<boolean> {
@@ -133,7 +136,7 @@ export default class NFTWorker {
             }
         } else {
             world = JSON.parse(msg.matrixGL_RH)
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH', { detail: { matrixGL_RH: world } })
+            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid, { detail: { matrixGL_RH: world } })
             document.dispatchEvent(matrixGLrhEvent)
         }
     }
