@@ -8,6 +8,8 @@ import packageJson from '../package.json';
 const { version } = packageJson;
 export default class ARnft {
     constructor(width, height, configUrl) {
+        this._fps = 15;
+        this._lastTime = 0;
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
@@ -46,10 +48,23 @@ export default class ARnft {
                 return Promise.reject(false);
             });
             const worker = new NFTWorker(markerUrl, this.width, this.height);
-            worker.initialize(this.appData.cameraPara);
+            worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => { });
+            console.log(this.cameraView.getImage());
             worker.process(this.cameraView.getImage());
+            this.update(worker);
         });
         return Promise.resolve(this);
+    }
+    update(worker) {
+        let time = Date.now();
+        let imageData;
+        if ((time - this._lastTime) > this._fps) {
+            imageData = this.cameraView.getImage();
+            console.log(imageData);
+            this._lastTime = time;
+        }
+        if (imageData)
+            worker.process(imageData);
     }
 }
 //# sourceMappingURL=ARnft.js.map
