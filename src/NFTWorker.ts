@@ -118,7 +118,7 @@ export default class NFTWorker {
                 }
                 //this._processing = false;
             };
-            this.tick();
+            //this.tick();
             this.process(imageData);
         });
     };
@@ -138,10 +138,10 @@ export default class NFTWorker {
         }
     }
 
-    tick = () => {
+    /*tick = () => {
         //renderUpdate()
         window.requestAnimationFrame(this.tick)
-      }
+      }*/
 
     public destroy(): void {
 

@@ -63,8 +63,13 @@ export default class ARnft {
             console.log(imageData);
             this._lastTime = time;
         }
-        if (imageData)
-            worker.process(imageData);
+        if (imageData) {
+            let update = () => {
+                worker.process(imageData);
+                requestAnimationFrame(update);
+            };
+            update();
+        }
     }
 }
 //# sourceMappingURL=ARnft.js.map
