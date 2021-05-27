@@ -65,7 +65,7 @@ export default class ARnft {
                 console.error(error);
                 return Promise.reject(false);
             });
-        const worker = new NFTWorker(markerUrl, this.width, this.height);
+        const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height);
         worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {})
         console.log(this.cameraView.getImage());
         
