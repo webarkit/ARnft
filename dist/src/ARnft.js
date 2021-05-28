@@ -8,8 +8,6 @@ import packageJson from '../package.json';
 const { version } = packageJson;
 export default class ARnft {
     constructor(width, height, configUrl) {
-        this._fps = 15;
-        this._lastTime = 0;
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
@@ -50,6 +48,10 @@ export default class ARnft {
             worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
                 if (stats) {
                     statsMain.update();
+                }
+            }, () => {
+                if (stats) {
+                    statsWorker.update();
                 }
             });
             worker.process(this.cameraView.getImage());

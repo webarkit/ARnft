@@ -1,4 +1,5 @@
 import Worker from 'worker-loader?inline=no-fallback!./Worker';
+import { isMobile } from './utils/ARUtils'
 
 export default class NFTWorker {
 
@@ -44,11 +45,19 @@ export default class NFTWorker {
         return new Promise<boolean>((resolve, reject) => {
 
             var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+            var sscale = isMobile() ? window.outerWidth / this.vw : 1
+
+            let sw = this.vw * sscale
+            let sh = this.vh * sscale
+            
 
             let w: number = this.vw * pscale;
             let h: number = this.vh * pscale;
             let pw: number = Math.max(w, (h / 3) * 4);
             let ph: number = Math.max(h, (w / 4) * 3);
+
+            const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
+            document.dispatchEvent(setWindowSizeEvent)
 
             this.worker.postMessage({
                 type: 'load',
