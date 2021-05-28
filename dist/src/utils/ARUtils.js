@@ -22,7 +22,6 @@ export function getConfig(configData) {
         return response.json();
     })
         .then((response) => {
-        console.log(response);
         const eventData = new CustomEvent('getConfig', { detail: { config: response } });
         document.dispatchEvent(eventData);
         return (response);

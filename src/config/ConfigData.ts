@@ -33,7 +33,7 @@ export interface VideoSettingData {
 }
 
 export interface StatsData {
-    createHtml: true
+    createHtml: boolean
 }
 
 export interface ScreenData {

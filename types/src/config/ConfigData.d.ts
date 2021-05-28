@@ -28,7 +28,7 @@ export interface VideoSettingData {
     facingMode: string;
 }
 export interface StatsData {
-    createHtml: true;
+    createHtml: boolean;
 }
 export interface ScreenData {
     min: number;
