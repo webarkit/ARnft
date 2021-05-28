@@ -14,6 +14,7 @@ export default class ARnft {
     public width: number;
     public height: number;
     public configUrl: string;
+    public listeners:  object;
     public markerUrl: string;
     public camData: string;
     private uuid: string;
@@ -22,6 +23,7 @@ export default class ARnft {
         this.width = width
         this.height = height
         this.configUrl = configUrl;
+        this.listeners = {};
         this.uuid = uuidv4();
         this.version = version;
         console.log('ARnft ', this.version);
@@ -84,4 +86,39 @@ export default class ARnft {
         })
         return Promise.resolve(this)
     }
+
+    private converter(): any {
+        return this;
+      }
+
+    public dispatchEvent(event: { name: string; target: any; data?: object }) {
+        let listeners = this.converter().listeners[event.name];
+        if(listeners) {
+            for(let i = 0; i < listeners.length; i++) {
+                listeners[i].call(this, event);
+            }
+        }
+      };
+    
+    public addEventListener(name: string, callback: object) {
+        if(!this.converter().listeners[name]) {
+            this.converter().listeners[name] = [];
+        }
+        this.converter().listeners[name].push(callback);
+      };
+    
+    public removeEventListener(name: string, callback: object) {
+        if(this.converter().listeners[name]) {
+            let index = this.converter().listeners[name].indexOf(callback);
+            if(index > -1) {
+                this.converter().listeners[name].splice(index, 1);
+          }
+        }
+      };
+    
+    /* _teardownVideo (video: HTMLVideoElement) {
+        video.srcObject.getVideoTracks()[0].stop()
+        video.srcObject = null
+        video.src = null
+    };*/
 }
