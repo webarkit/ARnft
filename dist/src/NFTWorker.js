@@ -1,4 +1,5 @@
 import Worker from 'worker-loader?inline=no-fallback!./Worker';
+import { isMobile } from './utils/ARUtils';
 export default class NFTWorker {
     constructor(markerURL, w, h, uuid) {
         this._processing = false;
@@ -7,10 +8,10 @@ export default class NFTWorker {
         this.vh = h;
         this.uuid = uuid;
     }
-    initialize(cameraURL, imageData, renderUpdate) {
+    initialize(cameraURL, imageData, renderUpdate, trackUpdate) {
         return new Promise((resolve, reject) => {
             this.worker = new Worker();
-            this.load(cameraURL, imageData).then(() => {
+            this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
                 resolve(true);
             });
         });
@@ -22,13 +23,18 @@ export default class NFTWorker {
         this._processing = true;
         this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
     }
-    load(cameraURL, imageData) {
+    load(cameraURL, imageData, renderUpdate, trackUpdate) {
         return new Promise((resolve, reject) => {
             var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+            var sscale = isMobile() ? window.outerWidth / this.vw : 1;
+            let sw = this.vw * sscale;
+            let sh = this.vh * sscale;
             let w = this.vw * pscale;
             let h = this.vh * pscale;
             let pw = Math.max(w, (h / 3) * 4);
             let ph = Math.max(h, (w / 4) * 3);
+            const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } });
+            document.dispatchEvent(setWindowSizeEvent);
             this.worker.postMessage({
                 type: 'load',
                 pw: pw,
@@ -83,7 +89,13 @@ export default class NFTWorker {
                     }
                 }
                 this._processing = false;
+                trackUpdate();
             };
+            let renderU = () => {
+                renderUpdate();
+                window.requestAnimationFrame(renderU);
+            };
+            renderU();
             this.process(imageData);
         });
     }
