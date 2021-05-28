@@ -20,10 +20,10 @@ export default class NFTWorker {
         this.uuid = uuid
     }
 
-    public initialize(cameraURL: string, imageData: ImageData, renderUpdate: () => void): Promise<boolean> {
+    public initialize(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker();
-                this.load(cameraURL, imageData).then(() => {
+                this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
                     resolve(true);
                 });
         });
@@ -37,10 +37,9 @@ export default class NFTWorker {
         this._processing = true;
 
         this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
-        //this.worker.postMessage({ type: 'process', imagedata: imageData });
     }
 
-    protected load(cameraURL: string, imageData: ImageData): Promise<boolean> {
+    protected load(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
 
         return new Promise<boolean>((resolve, reject) => {
 
@@ -107,8 +106,13 @@ export default class NFTWorker {
                     }
                 }
                 this._processing = false;
+                trackUpdate();
             };
-            //this.tick();
+            let renderU = () => {
+                renderUpdate()
+                window.requestAnimationFrame(renderU)
+            }
+            renderU();
             this.process(imageData);
         });
     };
@@ -128,10 +132,7 @@ export default class NFTWorker {
         }
     }
 
-    /*tick = () => {
-        //renderUpdate()
-        window.requestAnimationFrame(this.tick)
-      }*/
+    
 
     public destroy(): void {
 
