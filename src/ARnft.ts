@@ -1,7 +1,7 @@
 import Container from './utils/html/Container'
 import { ConfigData } from "./config/ConfigData";
 import Stats from 'stats.js'
-import { ICameraViewRenderer, CameraViewRenderer } from "./renderers/CameraViewRenderer";
+import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
 import { getConfig } from "./utils/ARUtils";
 import NFTWorker from './NFTWorker'
 import { v4 as uuidv4 } from 'uuid'
@@ -18,9 +18,6 @@ export default class ARnft {
     public camData: string;
     private uuid: string;
     private version: string;
-    private _videoRenderer: ICameraViewRenderer;
-    private _fps: number = 15;
-    private _lastTime: number = 0;
     constructor(width: number, height: number,configUrl: string){
         this.width = width
         this.height = height
@@ -48,7 +45,7 @@ export default class ARnft {
         Container.createLoading(this.appData);
         Container.createStats(this.appData.stats.createHtml, this.appData);
 
-        let statsMain, statsWorker
+        let statsMain: any, statsWorker: any
 
         if (stats) {
             statsMain = new Stats()
@@ -65,7 +62,19 @@ export default class ARnft {
                 return Promise.reject(false);
             });
         const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
-        worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {})     
+        worker.initialize(
+            this.appData.cameraPara, 
+            this.cameraView.getImage(), 
+            () => {
+                if (stats) {
+                    statsMain.update()
+            }
+            },
+            () => {
+                if (stats) {
+                    statsWorker.update()
+            }
+        })     
         worker.process(this.cameraView.getImage())
         let update = () => {
             worker.process(this.cameraView.getImage());

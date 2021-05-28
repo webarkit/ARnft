@@ -47,7 +47,11 @@ export default class ARnft {
                 return Promise.reject(false);
             });
             const worker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
-            worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => { });
+            worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
+                if (stats) {
+                    statsMain.update();
+                }
+            });
             worker.process(this.cameraView.getImage());
             let update = () => {
                 worker.process(this.cameraView.getImage());
