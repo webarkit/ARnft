@@ -43,7 +43,6 @@ export default class ARnft {
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev: any) => {
             this.appData = ev.detail.config;
-            console.log(this.appData);
         // views
         Container.createContainer(this.appData);
         Container.createLoading(this.appData);
@@ -66,36 +65,14 @@ export default class ARnft {
                 return Promise.reject(false);
             });
         const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
-        worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {})
-        //console.log(this.cameraView.getImage());
-        
+        worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {})     
         worker.process(this.cameraView.getImage())
         let update = () => {
             worker.process(this.cameraView.getImage());
             requestAnimationFrame(update);
         }
         update()
-        //this.update(worker)
         })
         return Promise.resolve(this)
-    }
-
-    public update(worker: NFTWorker): void {
-        let time: number = Date.now();
-        let imageData: ImageData;
-        if ((time - this._lastTime) > this._fps) {
-            imageData = this.cameraView.getImage();
-            console.log(imageData);
-            
-            this._lastTime = time;
-        }
-            //element.update();
-            if (imageData) {
-                let update = () => {
-                    worker.process(imageData);
-                    requestAnimationFrame(update);
-                }
-                update()
-            }
     }
 }
