@@ -38,6 +38,8 @@ export default class ARnft {
     }
 
     public async initialize(markerUrl: string, stats: boolean, camera: boolean): Promise<object> {
+        var event = new Event("initARnft");
+        document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev: any) => {
@@ -115,10 +117,9 @@ export default class ARnft {
           }
         }
       };
-    
-    /* _teardownVideo (video: HTMLVideoElement) {
-        video.srcObject.getVideoTracks()[0].stop()
-        video.srcObject = null
-        video.src = null
-    };*/
+
+    public dispose() {
+        this.cameraView.destroy();
+        NFTWorker.stopNFT();    
+    }
 }

@@ -22,4 +22,5 @@ export default class ARnft {
     }): void;
     addEventListener(name: string, callback: object): void;
     removeEventListener(name: string, callback: object): void;
+    dispose(): void;
 }
