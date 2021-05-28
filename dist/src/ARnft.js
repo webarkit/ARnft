@@ -29,7 +29,6 @@ export default class ARnft {
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev) => {
             this.appData = ev.detail.config;
-            console.log(this.appData);
             Container.createContainer(this.appData);
             Container.createLoading(this.appData);
             Container.createStats(this.appData.stats.createHtml, this.appData);
