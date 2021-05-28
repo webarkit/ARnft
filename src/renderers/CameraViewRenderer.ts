@@ -115,4 +115,26 @@ export class CameraViewRenderer implements ICameraViewRenderer {
             }
         });
     }
+
+    public destroy(): void {
+        const video = this.video
+        document.addEventListener("stopStreaming", function() {
+            const stream = <MediaStream>video.srcObject;
+            console.log("stop streaming");
+            if (stream !== null && stream !== undefined) {
+                const tracks = stream.getTracks();
+      
+                tracks.forEach(function(track) {
+                    track.stop();
+                });
+      
+                video.srcObject = null;
+      
+                let currentAR = document.getElementById("app");
+                if (currentAR !== null && currentAR !== undefined) {
+                    currentAR.remove();
+                }
+            }
+        });
+    }
 }

@@ -30,4 +30,5 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     getWidth(): number;
     getImage(): ImageData;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;
+    destroy(): void;
 }

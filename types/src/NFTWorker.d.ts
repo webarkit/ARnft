@@ -11,4 +11,5 @@ export default class NFTWorker {
     protected load(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean>;
     found(msg: any): void;
     destroy(): void;
+    static stopNFT(): void;
 }

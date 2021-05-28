@@ -24,9 +24,14 @@ export default class NFTWorker {
     public initialize(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker();
-                this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
-                    resolve(true);
-                });
+            this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
+                resolve(true);
+            });
+            const worker = this.worker
+            document.addEventListener("terminateWorker", function() {
+                worker.postMessage({type: 'stop'})
+                worker.terminate();
+            });
         });
     }
 
@@ -113,6 +118,12 @@ export default class NFTWorker {
                         this.found(null)
                         break
                     }
+                    case 'error': {
+                        console.log("NFTWorker : error");
+                        var event = new Event("nftError");
+                        document.dispatchEvent(event);
+                        break
+                      }
                 }
                 this._processing = false;
                 trackUpdate();
@@ -145,6 +156,14 @@ export default class NFTWorker {
 
     public destroy(): void {
 
+    }
+
+    static stopNFT () {
+        console.log("Stop NFT");
+        var event = new Event("terminateWorker");
+        document.dispatchEvent(event);
+        var event = new Event("stopStreaming");
+        document.dispatchEvent(event);
     }
 
 }
