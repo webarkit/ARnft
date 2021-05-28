@@ -10,9 +10,7 @@ ctx.onmessage = (e) => {
       load(msg)
       return
     }
-    case 'process': {
-      //console.log(msg.imagedata);
-      
+    case 'process': {      
       next = msg.imagedata
       process(next)
     }
@@ -32,8 +30,6 @@ const load = (msg: any) => {
     const cameraMatrix = ar.getCameraMatrix()
 
     ar.addEventListener('getNFTMarker', (ev: any) => {
-      //console.log(ev);
-      
       markerResult = { type: 'found', matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH) }
     })
     // after the ARController is set up, we load the NFT Marker
@@ -92,13 +88,9 @@ const load = (msg: any) => {
 }
 
 const process = (next: any) => {
-  //console.log('inside worker process: ', next);
-  
   markerResult = null
-  //console.log(ar);
 
   if (ar && ar.process) {
-    //console.log('ar.process...');  
     ar.process(next)
   }
 

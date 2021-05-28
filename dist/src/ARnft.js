@@ -58,21 +58,5 @@ export default class ARnft {
         });
         return Promise.resolve(this);
     }
-    update(worker) {
-        let time = Date.now();
-        let imageData;
-        if ((time - this._lastTime) > this._fps) {
-            imageData = this.cameraView.getImage();
-            console.log(imageData);
-            this._lastTime = time;
-        }
-        if (imageData) {
-            let update = () => {
-                worker.process(imageData);
-                requestAnimationFrame(update);
-            };
-            update();
-        }
-    }
 }
 //# sourceMappingURL=ARnft.js.map
