@@ -28,7 +28,7 @@ export function isIOS(): boolean {
      })
      .then((response) => {
        // printing the response only for testing
-       console.log(response);
+       //console.log(response);
        const eventData = new CustomEvent('getConfig', { detail: { config: response } });
        document.dispatchEvent(eventData);
        return(response)

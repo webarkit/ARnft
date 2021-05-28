@@ -16,6 +16,10 @@ export default class NFTWorker {
         });
     }
     process(imageData) {
+        if (this._processing) {
+            return;
+        }
+        this._processing = true;
         this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
     }
     load(cameraURL, imageData) {
@@ -78,6 +82,7 @@ export default class NFTWorker {
                         break;
                     }
                 }
+                this._processing = false;
             };
             this.process(imageData);
         });

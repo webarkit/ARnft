@@ -23,30 +23,18 @@ export default class NFTWorker {
     public initialize(cameraURL: string, imageData: ImageData, renderUpdate: () => void): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             this.worker = new Worker();
-            //this.worker.onmessage = (ev) => {
                 this.load(cameraURL, imageData).then(() => {
-                    // Overwrite load onmessage with search onmessage
-                    /*this.worker.onmessage = (ev) => {
-
-                        // console.log("response found = " + (ev.data.type == "found"));
-                        let msg: any = (ev.data.type == "found") ? ev.data : null;
-                        this._dispatcher.found(msg);
-                        this._processing = false;
-                    };*/
-                    //
                     resolve(true);
                 });
-            //};
-
         });
     }
 
     public process(imageData: ImageData) {
 
-       /* if (this._processing) {
+        if (this._processing) {
             return;
         }
-        this._processing = true;*/
+        this._processing = true;
 
         this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
         //this.worker.postMessage({ type: 'process', imagedata: imageData });
@@ -88,7 +76,6 @@ export default class NFTWorker {
                         proj[13] *= ratioH
                         const projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
                         document.dispatchEvent(projectionMatrixEvent)
-                        // this._dispatcher.dispatchEvent(new CustomEvent(ARnft.EVENT_SET_CAMERA, proj));
                         break;
                     }
                     case "endLoading": {
@@ -119,7 +106,7 @@ export default class NFTWorker {
                         break
                     }
                 }
-                //this._processing = false;
+                this._processing = false;
             };
             //this.tick();
             this.process(imageData);
