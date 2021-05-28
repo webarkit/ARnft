@@ -11,6 +11,7 @@ export default class ARnft {
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
+        this.listeners = {};
         this.uuid = uuidv4();
         this.version = version;
         console.log('ARnft ', this.version);
@@ -63,5 +64,33 @@ export default class ARnft {
         });
         return Promise.resolve(this);
     }
+    converter() {
+        return this;
+    }
+    dispatchEvent(event) {
+        let listeners = this.converter().listeners[event.name];
+        if (listeners) {
+            for (let i = 0; i < listeners.length; i++) {
+                listeners[i].call(this, event);
+            }
+        }
+    }
+    ;
+    addEventListener(name, callback) {
+        if (!this.converter().listeners[name]) {
+            this.converter().listeners[name] = [];
+        }
+        this.converter().listeners[name].push(callback);
+    }
+    ;
+    removeEventListener(name, callback) {
+        if (this.converter().listeners[name]) {
+            let index = this.converter().listeners[name].indexOf(callback);
+            if (index > -1) {
+                this.converter().listeners[name].splice(index, 1);
+            }
+        }
+    }
+    ;
 }
 //# sourceMappingURL=ARnft.js.map
