@@ -23,4 +23,6 @@ export default class ARnft {
     addEventListener(name: string, callback: object): void;
     removeEventListener(name: string, callback: object): void;
     dispose(): void;
+    disposeNFT(): void;
+    disposeVideoStream(): void;
 }

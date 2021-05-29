@@ -24,6 +24,8 @@ export default class ARnft {
         });
     }
     async initialize(markerUrl, stats, camera) {
+        var event = new Event("initARnft");
+        document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev) => {
@@ -92,5 +94,15 @@ export default class ARnft {
         }
     }
     ;
+    dispose() {
+        this.disposeVideoStream();
+        this.disposeNFT();
+    }
+    disposeNFT() {
+        NFTWorker.stopNFT();
+    }
+    disposeVideoStream() {
+        this.cameraView.destroy();
+    }
 }
 //# sourceMappingURL=ARnft.js.map
