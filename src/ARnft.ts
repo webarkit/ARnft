@@ -119,7 +119,15 @@ export default class ARnft {
       };
 
     public dispose() {
+        this.disposeVideoStream();
+        this.disposeNFT();    
+    }
+
+    public disposeNFT() {
+        NFTWorker.stopNFT();
+    }
+
+    public disposeVideoStream() {
         this.cameraView.destroy();
-        NFTWorker.stopNFT();    
     }
 }

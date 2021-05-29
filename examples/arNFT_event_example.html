@@ -20,6 +20,9 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
+        document.addEventListener('initARnft', function(e){
+            console.log(e);
+        })
         ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config-event.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
@@ -76,6 +79,9 @@
                     console.log(ev);
                     console.log("lost marker");
                 })
+                setTimeout(function(){
+                    nft.dispose()
+                },5000)
             }).catch((error) => {
                 console.log(error);
             });
