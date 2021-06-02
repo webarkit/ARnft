@@ -140,11 +140,12 @@ export default class NFTWorker {
     public found (msg: any) {
         let world: any;
         if (!msg) {
-            if (world) {
+            // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903 
+            //if (world) {
                 world = null
                 const nftTrackingLostEvent = new CustomEvent('nftTrackingLost')
                 document.dispatchEvent(nftTrackingLostEvent)
-            }
+            //}
         } else {
             world = JSON.parse(msg.matrixGL_RH)
             const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid, { detail: { matrixGL_RH: world } })
