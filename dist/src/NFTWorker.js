@@ -114,11 +114,9 @@ export default class NFTWorker {
     found(msg) {
         let world;
         if (!msg) {
-            if (world) {
-                world = null;
-                const nftTrackingLostEvent = new CustomEvent('nftTrackingLost');
-                document.dispatchEvent(nftTrackingLostEvent);
-            }
+            world = null;
+            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost');
+            document.dispatchEvent(nftTrackingLostEvent);
         }
         else {
             world = JSON.parse(msg.matrixGL_RH);
