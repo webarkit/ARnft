@@ -94,10 +94,11 @@ export default class ARnft {
     }
     
     /**
-     * 
-     * @param markerUrl 
-     * @param stats 
-     * @returns 
+     * Used internally by the init static function. It create the html Container, 
+     * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker.
+     * @param markerUrl the url of the marker.
+     * @param stats choose if you want the stats.
+     * @returns the ARnft object.
      */
     private async initialize(markerUrl: string, stats: boolean): Promise<object> {
         var event = new Event("initARnft");
@@ -151,10 +152,18 @@ export default class ARnft {
         return Promise.resolve(this)
     }
 
+    /**
+     * Used only by the ARnft functions.
+     * @returns 
+     */
     private converter(): any {
         return this;
       }
 
+    /**
+     * Dispatch an event from the ARnft instance.
+     * @param event set the event to dispatch.
+     */
     public dispatchEvent(event: { name: string; target: any; data?: object }) {
         let listeners = this.converter().listeners[event.name];
         if(listeners) {
@@ -164,6 +173,12 @@ export default class ARnft {
         }
       };
     
+    /**
+     * Add an event listener to the ARnft instance. Choose the name
+     * of the event to listen, and set the callback.
+     * @param name the name of the event to listen.
+     * @param callback callback function.
+     */
     public addEventListener(name: string, callback: object) {
         if(!this.converter().listeners[name]) {
             this.converter().listeners[name] = [];
@@ -171,6 +186,12 @@ export default class ARnft {
         this.converter().listeners[name].push(callback);
       };
     
+    /**
+     * Remove an event listener from the ARnft instance. Choose the name
+     * of the event to remove and set the callback.
+     * @param name name of the event to remove.
+     * @param callback callback function.
+     */
     public removeEventListener(name: string, callback: object) {
         if(this.converter().listeners[name]) {
             let index = this.converter().listeners[name].indexOf(callback);
@@ -179,16 +200,25 @@ export default class ARnft {
           }
         }
       };
-
+    
+    /**
+     * Dispose the Video stream and the NFTWorker.
+     */
     public dispose() {
         this.disposeVideoStream();
         this.disposeNFT();    
     }
 
+    /**
+     * Dispose only the NFTWorker.
+     */
     public disposeNFT() {
         NFTWorker.stopNFT();
     }
 
+    /**
+     * Dispose only the video stream.
+     */
     public disposeVideoStream() {
         this.cameraView.destroy();
     }
