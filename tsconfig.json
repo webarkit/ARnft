@@ -43,6 +43,18 @@
     "dom",
     "es5"
   ],
+  "typedocOptions": {
+    "entryPoints": [
+      "src/index.ts",
+      "src/ARnft.ts",
+      "src/NFTWorker.ts",
+      "src/config/ConfigData.ts",
+      "src/utils/ARUtils.ts",
+      "src/utils/html/Container.ts",
+      "src/renderers/CameraViewRenderer.ts"
+    ],
+    "out": "docs"
+    },
   "include": [
     "src/**/*",
     "typings/worker-loader.d.ts"  ]

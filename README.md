@@ -63,6 +63,11 @@ Test the examples in the `/examples` folder:
 
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
 
+## Documentation
+You can build the docs with this command:
+`yarn docs`
+Then run a live server and go to the docs folder. 
+
 ## Features
 
 - **NFT** (**N**atural **F**eature **T**racking) Markers, read my article: [NFT natural feature tracking with jsartoolkit5](https://www.kalwaltart.com/blog/2020/01/21/nft-natural-feature-tracking-with-jsartoolkit5/)
