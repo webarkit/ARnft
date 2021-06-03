@@ -65,7 +65,7 @@ export default class ARnft {
      * @param height (number) the height in pixels of the video camera.
      * @param configUrl (string) the url of the config.json file
      */
-    constructor(width: number, height: number,configUrl: string){
+    constructor(width: number, height: number, configUrl: string){
         this.width = width
         this.height = height
         this.configUrl = configUrl;
@@ -83,12 +83,11 @@ export default class ARnft {
      * @param markerUrl (string) the url of the marker (without the extension) 
      * @param configUrl (string) the url of the config.json file
      * @param stats (boolean) true if you want the stats.
-     * @param camera (boolean) true if you want the camera.
      * @returns (object) the nft object.
      */
-    static async init (width: number, height: number, markerUrl: string, configUrl: string, stats: boolean, camera: boolean): Promise<object> {
+    static async init (width: number, height: number, markerUrl: string, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft.initialize(markerUrl, stats, camera).catch((error: any) => {
+        return await _arnft.initialize(markerUrl, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         })
@@ -98,10 +97,9 @@ export default class ARnft {
      * 
      * @param markerUrl 
      * @param stats 
-     * @param camera 
      * @returns 
      */
-    private async initialize(markerUrl: string, stats: boolean, camera: boolean): Promise<object> {
+    private async initialize(markerUrl: string, stats: boolean): Promise<object> {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
