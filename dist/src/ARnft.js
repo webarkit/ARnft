@@ -18,12 +18,12 @@ export default class ARnft {
     }
     static async init(width, height, markerUrl, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft.initialize(markerUrl, stats).catch((error) => {
+        return await _arnft._initialize(markerUrl, stats).catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
     }
-    async initialize(markerUrl, stats) {
+    async _initialize(markerUrl, stats) {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
