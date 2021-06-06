@@ -87,7 +87,7 @@ export default class ARnft {
      */
     static async init (width: number, height: number, markerUrl: string, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft.initialize(markerUrl, stats).catch((error: any) => {
+        return await _arnft._initialize(markerUrl, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         })
@@ -100,7 +100,7 @@ export default class ARnft {
      * @param stats choose if you want the stats.
      * @returns the ARnft object.
      */
-    private async initialize(markerUrl: string, stats: boolean): Promise<object> {
+    private async _initialize(markerUrl: string, stats: boolean): Promise<object> {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
