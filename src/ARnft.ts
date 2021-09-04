@@ -118,10 +118,12 @@ export default class ARnft {
             console.error(error);
             return Promise.reject(false);
         });
-        markerUrls.forEach((markerUrl: string) => {
+        markerUrls.forEach((markerUrl: string, index: number) => {
+            console.log('marker url: ', markerUrl);   
             controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid));
             console.log('controllers...');
-            controllers[0].initialize(
+            console.log('controllers length: ', controllers.length)
+            controllers[index].initialize(
                 this.appData.cameraPara, 
                 this.cameraView.getImage(), 
                 () => {
@@ -134,10 +136,10 @@ export default class ARnft {
                         statsWorker.update()
                 }*/
             })
-            
-            controllers[0].process(this.cameraView.getImage())
+
+            controllers[index].process(this.cameraView.getImage())
             let update = () => {
-            controllers[0].process(this.cameraView.getImage());
+            controllers[index].process(this.cameraView.getImage());
             requestAnimationFrame(update);
             }
             update()
