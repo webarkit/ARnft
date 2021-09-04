@@ -13,6 +13,8 @@ export default class ARnft {
     private version;
     constructor(width: number, height: number, configUrl: string);
     static init(width: number, height: number, markerUrl: string, configUrl: string, stats: boolean): Promise<object>;
+    static init_multi(width: number, height: number, markerUrls: Array<string>, configUrl: string, stats: boolean): Promise<object>;
+    private _initialize_multi;
     private _initialize;
     private converter;
     dispatchEvent(event: {

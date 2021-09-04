@@ -23,6 +23,20 @@ export default class ARnft {
             return Promise.reject(false);
         });
     }
+    static async init_multi(width, height, markerUrls, configUrl, stats) {
+        const _arnft = new ARnft(width, height, configUrl);
+        return await _arnft._initialize_multi(markerUrls).catch((error) => {
+            console.error(error);
+            return Promise.reject(false);
+        });
+    }
+    async _initialize_multi(markerUrls) {
+        let controllers = [];
+        markerUrls.forEach((markerUrl) => {
+            controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid));
+        });
+        return Promise.resolve(this);
+    }
     async _initialize(markerUrl, stats) {
         var event = new Event("initARnft");
         document.dispatchEvent(event);

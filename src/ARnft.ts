@@ -92,6 +92,60 @@ export default class ARnft {
             return Promise.reject(false);
         })
     }
+
+    static async init_multi (width: number, height: number, markerUrls: Array<string>, configUrl: string, stats: boolean): Promise<object> {
+        const _arnft = new ARnft(width, height, configUrl);
+        return await _arnft._initialize_multi(markerUrls).catch((error: any) => {
+            console.error(error);
+            return Promise.reject(false);
+        })
+    }
+
+    private async _initialize_multi(markerUrls: Array<string>): Promise<object> {
+        var event = new Event("initARnft");
+        document.dispatchEvent(event);
+        console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
+        getConfig(this.configUrl);
+        document.addEventListener('getConfig', async (ev: any) => {
+            this.appData = ev.detail.config;
+        // views
+        Container.createContainer(this.appData);
+        Container.createLoading(this.appData);
+        Container.createStats(this.appData.stats.createHtml, this.appData);
+        let controllers: NFTWorker[] = [];
+        this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+        await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
+            console.error(error);
+            return Promise.reject(false);
+        });
+        markerUrls.forEach((markerUrl: string) => {
+            controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid));
+            console.log('controllers...');
+            controllers[0].initialize(
+                this.appData.cameraPara, 
+                this.cameraView.getImage(), 
+                () => {
+                    /*if (stats) {
+                        statsMain.update()
+                }*/
+                },
+                () => {
+                    /*if (stats) {
+                        statsWorker.update()
+                }*/
+            })
+            
+            controllers[0].process(this.cameraView.getImage())
+            let update = () => {
+            controllers[0].process(this.cameraView.getImage());
+            requestAnimationFrame(update);
+            }
+            update()
+            
+        })
+    })
+        return Promise.resolve(this)
+    }
     
     /**
      * Used internally by the init static function. It create the html Container, 
