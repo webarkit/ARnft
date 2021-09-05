@@ -48,6 +48,7 @@ export default class NFTWorker {
     private vh: number;
 
     private uuid: string;
+    private name: string;
     
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
@@ -56,11 +57,12 @@ export default class NFTWorker {
      * @param h the height of the camera.
      * @param uuid the uuid of the marker assigned by the ARnft constructor.
      */
-    constructor(markerURL: string, w: number, h: number,  uuid: string) {
+    constructor(markerURL: string, w: number, h: number,  uuid: string, name: string) {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
-        this.uuid = uuid
+        this.uuid = uuid;
+        this.name = name;
     }
     
     /**
@@ -217,7 +219,7 @@ export default class NFTWorker {
             //}
         } else {
             world = JSON.parse(msg.matrixGL_RH)
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid, { detail: { matrixGL_RH: world } })
+            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world } })
             document.dispatchEvent(matrixGLrhEvent)
         }
     }

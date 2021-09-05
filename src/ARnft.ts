@@ -93,15 +93,15 @@ export default class ARnft {
         })
     }
 
-    static async init_multi (width: number, height: number, markerUrls: Array<string>, configUrl: string, stats: boolean): Promise<object> {
+    static async init_multi (width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize_multi(markerUrls).catch((error: any) => {
+        return await _arnft._initialize_multi(markerUrls, names).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         })
     }
 
-    private async _initialize_multi(markerUrls: Array<string>): Promise<object> {
+    private async _initialize_multi(markerUrls: Array<string>, names: Array<string>): Promise<object> {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
@@ -120,7 +120,7 @@ export default class ARnft {
         });
         markerUrls.forEach((markerUrl: string, index: number) => {
             console.log('marker url: ', markerUrl);   
-            controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid));
+            controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
             console.log('controllers...');
             console.log('controllers length: ', controllers.length)
             controllers[index].initialize(
@@ -184,7 +184,8 @@ export default class ARnft {
                 console.error(error);
                 return Promise.reject(false);
             });
-        const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
+        let name: string
+        const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid, name);
         worker.initialize(
             this.appData.cameraPara, 
             this.cameraView.getImage(), 
