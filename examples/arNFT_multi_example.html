@@ -20,7 +20,7 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
-        ARnft.ARnft.init_multi(640, 480, ["examples/DataNFT/pinball", "examples/DataNFT/kuva"], 'config.json', true)
+        ARnft.ARnft.init_multi(640, 480, ["examples/DataNFT/pinball", "examples/DataNFT/kuva"], ['pinball', 'kuva'], 'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -60,6 +60,13 @@
                     let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid,
                         true);
                     sceneThreejs.initRenderer();
+
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
+                        console.log('this is pinball!!');
+                    })
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-kuva', function() {
+                        console.log('this is kuva!!');
+                    })
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
                     nftAddTJS.add(cube);
