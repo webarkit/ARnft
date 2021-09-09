@@ -214,12 +214,12 @@ export default class NFTWorker {
             // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903 
             //if (world) {
                 world = null
-                const nftTrackingLostEvent = new CustomEvent('nftTrackingLost')
+                const nftTrackingLostEvent = new CustomEvent('nftTrackingLost-' + this.uuid + '-' + this.name, { detail: { name: this.name }})
                 document.dispatchEvent(nftTrackingLostEvent)
             //}
         } else {
             world = JSON.parse(msg.matrixGL_RH)
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world } })
+            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world, name: this.name } })
             document.dispatchEvent(matrixGLrhEvent)
         }
     }
