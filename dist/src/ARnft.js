@@ -23,17 +23,44 @@ export default class ARnft {
             return Promise.reject(false);
         });
     }
-    static async init_multi(width, height, markerUrls, configUrl, stats) {
+    static async init_multi(width, height, markerUrls, names, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize_multi(markerUrls).catch((error) => {
+        return await _arnft._initialize_multi(markerUrls, names).catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
     }
-    async _initialize_multi(markerUrls) {
-        let controllers = [];
-        markerUrls.forEach((markerUrl) => {
-            controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid));
+    async _initialize_multi(markerUrls, names) {
+        var event = new Event("initARnft");
+        document.dispatchEvent(event);
+        console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
+        getConfig(this.configUrl);
+        document.addEventListener('getConfig', async (ev) => {
+            this.appData = ev.detail.config;
+            Container.createContainer(this.appData);
+            Container.createLoading(this.appData);
+            Container.createStats(this.appData.stats.createHtml, this.appData);
+            let controllers = [];
+            this.cameraView = new CameraViewRenderer(document.getElementById("video"));
+            await this.cameraView.initialize(this.appData.videoSettings).catch((error) => {
+                console.error(error);
+                return Promise.reject(false);
+            });
+            markerUrls.forEach((markerUrl, index) => {
+                console.log('marker url: ', markerUrl);
+                controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                console.log('controllers...');
+                console.log('controllers length: ', controllers.length);
+                controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
+                }, () => {
+                });
+                controllers[index].process(this.cameraView.getImage());
+                let update = () => {
+                    controllers[index].process(this.cameraView.getImage());
+                    requestAnimationFrame(update);
+                };
+                update();
+            });
         });
         return Promise.resolve(this);
     }
@@ -61,7 +88,8 @@ export default class ARnft {
                 console.error(error);
                 return Promise.reject(false);
             });
-            const worker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
+            let name;
+            const worker = new NFTWorker(markerUrl, this.width, this.height, this.uuid, name);
             worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
                 if (stats) {
                     statsMain.update();

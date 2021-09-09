@@ -25,10 +25,20 @@
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
                 });
+
+                let maty = new THREE.MeshLambertMaterial({
+                    color: 0xffff00
+                });
                 let boxGeom = new THREE.BoxGeometry(1, 1, 1);
                 let cube = new THREE.Mesh(boxGeom, mat);
+                cube.name = 'cube'
                 cube.position.z = 90;
                 cube.scale.set(180, 180, 180);
+
+                let yellowCube = new THREE.Mesh(boxGeom, maty);
+                yellowCube.name = 'yellowCube'
+                yellowCube.position.z = 90;
+                yellowCube.scale.set(180, 180, 180);
 
                 let root = new THREE.Object3D();
                 root.matrixAutoUpdate = false;
@@ -58,8 +68,8 @@
                     }
 
                     let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid,
-                        true);
-                    sceneThreejs.initRenderer();
+            true);
+                    sceneThreejs.initRenderer(['pinball', 'kuva']);
 
                     document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
                         console.log('this is pinball!!');
@@ -68,8 +78,9 @@
                         console.log('this is kuva!!');
                     })
 
-                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
-                    nftAddTJS.add(cube);
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root, nft.uuid);
+                    nftAddTJS.add(cube, 'kuva');
+                    nftAddTJS.add(yellowCube, 'pinball');
 
                     const tick = () => {
                         sceneThreejs.draw();
