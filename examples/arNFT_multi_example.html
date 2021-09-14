@@ -40,10 +40,6 @@
                 yellowCube.position.z = 90;
                 yellowCube.scale.set(180, 180, 180);
 
-                let root = new THREE.Object3D();
-                root.matrixAutoUpdate = false;
-                let root2 = new THREE.Object3D();
-                root2.matrixAutoUpdate = false;
                 document.addEventListener('containerEvent', function (ev) {
 
                     let canvas = document.getElementById('canvas');
@@ -79,9 +75,9 @@
                         console.log('this is kuva!!');
                     })
 
-                    let nftAddTJSk = new ARnftThreejs.NFTaddTJS(root, nft.uuid);
+                    let nftAddTJSk = new ARnftThreejs.NFTaddTJS(nft.uuid);
                     nftAddTJSk.add(cube, 'kuva');
-                    let nftAddTJSp = new ARnftThreejs.NFTaddTJS(root2, nft.uuid);
+                    let nftAddTJSp = new ARnftThreejs.NFTaddTJS(nft.uuid);
                     nftAddTJSp.add(yellowCube, 'pinball');
 
                     const tick = () => {
