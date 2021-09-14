@@ -70,7 +70,6 @@
                     }
 
                     let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid, true);
-                    let scene = sceneThreejs.getScene();
                     sceneThreejs.initRenderer(['pinball', 'kuva']);
 
                     document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
@@ -80,9 +79,9 @@
                         console.log('this is kuva!!');
                     })
 
-                    let nftAddTJSk = new ARnftThreejs.NFTaddTJS(root, scene, nft.uuid);
+                    let nftAddTJSk = new ARnftThreejs.NFTaddTJS(root, nft.uuid);
                     nftAddTJSk.add(cube, 'kuva');
-                    let nftAddTJSp = new ARnftThreejs.NFTaddTJS(root2, scene, nft.uuid);
+                    let nftAddTJSp = new ARnftThreejs.NFTaddTJS(root2, nft.uuid);
                     nftAddTJSp.add(yellowCube, 'pinball');
 
                     const tick = () => {
