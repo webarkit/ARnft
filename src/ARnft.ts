@@ -95,13 +95,13 @@ export default class ARnft {
 
     static async init_multi (width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize_multi(markerUrls, names).catch((error: any) => {
+        return await _arnft._initialize_multi(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         })
     }
 
-    private async _initialize_multi(markerUrls: Array<string>, names: Array<string>): Promise<object> {
+    private async _initialize_multi(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
@@ -112,6 +112,19 @@ export default class ARnft {
         Container.createContainer(this.appData);
         Container.createLoading(this.appData);
         Container.createStats(this.appData.stats.createHtml, this.appData);
+
+        let statsMain: any, statsWorker: any
+
+        if (stats) {
+            statsMain = new Stats()
+            statsMain.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.getElementById('stats1').appendChild(statsMain.dom)
+
+            statsWorker = new Stats()
+            statsWorker.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.getElementById('stats2').appendChild(statsWorker.dom)
+        }
+
         let controllers: NFTWorker[] = [];
         this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
         await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
@@ -127,14 +140,14 @@ export default class ARnft {
                 this.appData.cameraPara, 
                 this.cameraView.getImage(), 
                 () => {
-                    /*if (stats) {
+                    if (stats) {
                         statsMain.update()
-                }*/
+                }
                 },
                 () => {
-                    /*if (stats) {
+                    if (stats) {
                         statsWorker.update()
-                }*/
+                }
             })
 
             controllers[index].process(this.cameraView.getImage())
