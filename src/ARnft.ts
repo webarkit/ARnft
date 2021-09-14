@@ -80,28 +80,31 @@ export default class ARnft {
      * Internally use the initialize function, that is responsible to load all the resources.
      * @param width (number) the width in pixels of the video camera.
      * @param height (number) the height in pixels of the video camera.
-     * @param markerUrl (string) the url of the marker (without the extension) 
+     * @param markerUrls (Array<string>) the Array of url of the markers (without the extension) 
+     * @param names the names of the markers
      * @param configUrl (string) the url of the config.json file
      * @param stats (boolean) true if you want the stats.
      * @returns (object) the nft object.
      */
-    static async init (width: number, height: number, markerUrl: string, configUrl: string, stats: boolean): Promise<object> {
+
+    static async init (width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize(markerUrl, stats).catch((error: any) => {
+        return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         })
     }
 
-    static async init_multi (width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object> {
-        const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize_multi(markerUrls, names, stats).catch((error: any) => {
-            console.error(error);
-            return Promise.reject(false);
-        })
-    }
+    /**
+     * Used internally by the init static function. It create the html Container, 
+     * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker.
+     * @param markerUrls the url Array of the markers.
+     * @param names the names of the markers
+     * @param stats choose if you want the stats.
+     * @returns the ARnft object.
+     */
 
-    private async _initialize_multi(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
+    private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
@@ -159,66 +162,6 @@ export default class ARnft {
             
         })
     })
-        return Promise.resolve(this)
-    }
-    
-    /**
-     * Used internally by the init static function. It create the html Container, 
-     * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker.
-     * @param markerUrl the url of the marker.
-     * @param stats choose if you want the stats.
-     * @returns the ARnft object.
-     */
-    private async _initialize(markerUrl: string, stats: boolean): Promise<object> {
-        var event = new Event("initARnft");
-        document.dispatchEvent(event);
-        console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
-        getConfig(this.configUrl);
-        document.addEventListener('getConfig', async (ev: any) => {
-            this.appData = ev.detail.config;
-        // views
-        Container.createContainer(this.appData);
-        Container.createLoading(this.appData);
-        Container.createStats(this.appData.stats.createHtml, this.appData);
-
-        let statsMain: any, statsWorker: any
-
-        if (stats) {
-            statsMain = new Stats()
-            statsMain.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-            document.getElementById('stats1').appendChild(statsMain.dom)
-
-            statsWorker = new Stats()
-            statsWorker.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-            document.getElementById('stats2').appendChild(statsWorker.dom)
-        }
-        this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
-            await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
-                console.error(error);
-                return Promise.reject(false);
-            });
-        let name: string
-        const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid, name);
-        worker.initialize(
-            this.appData.cameraPara, 
-            this.cameraView.getImage(), 
-            () => {
-                if (stats) {
-                    statsMain.update()
-            }
-            },
-            () => {
-                if (stats) {
-                    statsWorker.update()
-            }
-        })     
-        worker.process(this.cameraView.getImage())
-        let update = () => {
-            worker.process(this.cameraView.getImage());
-            requestAnimationFrame(update);
-        }
-        update()
-        })
         return Promise.resolve(this)
     }
 
