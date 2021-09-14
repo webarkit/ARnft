@@ -75,10 +75,11 @@
                         console.log('this is kuva!!');
                     })
 
-                    let nftAddTJSk = new ARnftThreejs.NFTaddTJS(nft.uuid);
-                    nftAddTJSk.add(cube, 'kuva');
-                    let nftAddTJSp = new ARnftThreejs.NFTaddTJS(nft.uuid);
-                    nftAddTJSp.add(yellowCube, 'pinball');
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                    nftAddTJS.add(yellowCube, 'pinball');
+                    nftAddTJS.add(cube, 'kuva');
+                    let names = nftAddTJS.getNames();
+                    console.log(names);
 
                     const tick = () => {
                         sceneThreejs.draw();
