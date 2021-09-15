@@ -137,8 +137,6 @@ export default class ARnft {
         markerUrls.forEach((markerUrl: string, index: number) => {
             console.log('marker url: ', markerUrl);   
             controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-            console.log('controllers...');
-            console.log('controllers length: ', controllers.length)
             controllers[index].initialize(
                 this.appData.cameraPara, 
                 this.cameraView.getImage(), 
