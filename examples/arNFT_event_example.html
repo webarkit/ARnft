@@ -23,7 +23,7 @@
         document.addEventListener('initARnft', function(e){
             console.log(e);
         })
-        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"],['pinball'], 'config-event.json', true)
+        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"], ['pinball'], 'config-event.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
