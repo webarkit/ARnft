@@ -22,8 +22,6 @@
     <script>
         ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"],['pinball'], 'config_brave_robot.json', true, true)
             .then((nft) => {
-                let root = new THREE.Object3D();
-                root.matrixAutoUpdate = false;
                 document.addEventListener('containerEvent', function (ev) {
 
                     let canvas = document.getElementById('canvas');
@@ -49,7 +47,7 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid,
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
                         true);
                     sceneThreejs.initRenderer();
 

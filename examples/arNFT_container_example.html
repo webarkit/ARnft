@@ -22,7 +22,7 @@
     <script>
         // This example not create the Html elements for loading, stats and container app.
         // But instead you define in your html code. See 'config-container.json' for the set-up.
-        ARnft.ARnft.init(640, 480, "examples/DataNFT/pinball", 'config-container.json', true)
+        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"],['pinball'], 'config-container.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -32,8 +32,6 @@
                 cube.position.z = 90;
                 cube.scale.set(180, 180, 180);
 
-                let root = new THREE.Object3D();
-                root.matrixAutoUpdate = false;
                 document.addEventListener('containerEvent', function (ev) {
 
                     let canvas = document.getElementById('canvas');
@@ -59,12 +57,12 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, root, nft.uuid,
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
                         true);
                     sceneThreejs.initRenderer();
 
-                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(root);
-                    nftAddTJS.add(cube);
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                    nftAddTJS.add(cube, 'pinball');
 
                     const tick = () => {
                         sceneThreejs.draw();
