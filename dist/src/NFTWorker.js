@@ -81,7 +81,7 @@ export default class NFTWorker {
                     }
                     case 'nftData': {
                         const nft = JSON.parse(msg.nft);
-                        const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } });
+                        const nftEvent = new CustomEvent('getNFTData-' + this.uuid + '-' + this.name, { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } });
                         document.dispatchEvent(nftEvent);
                         break;
                     }
@@ -116,12 +116,12 @@ export default class NFTWorker {
         let world;
         if (!msg) {
             world = null;
-            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost');
+            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost-' + this.uuid + '-' + this.name, { detail: { name: this.name } });
             document.dispatchEvent(nftTrackingLostEvent);
         }
         else {
             world = JSON.parse(msg.matrixGL_RH);
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world } });
+            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world, name: this.name } });
             document.dispatchEvent(matrixGLrhEvent);
         }
     }
