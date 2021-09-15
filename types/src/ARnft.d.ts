@@ -9,6 +9,7 @@ export default class ARnft {
     listeners: object;
     markerUrl: string;
     camData: string;
+    private controllers;
     private uuid;
     private version;
     constructor(width: number, height: number, configUrl: string);

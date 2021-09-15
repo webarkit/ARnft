@@ -52,6 +52,7 @@ export default class ARnft {
     public listeners:  object;
     public markerUrl: string;
     public camData: string;
+    private controllers: NFTWorker[];
     private uuid: string;
     private version: string;
 
@@ -128,16 +129,15 @@ export default class ARnft {
             document.getElementById('stats2').appendChild(statsWorker.dom)
         }
 
-        let controllers: NFTWorker[] = [];
+        this.controllers = [];
         this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
         await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         });
-        markerUrls.forEach((markerUrl: string, index: number) => {
-            console.log('marker url: ', markerUrl);   
-            controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-            controllers[index].initialize(
+        markerUrls.forEach((markerUrl: string, index: number) => {   
+            this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+            this.controllers[index].initialize(
                 this.appData.cameraPara, 
                 this.cameraView.getImage(), 
                 () => {
@@ -151,9 +151,9 @@ export default class ARnft {
                 }
             })
 
-            controllers[index].process(this.cameraView.getImage())
+            this.controllers[index].process(this.cameraView.getImage())
             let update = () => {
-            controllers[index].process(this.cameraView.getImage());
+            this.controllers[index].process(this.cameraView.getImage());
             requestAnimationFrame(update);
             }
             update()
