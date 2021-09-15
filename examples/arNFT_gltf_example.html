@@ -20,7 +20,7 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
-        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"],['pinball'], 'config.json', true)
+        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"], ['pinball'], 'config.json', true)
             .then((nft) => {
                 document.addEventListener('containerEvent', function (ev) {
 
@@ -60,7 +60,7 @@
                     scene.add(directionalLight)
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
-                    nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb','pinball', 40, 80, 80, 80);
+                    nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb', 'pinball', 40, 80, 80, 80);
 
                     const tick = () => {
                         sceneThreejs.draw();
