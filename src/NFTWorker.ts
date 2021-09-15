@@ -172,7 +172,7 @@ export default class NFTWorker {
                     }
                     case 'nftData': {
                         const nft = JSON.parse(msg.nft)
-                        const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
+                        const nftEvent = new CustomEvent('getNFTData-' + this.uuid + '-' + this.name, { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
                         document.dispatchEvent(nftEvent)
                         break
                     }
