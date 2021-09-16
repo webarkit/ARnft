@@ -42,16 +42,15 @@ export default class ARnft {
                 statsWorker.showPanel(0);
                 document.getElementById('stats2').appendChild(statsWorker.dom);
             }
-            let controllers = [];
+            this.controllers = [];
             this.cameraView = new CameraViewRenderer(document.getElementById("video"));
             await this.cameraView.initialize(this.appData.videoSettings).catch((error) => {
                 console.error(error);
                 return Promise.reject(false);
             });
             markerUrls.forEach((markerUrl, index) => {
-                console.log('marker url: ', markerUrl);
-                controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-                controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
                     if (stats) {
                         statsMain.update();
                     }
@@ -60,9 +59,9 @@ export default class ARnft {
                         statsWorker.update();
                     }
                 });
-                controllers[index].process(this.cameraView.getImage());
+                this.controllers[index].process(this.cameraView.getImage());
                 let update = () => {
-                    controllers[index].process(this.cameraView.getImage());
+                    this.controllers[index].process(this.cameraView.getImage());
                     requestAnimationFrame(update);
                 };
                 update();
