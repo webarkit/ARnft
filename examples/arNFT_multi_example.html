@@ -20,11 +20,11 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
-        const entities = { entities: [
+        const entities = [
             { name: 'pinball', markerUrl: "examples/DataNFT/pinball" },
             { name: 'kuva', markerUrl: "examples/DataNFT/kuva" },
             { name: 'chalk_multi', markerUrl: "examples/DataNFT/chalk_multi"}
-        ] }
+        ]
         ARnft.ARnft.initWithEntities(640, 480, entities,  'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({

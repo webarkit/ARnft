@@ -47,10 +47,6 @@ interface Entity {
     name: string, 
     markerUrl: string
 }
-interface Entities extends Entity {
-    entities: Entity[]
-}
-
 export default class ARnft {
     public cameraView: CameraViewRenderer;
     public appData: ConfigData;
@@ -104,11 +100,10 @@ export default class ARnft {
         })
     }
 
-    static async initWithEntities (width: number, height: number, entities: Entities, configUrl: string, stats: boolean): Promise<object> {
+    static async initWithEntities (width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        console.log(entities);
-        let markerUrls = entities.entities.map((entity)=>{ return entity.markerUrl })
-        let names = entities.entities.map((entity) => { return entity.name})
+        let markerUrls = entities.map((entity)=>{ return entity.markerUrl })
+        let names = entities.map((entity) => { return entity.name})
         return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
