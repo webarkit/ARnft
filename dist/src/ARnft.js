@@ -23,6 +23,15 @@ export default class ARnft {
             return Promise.reject(false);
         });
     }
+    static async initWithEntities(width, height, entities, configUrl, stats) {
+        const _arnft = new ARnft(width, height, configUrl);
+        let markerUrls = entities.entities.map((entity) => { return entity.markerUrl; });
+        let names = entities.entities.map((entity) => { return entity.name; });
+        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
+            console.error(error);
+            return Promise.reject(false);
+        });
+    }
     async _initialize(markerUrls, names, stats) {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
