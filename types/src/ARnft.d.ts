@@ -1,5 +1,12 @@
 import { ConfigData } from "./config/ConfigData";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
+interface Entity {
+    name: string;
+    markerUrl: string;
+}
+interface Entities extends Entity {
+    entities: Entity[];
+}
 export default class ARnft {
     cameraView: CameraViewRenderer;
     appData: ConfigData;
@@ -14,6 +21,7 @@ export default class ARnft {
     private version;
     constructor(width: number, height: number, configUrl: string);
     static init(width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object>;
+    static initWithEntities(width: number, height: number, entities: Entities, configUrl: string, stats: boolean): Promise<object>;
     private _initialize;
     private converter;
     dispatchEvent(event: {
@@ -27,3 +35,4 @@ export default class ARnft {
     disposeNFT(): void;
     disposeVideoStream(): void;
 }
+export {};

@@ -43,6 +43,14 @@ import { v4 as uuidv4 } from 'uuid'
 import packageJson from '../package.json'
 const { version } = packageJson
 
+interface Entity {
+    name: string, 
+    markerUrl: string
+}
+interface Entities extends Entity {
+    entities: Entity[]
+}
+
 export default class ARnft {
     public cameraView: CameraViewRenderer;
     public appData: ConfigData;
@@ -90,6 +98,17 @@ export default class ARnft {
 
     static async init (width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
+        return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
+            console.error(error);
+            return Promise.reject(false);
+        })
+    }
+
+    static async initWithEntities (width: number, height: number, entities: Entities, configUrl: string, stats: boolean): Promise<object> {
+        const _arnft = new ARnft(width, height, configUrl);
+        console.log(entities);
+        let markerUrls = entities.entities.map((entity)=>{ return entity.markerUrl })
+        let names = entities.entities.map((entity) => { return entity.name})
         return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
