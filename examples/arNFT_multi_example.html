@@ -58,6 +58,9 @@
                 sphere.name = 'sphere'
                 sphere.position.z = 90;
                 sphere.scale.set(180, 180, 180);
+                
+                let testEntities = ARnft.ARnft.getEntities();
+                console.log("entities from getEntities static method: ", testEntities);
 
                 document.addEventListener('containerEvent', function (ev) {
 
