@@ -14,6 +14,7 @@ export default class ARnft {
     markerUrl: string;
     camData: string;
     private controllers;
+    private static entities;
     private uuid;
     private version;
     constructor(width: number, height: number, configUrl: string);
@@ -21,6 +22,7 @@ export default class ARnft {
     static initWithEntities(width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object>;
     private _initialize;
     private converter;
+    static getEntities(): Entity[];
     dispatchEvent(event: {
         name: string;
         target: any;

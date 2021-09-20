@@ -57,6 +57,7 @@ export default class ARnft {
     public markerUrl: string;
     public camData: string;
     private controllers: NFTWorker[];
+    private static entities: Entity[];
     private uuid: string;
     private version: string;
 
@@ -100,10 +101,24 @@ export default class ARnft {
         })
     }
 
+    /**
+     * The initWithEntities function let set-up the NFT markers with a Entity object. 
+     * We set an Array of Entity for multiple NFT markers. An Entity is composed of a unique name and
+     * a markerUrl.
+     * Internally use the initialize function, that is responsible to load all the resources.
+     * @param width (number) the width in pixels of the video camera.
+     * @param height (number) the height in pixels of the video camera.
+     * @param entities (Entity[]) the Array of Entity  
+     * @param configUrl (string) the url of the config.json file
+     * @param stats (boolean) true if you want the stats.
+     * @returns (object) the nft object.
+     */
+
     static async initWithEntities (width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        let markerUrls = entities.map((entity)=>{ return entity.markerUrl })
-        let names = entities.map((entity) => { return entity.name})
+        this.entities = entities;
+        let markerUrls = this.entities.map((entity)=>{ return entity.markerUrl })
+        let names = this.entities.map((entity) => { return entity.name})
         return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
@@ -184,6 +199,10 @@ export default class ARnft {
     private converter(): any {
         return this;
       }
+
+    public static getEntities() {
+        return this.entities;
+    }
 
     /**
      * Dispatch an event from the ARnft instance.
