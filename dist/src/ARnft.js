@@ -16,14 +16,24 @@ export default class ARnft {
         this.version = version;
         console.log('ARnft ', this.version);
     }
-    static async init(width, height, markerUrl, configUrl, stats) {
+    static async init(width, height, markerUrls, names, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize(markerUrl, stats).catch((error) => {
+        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
     }
-    async _initialize(markerUrl, stats) {
+    static async initWithEntities(width, height, entities, configUrl, stats) {
+        const _arnft = new ARnft(width, height, configUrl);
+        this.entities = entities;
+        let markerUrls = this.entities.map((entity) => { return entity.markerUrl; });
+        let names = this.entities.map((entity) => { return entity.name; });
+        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
+            console.error(error);
+            return Promise.reject(false);
+        });
+    }
+    async _initialize(markerUrls, names, stats) {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
@@ -42,32 +52,38 @@ export default class ARnft {
                 statsWorker.showPanel(0);
                 document.getElementById('stats2').appendChild(statsWorker.dom);
             }
+            this.controllers = [];
             this.cameraView = new CameraViewRenderer(document.getElementById("video"));
             await this.cameraView.initialize(this.appData.videoSettings).catch((error) => {
                 console.error(error);
                 return Promise.reject(false);
             });
-            const worker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
-            worker.initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
-                if (stats) {
-                    statsMain.update();
-                }
-            }, () => {
-                if (stats) {
-                    statsWorker.update();
-                }
+            markerUrls.forEach((markerUrl, index) => {
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
+                    if (stats) {
+                        statsMain.update();
+                    }
+                }, () => {
+                    if (stats) {
+                        statsWorker.update();
+                    }
+                });
+                this.controllers[index].process(this.cameraView.getImage());
+                let update = () => {
+                    this.controllers[index].process(this.cameraView.getImage());
+                    requestAnimationFrame(update);
+                };
+                update();
             });
-            worker.process(this.cameraView.getImage());
-            let update = () => {
-                worker.process(this.cameraView.getImage());
-                requestAnimationFrame(update);
-            };
-            update();
         });
         return Promise.resolve(this);
     }
     converter() {
         return this;
+    }
+    static getEntities() {
+        return this.entities;
     }
     dispatchEvent(event) {
         let listeners = this.converter().listeners[event.name];

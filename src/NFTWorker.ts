@@ -48,6 +48,7 @@ export default class NFTWorker {
     private vh: number;
 
     private uuid: string;
+    private name: string;
     
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
@@ -56,11 +57,12 @@ export default class NFTWorker {
      * @param h the height of the camera.
      * @param uuid the uuid of the marker assigned by the ARnft constructor.
      */
-    constructor(markerURL: string, w: number, h: number,  uuid: string) {
+    constructor(markerURL: string, w: number, h: number,  uuid: string, name: string) {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
-        this.uuid = uuid
+        this.uuid = uuid;
+        this.name = name;
     }
     
     /**
@@ -162,7 +164,12 @@ export default class NFTWorker {
                             if (loader) {
                                 loader.querySelector<HTMLElement>('.loading-text').innerText = 'Start the tracking!'
                                 setTimeout(function () {
+                                    if (loader.parentElement == null) {
+                                       return;                                      
+                                    } 
+                                    if (loader) {
                                     loader.parentElement.removeChild(loader)
+                                    }
                                 }, 2000)
                             }
                         }
@@ -170,7 +177,7 @@ export default class NFTWorker {
                     }
                     case 'nftData': {
                         const nft = JSON.parse(msg.nft)
-                        const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
+                        const nftEvent = new CustomEvent('getNFTData-' + this.uuid + '-' + this.name, { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
                         document.dispatchEvent(nftEvent)
                         break
                     }
@@ -212,12 +219,12 @@ export default class NFTWorker {
             // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903 
             //if (world) {
                 world = null
-                const nftTrackingLostEvent = new CustomEvent('nftTrackingLost')
+                const nftTrackingLostEvent = new CustomEvent('nftTrackingLost-' + this.uuid + '-' + this.name, { detail: { name: this.name }})
                 document.dispatchEvent(nftTrackingLostEvent)
             //}
         } else {
             world = JSON.parse(msg.matrixGL_RH)
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid, { detail: { matrixGL_RH: world } })
+            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world, name: this.name } })
             document.dispatchEvent(matrixGLrhEvent)
         }
     }

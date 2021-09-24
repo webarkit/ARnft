@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>ARnft example showing a simple red cube</title>
+    <title>ARnft multi example showing some simple meshes</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
     <link rel="stylesheet" href="css/nft-style.css">
 </head>
@@ -20,18 +20,48 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
-        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"], ['pinball'], 'config.json', true)
+        const entities = [
+            { name: 'pinball', markerUrl: "examples/DataNFT/pinball" },
+            { name: 'kuva', markerUrl: "examples/DataNFT/kuva" },
+            { name: 'chalk_multi', markerUrl: "examples/DataNFT/chalk_multi"}
+        ]
+        ARnft.ARnft.initWithEntities(640, 480, entities,  'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
                 });
+
+                let maty = new THREE.MeshLambertMaterial({
+                    color: 0xffff00
+                });
+
+                let matz = new THREE.MeshLambertMaterial({
+                    color: 0x0000ff
+                });
+
                 let boxGeom = new THREE.BoxGeometry(1, 1, 1);
                 let cube = new THREE.Mesh(boxGeom, mat);
+                cube.name = 'cube';
                 cube.position.z = 90;
                 cube.scale.set(180, 180, 180);
+                
+                let coneGeom = new THREE.ConeGeometry( 0.5, 1, 32 );
+                let cone = new THREE.Mesh( coneGeom, maty);
+                cone.name = 'cone';
+                cone.rotation.x = 90;
+                cone.position.z = 90;
+                cone.scale.set(180, 180, 180);
 
-                let root = new THREE.Object3D();
-                root.matrixAutoUpdate = false;
+
+                let sphereGeom = new THREE.SphereGeometry(0.5, 8, 8);
+                let sphere = new THREE.Mesh(sphereGeom, matz)
+                sphere.name = 'sphere'
+                sphere.position.z = 90;
+                sphere.scale.set(180, 180, 180);
+                
+                let testEntities = ARnft.ARnft.getEntities();
+                console.log("entities from getEntities static method: ", testEntities);
+
                 document.addEventListener('containerEvent', function (ev) {
 
                     let canvas = document.getElementById('canvas');
@@ -56,12 +86,25 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
-                        true);
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid, true);
                     sceneThreejs.initRenderer();
+
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
+                        console.log('this is pinball!!');
+                    })
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-kuva', function() {
+                        console.log('this is kuva!!');
+                    })
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-chalk_multi', function() {
+                        console.log('this is chalk_multi!!');
+                    })
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
                     nftAddTJS.add(cube, 'pinball', false);
+                    nftAddTJS.add(cone, 'kuva', false);
+                    nftAddTJS.add(sphere, 'chalk_multi', false);
+                    let names = nftAddTJS.getNames();
+                    console.log(names);
 
                     const tick = () => {
                         sceneThreejs.draw();
