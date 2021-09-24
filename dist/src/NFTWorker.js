@@ -73,7 +73,12 @@ export default class NFTWorker {
                             if (loader) {
                                 loader.querySelector('.loading-text').innerText = 'Start the tracking!';
                                 setTimeout(function () {
-                                    loader.parentElement.removeChild(loader);
+                                    if (loader.parentElement == null) {
+                                        return;
+                                    }
+                                    if (loader) {
+                                        loader.parentElement.removeChild(loader);
+                                    }
                                 }, 2000);
                             }
                         }

@@ -25,8 +25,9 @@ export default class ARnft {
     }
     static async initWithEntities(width, height, entities, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
-        let markerUrls = entities.entities.map((entity) => { return entity.markerUrl; });
-        let names = entities.entities.map((entity) => { return entity.name; });
+        this.entities = entities;
+        let markerUrls = this.entities.map((entity) => { return entity.markerUrl; });
+        let names = this.entities.map((entity) => { return entity.name; });
         return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
             console.error(error);
             return Promise.reject(false);
@@ -80,6 +81,9 @@ export default class ARnft {
     }
     converter() {
         return this;
+    }
+    static getEntities() {
+        return this.entities;
     }
     dispatchEvent(event) {
         let listeners = this.converter().listeners[event.name];
