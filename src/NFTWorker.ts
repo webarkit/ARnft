@@ -48,7 +48,7 @@ export default class NFTWorker {
     private vh: number;
 
     private uuid: string;
-    
+
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
      * @param markerURL the marker url of the NFT marker.
@@ -56,13 +56,13 @@ export default class NFTWorker {
      * @param h the height of the camera.
      * @param uuid the uuid of the marker assigned by the ARnft constructor.
      */
-    constructor(markerURL: string, w: number, h: number,  uuid: string) {
+    constructor(markerURL: string, w: number, h: number, uuid: string) {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
         this.uuid = uuid
     }
-    
+
     /**
      * Initialize the NFTWorker instance, you need to provide the camera_para.dat Url,
      * the ImageData from the video stream and the renderUpdate and trackUpdate functions for the stats.
@@ -79,13 +79,13 @@ export default class NFTWorker {
                 resolve(true);
             });
             const worker = this.worker
-            document.addEventListener("terminateWorker", function() {
-                worker.postMessage({type: 'stop'})
+            document.addEventListener("terminateWorker", function () {
+                worker.postMessage({ type: 'stop' })
                 worker.terminate();
             });
         });
     }
-    
+
     /**
      * This is the function that will pass the video stream to the worker.
      * @param imageData the image data from the video stream.
@@ -100,7 +100,7 @@ export default class NFTWorker {
 
         this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
     }
-    
+
     /**
      * Load the resources from the ARnft instance into the worker.
      * @param cameraURL camera_para.dat url
@@ -109,111 +109,107 @@ export default class NFTWorker {
      * @param trackUpdate trackUpdate for the stats.
      * @returns true if succesfull.
      */
-    protected load(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
+    protected async load(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void) {
 
-        return new Promise<boolean>((resolve, reject) => {
+        var pscale = 480 / Math.max(this.vw, this.vh / 3 * 4);
+        var sscale = isMobile() ? window.outerWidth / this.vw : 1
 
-            var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
-            var sscale = isMobile() ? window.outerWidth / this.vw : 1
+        let sw = this.vw * sscale
+        let sh = this.vh * sscale
 
-            let sw = this.vw * sscale
-            let sh = this.vh * sscale
-            
+        let w: number = this.vw * pscale;
+        let h: number = this.vh * pscale;
+        let pw: number = Math.max(w, (h / 3) * 4);
+        let ph: number = Math.max(h, (w / 4) * 3);
 
-            let w: number = this.vw * pscale;
-            let h: number = this.vh * pscale;
-            let pw: number = Math.max(w, (h / 3) * 4);
-            let ph: number = Math.max(h, (w / 4) * 3);
+        const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
+        document.dispatchEvent(setWindowSizeEvent)
 
-            const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } })
-            document.dispatchEvent(setWindowSizeEvent)
-
-            this.worker.postMessage({
-                type: 'load',
-                pw: pw,
-                ph: ph,
-                camera_para: cameraURL,
-                marker: this.markerURL
-            });
-
-            this.worker.onmessage = (ev: any) => {
-                var msg = ev.data;
-                switch (msg.type) {
-                    case 'loaded': {
-                        var proj = JSON.parse(msg.proj);
-                        const ratioW = pw / w
-                        const ratioH = ph / h
-                        proj[0] *= ratioW
-                        proj[4] *= ratioW
-                        proj[8] *= ratioW
-                        proj[12] *= ratioW
-                        proj[1] *= ratioH
-                        proj[5] *= ratioH
-                        proj[9] *= ratioH
-                        proj[13] *= ratioH
-                        const projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
-                        document.dispatchEvent(projectionMatrixEvent)
-                        break;
-                    }
-                    case "endLoading": {
-                        if (msg.end == true) {
-                            // removing loader page if present
-                            const loader = document.getElementById('loading')
-                            if (loader) {
-                                loader.querySelector<HTMLElement>('.loading-text').innerText = 'Start the tracking!'
-                                setTimeout(function () {
-                                    loader.parentElement.removeChild(loader)
-                                }, 2000)
-                            }
-                        }
-                        break;
-                    }
-                    case 'nftData': {
-                        const nft = JSON.parse(msg.nft)
-                        const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
-                        document.dispatchEvent(nftEvent)
-                        break
-                    }
-                    case 'found': {
-                        this.found(msg)
-                        break
-                    }
-                    case 'not found': {
-                        this.found(null)
-                        break
-                    }
-                    case 'error': {
-                        console.log("NFTWorker : error");
-                        var event = new Event("nftError");
-                        document.dispatchEvent(event);
-                        break
-                      }
-                }
-                this._processing = false;
-                trackUpdate();
-            };
-            let renderU = () => {
-                renderUpdate()
-                window.requestAnimationFrame(renderU)
-            }
-            renderU();
-            this.process(imageData);
+        this.worker.postMessage({
+            type: 'load',
+            pw: pw,
+            ph: ph,
+            camera_para: cameraURL,
+            marker: this.markerURL
         });
+
+        this.worker.onmessage = (ev: any) => {
+            var msg = ev.data;
+            switch (msg.type) {
+                case 'loaded': {
+                    var proj = JSON.parse(msg.proj);
+                    const ratioW = pw / w
+                    const ratioH = ph / h
+                    proj[0] *= ratioW
+                    proj[4] *= ratioW
+                    proj[8] *= ratioW
+                    proj[12] *= ratioW
+                    proj[1] *= ratioH
+                    proj[5] *= ratioH
+                    proj[9] *= ratioH
+                    proj[13] *= ratioH
+                    const projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } })
+                    document.dispatchEvent(projectionMatrixEvent)
+                    break;
+                }
+                case "endLoading": {
+                    if (msg.end == true) {
+                        // removing loader page if present
+                        const loader = document.getElementById('loading')
+                        if (loader) {
+                            loader.querySelector<HTMLElement>('.loading-text').innerText = 'Start the tracking!'
+                            setTimeout(function () {
+                                loader.parentElement.removeChild(loader)
+                            }, 2000)
+                        }
+                    }
+                    break;
+                }
+                case 'nftData': {
+                    const nft = JSON.parse(msg.nft)
+                    const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } })
+                    document.dispatchEvent(nftEvent)
+                    break
+                }
+                case 'found': {
+                    this.found(msg)
+                    break
+                }
+                case 'not found': {
+                    this.found(null)
+                    break
+                }
+                case 'error': {
+                    console.log("NFTWorker : error");
+                    var event = new Event("nftError");
+                    document.dispatchEvent(event);
+                    break
+                }
+            }
+            this._processing = false;
+            trackUpdate();
+        };
+        let renderU = () => {
+            renderUpdate()
+            window.requestAnimationFrame(renderU)
+        }
+        renderU();
+        this.process(imageData);
     };
-    
+
     /**
      * dispatch an event listener if the marker is lost or the matrix of the marker
      * if found.
      * @param msg message from the worker.
      */
-    public found (msg: any) {
+    public found(msg: any) {
         let world: any;
         if (!msg) {
             // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903 
             //if (world) {
-                world = null
-                const nftTrackingLostEvent = new CustomEvent('nftTrackingLost')
-                document.dispatchEvent(nftTrackingLostEvent)
+            world = null
+            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost')
+            document.dispatchEvent(nftTrackingLostEvent)
             //}
         } else {
             world = JSON.parse(msg.matrixGL_RH)
@@ -222,16 +218,16 @@ export default class NFTWorker {
         }
     }
 
-    
+
 
     public destroy(): void {
 
     }
-    
+
     /**
      * Stop the NFT tracking and the video streaming.
      */
-    static stopNFT () {
+    static stopNFT() {
         console.log("Stop NFT");
         var event = new Event("terminateWorker");
         document.dispatchEvent(event);

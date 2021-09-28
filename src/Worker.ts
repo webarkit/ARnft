@@ -49,7 +49,7 @@ ctx.onmessage = (e) => {
       ar = null;
       break;
     }
-    case 'process': {      
+    case 'process': {
       next = msg.imagedata
       process(next)
     }
@@ -97,8 +97,8 @@ const load = (msg: any) => {
         console.log(nft)
         ctx.postMessage({ type: 'endLoading', end: true })
       }).catch((err: any) => {
-      console.error('Error in loading marker on Worker', err)
-    })
+        console.error('Error in loading marker on Worker', err)
+      })
 
     ctx.postMessage({ type: 'loaded', proj: JSON.stringify(cameraMatrix) })
   }

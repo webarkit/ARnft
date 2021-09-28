@@ -58,6 +58,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public video: HTMLVideoElement;
 
+    private _frame: ImageData;
     private _facing: string;
 
     private vw: number;
@@ -74,6 +75,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement('canvas');
+        this.canvas_process.id = "videoCanvas";
         this.context_process = this.canvas_process.getContext('2d');
         this.video = video;
     }
@@ -86,17 +88,30 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return this.vw;
     }
 
+    public getPHeight(): number {
+        return this.ph;
+    }
+
+    public getPWidth(): number {
+        return this.pw;
+    }
+
+    public getFrame(): ImageData {
+        return this._frame;
+    }
+
+    public getContext(): CanvasRenderingContext2D {
+        return this.context_process;
+    }
+
     public getImage(): ImageData {
         this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
-        return this.context_process.getImageData(0, 0, this.pw, this.ph);
+        return this._frame = this.context_process.getImageData(0, 0, this.pw, this.ph);
     }
 
     public initialize(videoSettings: VideoSettingData): Promise<boolean> {
 
         this._facing = videoSettings.facingMode || 'environment'
-
-        const constraints = {}
-        const mediaDevicesConstraints = {}
 
         return new Promise<boolean>(async (resolve, reject) => {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -107,6 +122,23 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                         width: { min: 480, max: 640 }
                     }
                 };
+                if (navigator.mediaDevices.enumerateDevices) {
+                    try {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        var videoDevices = [] as Array<string>;
+                        var videoDeviceIndex = 0;
+                        devices.forEach(function (device) {
+                            if (device.kind == "videoinput") {
+                                videoDevices[videoDeviceIndex++] = device.deviceId;
+                            }
+                        });
+                        if (videoDevices.length > 1) {
+                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                        }
+                    } catch (err: any) {
+                        console.log(err.name + ": " + err.message);
+                    }
+                }
 
                 if (navigator.mediaDevices.enumerateDevices) {
                     try {
@@ -135,7 +167,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                         this.vw = this.video.videoWidth;
                         this.vh = this.video.videoHeight;
 
-                        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+                        var pscale = 480 / Math.max(this.vw, this.vh / 3 * 4);
 
                         this.w = this.vw * pscale;
                         this.h = this.vh * pscale;
@@ -170,18 +202,18 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public destroy(): void {
         const video = this.video
-        document.addEventListener("stopStreaming", function() {
+        document.addEventListener("stopStreaming", function () {
             const stream = <MediaStream>video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {
                 const tracks = stream.getTracks();
-      
-                tracks.forEach(function(track) {
+
+                tracks.forEach(function (track) {
                     track.stop();
                 });
-      
+
                 video.srcObject = null;
-      
+
                 let currentAR = document.getElementById("app");
                 if (currentAR !== null && currentAR !== undefined) {
                     currentAR.remove();

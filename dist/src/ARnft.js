@@ -58,9 +58,18 @@ export default class ARnft {
                 }
             });
             worker.process(this.cameraView.getImage());
+            const renderT = 1000 / 12;
+            let start = Date.now();
+            let lag = 0;
             let update = () => {
-                worker.process(this.cameraView.getImage());
                 requestAnimationFrame(update);
+                let current = Date.now(), elapsed = current - start;
+                lag += elapsed;
+                if (lag < renderT) {
+                    return;
+                }
+                worker.process(this.cameraView.getImage());
+                lag = 0;
             };
             update();
         });

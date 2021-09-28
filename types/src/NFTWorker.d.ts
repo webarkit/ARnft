@@ -8,7 +8,7 @@ export default class NFTWorker {
     constructor(markerURL: string, w: number, h: number, uuid: string);
     initialize(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean>;
     process(imageData: ImageData): void;
-    protected load(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean>;
+    protected load(cameraURL: string, imageData: ImageData, renderUpdate: () => void, trackUpdate: () => void): Promise<void>;
     found(msg: any): void;
     destroy(): void;
     static stopNFT(): void;
