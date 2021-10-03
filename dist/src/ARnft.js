@@ -23,6 +23,13 @@ export default class ARnft {
             return Promise.reject(false);
         });
     }
+    static async initPromiseBased(width, height, markerUrls, names, configUrl, stats) {
+        const _arnft = new ARnft(width, height, configUrl);
+        return _arnft._initialize(markerUrls, names, stats).catch((error) => {
+            console.error(error);
+            return Promise.reject(false);
+        });
+    }
     static async initWithEntities(width, height, entities, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
         this.entities = entities;
