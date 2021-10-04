@@ -1,12 +1,13 @@
 import Worker from 'worker-loader?inline=no-fallback!./Worker';
 import { isMobile } from './utils/ARUtils';
 export default class NFTWorker {
-    constructor(markerURL, w, h, uuid) {
+    constructor(markerURL, w, h, uuid, name) {
         this._processing = false;
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
         this.uuid = uuid;
+        this.name = name;
     }
     initialize(cameraURL, imageData, renderUpdate, trackUpdate) {
         return new Promise((resolve, reject) => {
@@ -72,7 +73,12 @@ export default class NFTWorker {
                             if (loader) {
                                 loader.querySelector('.loading-text').innerText = 'Start the tracking!';
                                 setTimeout(function () {
-                                    loader.parentElement.removeChild(loader);
+                                    if (loader.parentElement == null) {
+                                        return;
+                                    }
+                                    if (loader) {
+                                        loader.parentElement.removeChild(loader);
+                                    }
                                 }, 2000);
                             }
                         }
@@ -80,7 +86,7 @@ export default class NFTWorker {
                     }
                     case 'nftData': {
                         const nft = JSON.parse(msg.nft);
-                        const nftEvent = new CustomEvent('getNFTData', { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } });
+                        const nftEvent = new CustomEvent('getNFTData-' + this.uuid + '-' + this.name, { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } });
                         document.dispatchEvent(nftEvent);
                         break;
                     }
@@ -115,12 +121,12 @@ export default class NFTWorker {
         let world;
         if (!msg) {
             world = null;
-            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost');
+            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost-' + this.uuid + '-' + this.name, { detail: { name: this.name } });
             document.dispatchEvent(nftTrackingLostEvent);
         }
         else {
             world = JSON.parse(msg.matrixGL_RH);
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid, { detail: { matrixGL_RH: world } });
+            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world, name: this.name } });
             document.dispatchEvent(matrixGLrhEvent);
         }
     }

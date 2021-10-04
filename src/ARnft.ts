@@ -43,6 +43,10 @@ import { v4 as uuidv4 } from 'uuid'
 import packageJson from '../package.json'
 const { version } = packageJson
 
+interface Entity {
+    name: string, 
+    markerUrl: string
+}
 export default class ARnft {
     public cameraView: CameraViewRenderer;
     public appData: ConfigData;
@@ -52,6 +56,8 @@ export default class ARnft {
     public listeners: object;
     public markerUrl: string;
     public camData: string;
+    private controllers: NFTWorker[];
+    private static entities: Entity[];
     private uuid: string;
     private version: string;
 
@@ -80,14 +86,40 @@ export default class ARnft {
      * Internally use the initialize function, that is responsible to load all the resources.
      * @param width (number) the width in pixels of the video camera.
      * @param height (number) the height in pixels of the video camera.
-     * @param markerUrl (string) the url of the marker (without the extension) 
+     * @param markerUrls (Array<string>) the Array of url of the markers (without the extension) 
+     * @param names the names of the markers
      * @param configUrl (string) the url of the config.json file
      * @param stats (boolean) true if you want the stats.
      * @returns (object) the nft object.
      */
-    static async init(width: number, height: number, markerUrl: string, configUrl: string, stats: boolean): Promise<object> {
+
+    static async init (width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize(markerUrl, stats).catch((error: any) => {
+        return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
+            console.error(error);
+            return Promise.reject(false);
+        })
+    }
+
+    /**
+     * The initWithEntities function let set-up the NFT markers with a Entity object. 
+     * We set an Array of Entity for multiple NFT markers. An Entity is composed of a unique name and
+     * a markerUrl.
+     * Internally use the initialize function, that is responsible to load all the resources.
+     * @param width (number) the width in pixels of the video camera.
+     * @param height (number) the height in pixels of the video camera.
+     * @param entities (Entity[]) the Array of Entity  
+     * @param configUrl (string) the url of the config.json file
+     * @param stats (boolean) true if you want the stats.
+     * @returns (object) the nft object.
+     */
+
+    static async initWithEntities (width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object> {
+        const _arnft = new ARnft(width, height, configUrl);
+        this.entities = entities;
+        let markerUrls = this.entities.map((entity)=>{ return entity.markerUrl })
+        let names = this.entities.map((entity) => { return entity.name})
+        return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         })
@@ -96,11 +128,13 @@ export default class ARnft {
     /**
      * Used internally by the init static function. It create the html Container, 
      * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker.
-     * @param markerUrl the url of the marker.
+     * @param markerUrls the url Array of the markers.
+     * @param names the names of the markers
      * @param stats choose if you want the stats.
      * @returns the ARnft object.
      */
-    private async _initialize(markerUrl: string, stats: boolean): Promise<object> {
+
+    private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
@@ -119,46 +153,42 @@ export default class ARnft {
                 statsMain.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
                 document.getElementById('stats1').appendChild(statsMain.dom)
 
-                statsWorker = new Stats()
-                statsWorker.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-                document.getElementById('stats2').appendChild(statsWorker.dom)
-            }
-            this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
-            await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
-                console.error(error);
-                return Promise.reject(false);
-            });
-            const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
-            worker.initialize(
-                this.appData.cameraPara,
-                this.cameraView.getImage(),
+            statsWorker = new Stats()
+            statsWorker.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+            document.getElementById('stats2').appendChild(statsWorker.dom)
+        }
+
+        this.controllers = [];
+        this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+        await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
+            console.error(error);
+            return Promise.reject(false);
+        });
+        markerUrls.forEach((markerUrl: string, index: number) => {   
+            this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+            this.controllers[index].initialize(
+                this.appData.cameraPara, 
+                this.cameraView.getImage(), 
                 () => {
                     if (stats) {
                         statsMain.update()
-                    }
+                }
                 },
                 () => {
                     if (stats) {
                         statsWorker.update()
-                    }
-                })
-            worker.process(this.cameraView.getImage())
-
-            const renderT = 1000 / 12;
-            let start = Date.now();
-            let lag = 0;
-            let update = () => {
-                requestAnimationFrame(update);
-                let current = Date.now(), elapsed = current - start;
-                lag += elapsed;
-                if (lag < renderT) {
-                    return;
                 }
-                worker.process(this.cameraView.getImage());
-                lag = 0;
+            })
+
+            this.controllers[index].process(this.cameraView.getImage())
+            let update = () => {
+            this.controllers[index].process(this.cameraView.getImage());
+            requestAnimationFrame(update);
             }
             update()
+            
         })
+    })
         return Promise.resolve(this)
     }
 
@@ -168,6 +198,10 @@ export default class ARnft {
      */
     private converter(): any {
         return this;
+    }
+
+    public static getEntities() {
+        return this.entities;
     }
 
     /**
