@@ -113,7 +113,7 @@ export default class NFTWorker {
 
         return new Promise<boolean>((resolve, reject) => {
 
-            var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
         var sscale = isMobile() ? window.outerWidth / this.vw : 1
 
         let sw = this.vw * sscale
