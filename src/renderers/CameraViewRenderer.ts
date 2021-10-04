@@ -107,6 +107,23 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                         width: { min: 480, max: 640 }
                     }
                 };
+                if (navigator.mediaDevices.enumerateDevices) {
+                    try {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        var videoDevices = [] as Array<string>;
+                        var videoDeviceIndex = 0;
+                        devices.forEach(function (device) {
+                            if (device.kind == "videoinput") {
+                                videoDevices[videoDeviceIndex++] = device.deviceId;
+                            }
+                        });
+                        if (videoDevices.length > 1) {
+                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                        }
+                    } catch (err: any) {
+                        console.log(err.name + ": " + err.message);
+                    }
+                }
 
                 if (navigator.mediaDevices.enumerateDevices) {
                     try {
@@ -170,18 +187,18 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public destroy(): void {
         const video = this.video
-        document.addEventListener("stopStreaming", function() {
+        document.addEventListener("stopStreaming", function () {
             const stream = <MediaStream>video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {
                 const tracks = stream.getTracks();
-      
-                tracks.forEach(function(track) {
+
+                tracks.forEach(function (track) {
                     track.stop();
                 });
-      
+
                 video.srcObject = null;
-      
+
                 let currentAR = document.getElementById("app");
                 if (currentAR !== null && currentAR !== undefined) {
                     currentAR.remove();

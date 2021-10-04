@@ -49,7 +49,7 @@ export default class ARnft {
     public width: number;
     public height: number;
     public configUrl: string;
-    public listeners:  object;
+    public listeners: object;
     public markerUrl: string;
     public camData: string;
     private uuid: string;
@@ -65,7 +65,7 @@ export default class ARnft {
      * @param height (number) the height in pixels of the video camera.
      * @param configUrl (string) the url of the config.json file
      */
-    constructor(width: number, height: number, configUrl: string){
+    constructor(width: number, height: number, configUrl: string) {
         this.width = width
         this.height = height
         this.configUrl = configUrl;
@@ -74,7 +74,7 @@ export default class ARnft {
         this.version = version;
         console.log('ARnft ', this.version);
     }
-    
+
     /**
      * The init function let define the basic set-up for the NFT marker.
      * Internally use the initialize function, that is responsible to load all the resources.
@@ -85,14 +85,14 @@ export default class ARnft {
      * @param stats (boolean) true if you want the stats.
      * @returns (object) the nft object.
      */
-    static async init (width: number, height: number, markerUrl: string, configUrl: string, stats: boolean): Promise<object> {
+    static async init(width: number, height: number, markerUrl: string, configUrl: string, stats: boolean): Promise<object> {
         const _arnft = new ARnft(width, height, configUrl);
         return await _arnft._initialize(markerUrl, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
         })
     }
-    
+
     /**
      * Used internally by the init static function. It create the html Container, 
      * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker.
@@ -107,47 +107,57 @@ export default class ARnft {
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev: any) => {
             this.appData = ev.detail.config;
-        // views
-        Container.createContainer(this.appData);
-        Container.createLoading(this.appData);
-        Container.createStats(this.appData.stats.createHtml, this.appData);
+            // views
+            Container.createContainer(this.appData);
+            Container.createLoading(this.appData);
+            Container.createStats(this.appData.stats.createHtml, this.appData);
 
-        let statsMain: any, statsWorker: any
+            let statsMain: any, statsWorker: any
 
-        if (stats) {
-            statsMain = new Stats()
-            statsMain.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-            document.getElementById('stats1').appendChild(statsMain.dom)
+            if (stats) {
+                statsMain = new Stats()
+                statsMain.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+                document.getElementById('stats1').appendChild(statsMain.dom)
 
-            statsWorker = new Stats()
-            statsWorker.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
-            document.getElementById('stats2').appendChild(statsWorker.dom)
-        }
-        this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
+                statsWorker = new Stats()
+                statsWorker.showPanel(0) // 0: fps, 1: ms, 2: mb, 3+: custom
+                document.getElementById('stats2').appendChild(statsWorker.dom)
+            }
+            this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
             await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
                 console.error(error);
                 return Promise.reject(false);
             });
-        const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
-        worker.initialize(
-            this.appData.cameraPara, 
-            this.cameraView.getImage(), 
-            () => {
-                if (stats) {
-                    statsMain.update()
+            const worker: NFTWorker = new NFTWorker(markerUrl, this.width, this.height, this.uuid);
+            worker.initialize(
+                this.appData.cameraPara,
+                this.cameraView.getImage(),
+                () => {
+                    if (stats) {
+                        statsMain.update()
+                    }
+                },
+                () => {
+                    if (stats) {
+                        statsWorker.update()
+                    }
+                })
+            worker.process(this.cameraView.getImage())
+
+            const renderT = 1000 / 12;
+            let start = Date.now();
+            let lag = 0;
+            let update = () => {
+                requestAnimationFrame(update);
+                let current = Date.now(), elapsed = current - start;
+                lag += elapsed;
+                if (lag < renderT) {
+                    return;
+                }
+                worker.process(this.cameraView.getImage());
+                lag = 0;
             }
-            },
-            () => {
-                if (stats) {
-                    statsWorker.update()
-            }
-        })     
-        worker.process(this.cameraView.getImage())
-        let update = () => {
-            worker.process(this.cameraView.getImage());
-            requestAnimationFrame(update);
-        }
-        update()
+            update()
         })
         return Promise.resolve(this)
     }
@@ -158,7 +168,7 @@ export default class ARnft {
      */
     private converter(): any {
         return this;
-      }
+    }
 
     /**
      * Dispatch an event from the ARnft instance.
@@ -166,13 +176,13 @@ export default class ARnft {
      */
     public dispatchEvent(event: { name: string; target: any; data?: object }) {
         let listeners = this.converter().listeners[event.name];
-        if(listeners) {
-            for(let i = 0; i < listeners.length; i++) {
+        if (listeners) {
+            for (let i = 0; i < listeners.length; i++) {
                 listeners[i].call(this, event);
             }
         }
-      };
-    
+    };
+
     /**
      * Add an event listener to the ARnft instance. Choose the name
      * of the event to listen, and set the callback.
@@ -180,12 +190,12 @@ export default class ARnft {
      * @param callback callback function.
      */
     public addEventListener(name: string, callback: object) {
-        if(!this.converter().listeners[name]) {
+        if (!this.converter().listeners[name]) {
             this.converter().listeners[name] = [];
         }
         this.converter().listeners[name].push(callback);
-      };
-    
+    };
+
     /**
      * Remove an event listener from the ARnft instance. Choose the name
      * of the event to remove and set the callback.
@@ -193,20 +203,20 @@ export default class ARnft {
      * @param callback callback function.
      */
     public removeEventListener(name: string, callback: object) {
-        if(this.converter().listeners[name]) {
+        if (this.converter().listeners[name]) {
             let index = this.converter().listeners[name].indexOf(callback);
-            if(index > -1) {
+            if (index > -1) {
                 this.converter().listeners[name].splice(index, 1);
-          }
+            }
         }
-      };
-    
+    };
+
     /**
      * Dispose the Video stream and the NFTWorker.
      */
     public dispose() {
         this.disposeVideoStream();
-        this.disposeNFT();    
+        this.disposeNFT();
     }
 
     /**
