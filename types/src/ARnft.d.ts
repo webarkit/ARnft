@@ -4,6 +4,16 @@ interface Entity {
     name: string;
     markerUrl: string;
 }
+declare global {
+    namespace NodeJS {
+        interface Global {
+            arNFT: any;
+        }
+    }
+    interface Window {
+        arNFT: any;
+    }
+}
 export default class ARnft {
     cameraView: CameraViewRenderer;
     appData: ConfigData;
