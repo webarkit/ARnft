@@ -192,6 +192,39 @@ export default class ARnft {
         return Promise.resolve(this)
     }
 
+    public async initializeRaw(markerUrls: Array<string>, names: Array<string>, imagedata: ImageData): Promise<object>{
+        var event = new Event("initARnft");
+        document.dispatchEvent(event);
+        console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
+        getConfig(this.configUrl);
+        document.addEventListener('getConfig', async (ev: any) => {
+            this.appData = ev.detail.config;
+            this.controllers = [];
+
+            markerUrls.forEach((markerUrl: string, index: number) => {   
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                this.controllers[index].initialize(
+                    this.appData.cameraPara, 
+                    imagedata, 
+                    () => {
+                        
+                    },
+                    () => {
+                        
+                })
+    
+                this.controllers[index].process(imagedata)
+                let update = () => {
+                this.controllers[index].process(imagedata);
+                requestAnimationFrame(update);
+                }
+                update()
+                
+            })
+        })
+        return Promise.resolve(this)
+    }
+
     /**
      * Used only by the ARnft functions.
      * @returns 

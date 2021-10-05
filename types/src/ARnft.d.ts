@@ -21,6 +21,7 @@ export default class ARnft {
     static init(width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object>;
     static initWithEntities(width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object>;
     private _initialize;
+    initializeRaw(markerUrls: Array<string>, names: Array<string>, imagedata: ImageData): Promise<object>;
     private converter;
     static getEntities(): Entity[];
     dispatchEvent(event: {
