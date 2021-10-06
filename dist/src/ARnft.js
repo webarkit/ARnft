@@ -15,6 +15,8 @@ export default class ARnft {
         this.uuid = uuidv4();
         this.version = version;
         console.log('ARnft ', this.version);
+        let scope = (typeof window !== 'undefined') ? window : global;
+        scope.arNFT = this;
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);

@@ -47,6 +47,18 @@ interface Entity {
     name: string, 
     markerUrl: string
 }
+
+declare global {
+    namespace NodeJS {
+      interface Global {
+         arNFT: any;
+      }
+    }
+    interface Window {
+      arNFT: any;
+    }
+} 
+
 export default class ARnft {
     public cameraView: CameraViewRenderer;
     public appData: ConfigData;
@@ -79,6 +91,8 @@ export default class ARnft {
         this.uuid = uuidv4();
         this.version = version;
         console.log('ARnft ', this.version);
+        let scope = (typeof window !== 'undefined') ? window : global
+        scope.arNFT = this;
     }
     
     /**
