@@ -1,0 +1,31 @@
+name: ci-test
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build-dist:
+    runs-on: ubuntu-latest
+    steps:
+      - name: "checkout"
+        uses: actions/checkout@v2
+      - name: "install dependencies"
+        run: |
+          yarn
+      - name: "setup node"
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+      - name: "eslint"
+        run: |
+         yarn build-ts   
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: dist
+          path: |
+            dist
