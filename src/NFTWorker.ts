@@ -172,6 +172,8 @@ export default class NFTWorker {
                                     }
                                 }, 2000)
                             }
+                            const markerReady = new CustomEvent('markerReady', { detail : {url: this.markerURL} })
+                            document.dispatchEvent(markerReady)
                         }
                         break;
                     }
