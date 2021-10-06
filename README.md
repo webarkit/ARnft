@@ -82,9 +82,9 @@ npm i @webarkit/ar-nft
 ## Build
 
 ```
-npm --include=dev i
+yarn --include=dev i
 ```
 
 ```
-npm run build-ts
+yarn run build-ts
 ```
