@@ -150,8 +150,8 @@ export default class ARnft {
      */
 
     private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
-        var event = new Event("initARnft");
-        this.scope.arNFT.dispatchEvent(event);
+        //var event = new Event("initARnft");
+        this.dispatchEvent({name: 'initARnft', target:'document'});
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev: any) => {
@@ -202,8 +202,8 @@ export default class ARnft {
             }
             update()
             // superEv is an event only for testing!! this 
-            let ev = new Event('superEv');
-            this.scope.arNFT.dispatchEvent(ev);             
+            // let ev = new Event('superEv');
+            this.dispatchEvent({name:'superEv', target:'document'});             
         })
     })
         return Promise.resolve(this)

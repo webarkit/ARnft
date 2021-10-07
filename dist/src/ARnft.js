@@ -36,8 +36,7 @@ export default class ARnft {
         });
     }
     async _initialize(markerUrls, names, stats) {
-        var event = new Event("initARnft");
-        document.dispatchEvent(event);
+        this.dispatchEvent({ name: 'initARnft', target: document });
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev) => {
@@ -77,8 +76,7 @@ export default class ARnft {
                     requestAnimationFrame(update);
                 };
                 update();
-                let ev = new Event('superEv');
-                this.scope.arNFT.dispatchEvent(ev);
+                this.dispatchEvent({ name: 'superEv', target: 'document' });
             });
         });
         return Promise.resolve(this);
