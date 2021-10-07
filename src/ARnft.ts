@@ -72,6 +72,7 @@ export default class ARnft {
     private static entities: Entity[];
     private uuid: string;
     private version: string;
+    private scope: any;
 
     /**
      * The **ARnft** constructor to create a new instance of the ARnft class. 
@@ -91,8 +92,8 @@ export default class ARnft {
         this.uuid = uuidv4();
         this.version = version;
         console.log('ARnft ', this.version);
-        let scope = (typeof window !== 'undefined') ? window : global
-        scope.arNFT = this;
+        this.scope = (typeof window !== 'undefined') ? window : global
+        this.scope.arNFT = this;
     }
     
     /**
@@ -112,7 +113,7 @@ export default class ARnft {
         return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
-        })
+        })   
     }
 
     /**
@@ -150,7 +151,7 @@ export default class ARnft {
 
     private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
         var event = new Event("initARnft");
-        document.dispatchEvent(event);
+        this.scope.arNFT.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
         getConfig(this.configUrl);
         document.addEventListener('getConfig', async (ev: any) => {
@@ -200,7 +201,9 @@ export default class ARnft {
             requestAnimationFrame(update);
             }
             update()
-            
+            // superEv is an event only for testing!! this 
+            let ev = new Event('superEv');
+            this.scope.arNFT.dispatchEvent(ev);             
         })
     })
         return Promise.resolve(this)
