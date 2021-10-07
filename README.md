@@ -78,3 +78,13 @@ npm i @webarkit/ar-nft
 ```
 
 - Configuration data in an External .json file.
+
+## Build
+
+```
+yarn --include=dev i
+```
+
+```
+yarn run build-ts
+```
