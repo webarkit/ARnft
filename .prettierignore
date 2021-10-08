@@ -8,3 +8,4 @@ types
 *.json
 *.js
 *.lock
+*.md
