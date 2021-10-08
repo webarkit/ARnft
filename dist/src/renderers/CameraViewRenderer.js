@@ -4,15 +4,42 @@ export class CameraViewRenderer {
         this.context_process = this.canvas_process.getContext('2d');
         this.video = video;
     }
+    getFacing() {
+        return this._facing;
+    }
     getHeight() {
         return this.vh;
     }
     getWidth() {
         return this.vw;
     }
+    getVideo() {
+        return this.video;
+    }
+    getCanvasProcess() {
+        return this.canvas_process;
+    }
+    getContexProcess() {
+        return this.context_process;
+    }
     getImage() {
         this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
         return this.context_process.getImageData(0, 0, this.pw, this.ph);
+    }
+    prepareImage() {
+        this.vw = this.video.videoWidth;
+        this.vh = this.video.videoHeight;
+        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+        this.w = this.vw * pscale;
+        this.h = this.vh * pscale;
+        this.pw = Math.max(this.w, (this.h / 3) * 4);
+        this.ph = Math.max(this.h, (this.w / 4) * 3);
+        this.ox = (this.pw - this.w) / 2;
+        this.oy = (this.ph - this.h) / 2;
+        this.canvas_process.width = this.pw;
+        this.canvas_process.height = this.ph;
+        this.context_process.fillStyle = 'black';
+        this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
     initialize(videoSettings) {
         this._facing = videoSettings.facingMode || 'environment';
@@ -32,19 +59,7 @@ export class CameraViewRenderer {
                     this.video = await new Promise((resolve, reject) => {
                         this.video.onloadedmetadata = () => resolve(this.video);
                     }).then((value) => {
-                        this.vw = this.video.videoWidth;
-                        this.vh = this.video.videoHeight;
-                        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
-                        this.w = this.vw * pscale;
-                        this.h = this.vh * pscale;
-                        this.pw = Math.max(this.w, (this.h / 3) * 4);
-                        this.ph = Math.max(this.h, (this.w / 4) * 3);
-                        this.ox = (this.pw - this.w) / 2;
-                        this.oy = (this.ph - this.h) / 2;
-                        this.canvas_process.width = this.pw;
-                        this.canvas_process.height = this.ph;
-                        this.context_process.fillStyle = 'black';
-                        this.context_process.fillRect(0, 0, this.pw, this.ph);
+                        this.prepareImage();
                         resolve(true);
                         return value;
                     }).catch((msg) => {

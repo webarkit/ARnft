@@ -78,6 +78,12 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         this.video = video;
     }
 
+    // Getters
+
+    public getFacing(): string {
+        return this._facing;
+    }
+
     public getHeight(): number {
         return this.vh;
     }
@@ -86,9 +92,41 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return this.vw;
     }
 
+    public getVideo(): HTMLVideoElement {
+        return this.video;
+    }
+
+    public getCanvasProcess(): HTMLCanvasElement {
+        return this.canvas_process;
+    }
+
+    public getContexProcess(): CanvasRenderingContext2D {
+        return this.context_process;
+    }
+
     public getImage(): ImageData {
         this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
         return this.context_process.getImageData(0, 0, this.pw, this.ph);
+    }
+
+    public prepareImage(): void {
+        this.vw = this.video.videoWidth;
+        this.vh = this.video.videoHeight;
+
+        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+
+        this.w = this.vw * pscale;
+        this.h = this.vh * pscale;
+        this.pw = Math.max(this.w, (this.h / 3) * 4);
+        this.ph = Math.max(this.h, (this.w / 4) * 3);
+        this.ox = (this.pw - this.w) / 2;
+        this.oy = (this.ph - this.h) / 2;
+
+        this.canvas_process.width = this.pw;
+        this.canvas_process.height = this.ph;
+
+        this.context_process.fillStyle = 'black';
+        this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
 
     public initialize(videoSettings: VideoSettingData): Promise<boolean> {
@@ -113,24 +151,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                     this.video = await new Promise<HTMLVideoElement>((resolve, reject) => {
                         this.video.onloadedmetadata = () => resolve(this.video);
                     }).then((value) => {
-
-                        this.vw = this.video.videoWidth;
-                        this.vh = this.video.videoHeight;
-
-                        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
-
-                        this.w = this.vw * pscale;
-                        this.h = this.vh * pscale;
-                        this.pw = Math.max(this.w, (this.h / 3) * 4);
-                        this.ph = Math.max(this.h, (this.w / 4) * 3);
-                        this.ox = (this.pw - this.w) / 2;
-                        this.oy = (this.ph - this.h) / 2;
-
-                        this.canvas_process.width = this.pw;
-                        this.canvas_process.height = this.ph;
-
-                        this.context_process.fillStyle = 'black';
-                        this.context_process.fillRect(0, 0, this.pw, this.ph);
+                        this.prepareImage()
                         resolve(true);
                         return value;
                     }).catch((msg) => {
