@@ -76,20 +76,33 @@ Then run a live server and go to the docs folder.
 ## Features
 
 - **NFT** (**N**atural **F**eature **T**racking) Markers, read my article: [NFT natural feature tracking with jsartoolkit5](https://www.kalwaltart.com/blog/2020/01/21/nft-natural-feature-tracking-with-jsartoolkit5/)
-- **ES6** standard. You can install it as a npm package and use it as a module (experimental). Install it with:
+- **ES6** standard. You can install it as a npm package and use it as a module (experimental). Install it with npm:
 
 ```
 npm i @webarkit/ar-nft
 ```
 
+or with yarn:
+
+```
+yarn add @webarkit/ar-nft
+```
+
 - Configuration data in an External .json file.
 
-## Build
+## Format the code with Prettier
+We are using [Prettier](https://prettier.io/) as code formatter. You only need to run the `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted, before to format, run instead: `yarn format-check`
 
+## Build
+If you make changes to the code, run these commands to build the distribution libray, install all the dependencies with:
 ```
 yarn --include=dev i
 ```
-
+For a development build, that is the code will be rebuilt for every changes, run:
 ```
-yarn run build-ts
+yarn dev-ts
+```
+Instead for a production build, with more optimizations in the code and smaller size, run:
+```
+yarn build-ts
 ```
