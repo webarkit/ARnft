@@ -1,10 +1,10 @@
-import Container from './utils/html/Container';
-import Stats from 'stats.js';
+import Container from "./utils/html/Container";
+import Stats from "stats.js";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
 import { getConfig } from "./utils/ARUtils";
-import NFTWorker from './NFTWorker';
-import { v4 as uuidv4 } from 'uuid';
-import packageJson from '../package.json';
+import NFTWorker from "./NFTWorker";
+import { v4 as uuidv4 } from "uuid";
+import packageJson from "../package.json";
 const { version } = packageJson;
 export default class ARnft {
     constructor(width, height, configUrl) {
@@ -14,11 +14,13 @@ export default class ARnft {
         this.listeners = {};
         this.uuid = uuidv4();
         this.version = version;
-        console.log('ARnft ', this.version);
+        console.log("ARnft ", this.version);
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
+        return await _arnft
+            ._initialize(markerUrls, names, stats)
+            .catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
@@ -26,9 +28,15 @@ export default class ARnft {
     static async initWithEntities(width, height, entities, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
         this.entities = entities;
-        let markerUrls = this.entities.map((entity) => { return entity.markerUrl; });
-        let names = this.entities.map((entity) => { return entity.name; });
-        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
+        let markerUrls = this.entities.map((entity) => {
+            return entity.markerUrl;
+        });
+        let names = this.entities.map((entity) => {
+            return entity.name;
+        });
+        return await _arnft
+            ._initialize(markerUrls, names, stats)
+            .catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
@@ -36,9 +44,9 @@ export default class ARnft {
     async _initialize(markerUrls, names, stats) {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
-        console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
+        console.log("ARnft init() %cstart...", "color: yellow; background-color: blue; border-radius: 4px; padding: 2px");
         getConfig(this.configUrl);
-        document.addEventListener('getConfig', async (ev) => {
+        document.addEventListener("getConfig", async (ev) => {
             this.appData = ev.detail.config;
             Container.createContainer(this.appData);
             Container.createLoading(this.appData);
@@ -47,14 +55,16 @@ export default class ARnft {
             if (stats) {
                 statsMain = new Stats();
                 statsMain.showPanel(0);
-                document.getElementById('stats1').appendChild(statsMain.dom);
+                document.getElementById("stats1").appendChild(statsMain.dom);
                 statsWorker = new Stats();
                 statsWorker.showPanel(0);
-                document.getElementById('stats2').appendChild(statsWorker.dom);
+                document.getElementById("stats2").appendChild(statsWorker.dom);
             }
             this.controllers = [];
             this.cameraView = new CameraViewRenderer(document.getElementById("video"));
-            await this.cameraView.initialize(this.appData.videoSettings).catch((error) => {
+            await this.cameraView
+                .initialize(this.appData.videoSettings)
+                .catch((error) => {
                 console.error(error);
                 return Promise.reject(false);
             });
@@ -93,14 +103,12 @@ export default class ARnft {
             }
         }
     }
-    ;
     addEventListener(name, callback) {
         if (!this.converter().listeners[name]) {
             this.converter().listeners[name] = [];
         }
         this.converter().listeners[name].push(callback);
     }
-    ;
     removeEventListener(name, callback) {
         if (this.converter().listeners[name]) {
             let index = this.converter().listeners[name].indexOf(callback);
@@ -109,7 +117,6 @@ export default class ARnft {
             }
         }
     }
-    ;
     dispose() {
         this.disposeVideoStream();
         this.disposeNFT();
