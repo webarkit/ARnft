@@ -30,9 +30,11 @@ http://localhost:8000/examples/arNFT_example.html
 
 Download the zipped dist lib package from the releases page: [webarkit/ARnft/releases](https://github.com/webarkit/ARnft/releases)
 and use it in a script tag:
+
 ```html
 <script src="path/to/dist/ARnft.js"></script>
 ```
+
 or you can use raw.githack services (for development):
 
 ```html
@@ -48,11 +50,13 @@ or raw.cdn (for production, you need to add the hash):
 or if you want to import as a module with npm:
 
 ```javascript
-import { ARnft } from '@webarkit/ar-nft';
+import { ARnft } from "@webarkit/ar-nft";
 ```
 
 ## Examples
+
 Test the examples in the `/examples` folder:
+
 - `arNft_container_example.html` Example with an alternative container.
 - `arNFT_event_example.html` Example with objVisibility and eventListener.
 - `arNFT_example.html` The simplest example displaying a red cube.
@@ -64,9 +68,10 @@ Test the examples in the `/examples` folder:
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
 
 ## Documentation
+
 You can build the docs with this command:
 `yarn docs`
-Then run a live server and go to the docs folder. 
+Then run a live server and go to the docs folder.
 
 ## Features
 

@@ -39,7 +39,7 @@
  * @returns radians
  */
 export function degreesToRadians(degrees: number): number {
-    return degrees * (Math.PI / 180);
+  return degrees * (Math.PI / 180);
 }
 
 /**
@@ -47,12 +47,16 @@ export function degreesToRadians(degrees: number): number {
  * @returns true or false.
  */
 export function isMobile(): boolean {
-    //return /Android|mobile|iPad|iPhone/i.test(navigator.userAgent)
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        // true for mobile device
-        return true;
-    }
-    return false;
+  //return /Android|mobile|iPad|iPhone/i.test(navigator.userAgent)
+  if (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  ) {
+    // true for mobile device
+    return true;
+  }
+  return false;
 }
 
 /**
@@ -60,38 +64,39 @@ export function isMobile(): boolean {
  * @returns true or false.
  */
 export function isIOS(): boolean {
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        // true for mobile device
-        return true;
-    }
-    return false;
+  if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+    // true for mobile device
+    return true;
+  }
+  return false;
 }
 
 /**
  * Get the config data from the json file, and dispatch the data with
  * an event listener.
- * @param configData 
- * @returns 
+ * @param configData
+ * @returns
  */
 export function getConfig(configData: string): boolean {
   fetch(configData)
-   .then(response => {
-       if (!response.ok) {
-         throw new Error("HTTP error, status = " + response.status);
-       }
-       return response.json();
-     })
-     .then((response) => {
-       // printing the response only for testing
-       //console.log(response);
-       const eventData = new CustomEvent('getConfig', { detail: { config: response } });
-       document.dispatchEvent(eventData);
-       return(response)
-     })
-     .catch(function(error) {
-         console.error(error);
-         return Promise.reject(false);
-       });
-   return true;
- }
- 
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("HTTP error, status = " + response.status);
+      }
+      return response.json();
+    })
+    .then((response) => {
+      // printing the response only for testing
+      //console.log(response);
+      const eventData = new CustomEvent("getConfig", {
+        detail: { config: response },
+      });
+      document.dispatchEvent(eventData);
+      return response;
+    })
+    .catch(function (error) {
+      console.error(error);
+      return Promise.reject(false);
+    });
+  return true;
+}

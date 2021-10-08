@@ -1,7 +1,7 @@
 export class CameraViewRenderer {
     constructor(video) {
-        this.canvas_process = document.createElement('canvas');
-        this.context_process = this.canvas_process.getContext('2d');
+        this.canvas_process = document.createElement("canvas");
+        this.context_process = this.canvas_process.getContext("2d");
         this.video = video;
     }
     getHeight() {
@@ -15,26 +15,29 @@ export class CameraViewRenderer {
         return this.context_process.getImageData(0, 0, this.pw, this.ph);
     }
     initialize(videoSettings) {
-        this._facing = videoSettings.facingMode || 'environment';
+        this._facing = videoSettings.facingMode || "environment";
         const constraints = {};
         const mediaDevicesConstraints = {};
         return new Promise(async (resolve, reject) => {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 var hint = {
-                    "audio": false,
-                    "video": {
+                    audio: false,
+                    video: {
                         facingMode: this._facing,
-                        width: { min: 480, max: 640 }
-                    }
+                        width: { min: 480, max: 640 },
+                    },
                 };
-                navigator.mediaDevices.getUserMedia(hint).then(async (stream) => {
+                navigator.mediaDevices
+                    .getUserMedia(hint)
+                    .then(async (stream) => {
                     this.video.srcObject = stream;
                     this.video = await new Promise((resolve, reject) => {
                         this.video.onloadedmetadata = () => resolve(this.video);
-                    }).then((value) => {
+                    })
+                        .then((value) => {
                         this.vw = this.video.videoWidth;
                         this.vh = this.video.videoHeight;
-                        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+                        var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
                         this.w = this.vw * pscale;
                         this.h = this.vh * pscale;
                         this.pw = Math.max(this.w, (this.h / 3) * 4);
@@ -43,16 +46,18 @@ export class CameraViewRenderer {
                         this.oy = (this.ph - this.h) / 2;
                         this.canvas_process.width = this.pw;
                         this.canvas_process.height = this.ph;
-                        this.context_process.fillStyle = 'black';
+                        this.context_process.fillStyle = "black";
                         this.context_process.fillRect(0, 0, this.pw, this.ph);
                         resolve(true);
                         return value;
-                    }).catch((msg) => {
+                    })
+                        .catch((msg) => {
                         console.log(msg);
                         reject(msg);
                         return null;
                     });
-                }).catch((error) => {
+                })
+                    .catch((error) => {
                     console.error(error);
                     reject(error);
                 });
