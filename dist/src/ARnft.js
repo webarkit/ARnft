@@ -7,6 +7,18 @@ import { v4 as uuidv4 } from 'uuid';
 import packageJson from '../package.json';
 const { version } = packageJson;
 export default class ARnft {
+    cameraView;
+    appData;
+    width;
+    height;
+    configUrl;
+    listeners;
+    markerUrl;
+    camData;
+    controllers;
+    static entities;
+    uuid;
+    version;
     constructor(width, height, configUrl) {
         this.width = width;
         this.height = height;
