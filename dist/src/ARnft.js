@@ -18,9 +18,7 @@ export default class ARnft {
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
         const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft
-            ._initialize(markerUrls, names, stats)
-            .catch((error) => {
+        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
@@ -34,9 +32,7 @@ export default class ARnft {
         let names = this.entities.map((entity) => {
             return entity.name;
         });
-        return await _arnft
-            ._initialize(markerUrls, names, stats)
-            .catch((error) => {
+        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
@@ -62,9 +58,7 @@ export default class ARnft {
             }
             this.controllers = [];
             this.cameraView = new CameraViewRenderer(document.getElementById("video"));
-            await this.cameraView
-                .initialize(this.appData.videoSettings)
-                .catch((error) => {
+            await this.cameraView.initialize(this.appData.videoSettings).catch((error) => {
                 console.error(error);
                 return Promise.reject(false);
             });
