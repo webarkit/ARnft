@@ -15,16 +15,18 @@ export function isIOS() {
 }
 export function getConfig(configData) {
     fetch(configData)
-        .then(response => {
+        .then((response) => {
         if (!response.ok) {
             throw new Error("HTTP error, status = " + response.status);
         }
         return response.json();
     })
         .then((response) => {
-        const eventData = new CustomEvent('getConfig', { detail: { config: response } });
+        const eventData = new CustomEvent("getConfig", {
+            detail: { config: response },
+        });
         document.dispatchEvent(eventData);
-        return (response);
+        return response;
     })
         .catch(function (error) {
         console.error(error);

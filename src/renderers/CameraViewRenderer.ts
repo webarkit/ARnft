@@ -51,7 +51,6 @@ export interface ICameraViewRenderer {
 }
 
 export class CameraViewRenderer implements ICameraViewRenderer {
-
     private canvas_process: HTMLCanvasElement;
 
     private context_process: CanvasRenderingContext2D;
@@ -73,8 +72,8 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     private oy: number;
 
     constructor(video: HTMLVideoElement) {
-        this.canvas_process = document.createElement('canvas');
-        this.context_process = this.canvas_process.getContext('2d');
+        this.canvas_process = document.createElement("canvas");
+        this.context_process = this.canvas_process.getContext("2d");
         this.video = video;
     }
 
@@ -130,21 +129,37 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     }
 
     public initialize(videoSettings: VideoSettingData): Promise<boolean> {
+        this._facing = videoSettings.facingMode || "environment";
 
-        this._facing = videoSettings.facingMode || 'environment'
-
-        const constraints = {}
-        const mediaDevicesConstraints = {}
+        const constraints = {};
+        const mediaDevicesConstraints = {};
 
         return new Promise<boolean>(async (resolve, reject) => {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 var hint: any = {
-                    "audio": false,
-                    "video": {
+                    audio: false,
+                    video: {
                         facingMode: this._facing,
-                        width: { min: 480, max: 640 }
-                    }
+                        width: { min: 480, max: 640 },
+                    },
                 };
+                if (navigator.mediaDevices.enumerateDevices) {
+                    try {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        var videoDevices = [] as Array<string>;
+                        var videoDeviceIndex = 0;
+                        devices.forEach(function (device) {
+                            if (device.kind == "videoinput") {
+                                videoDevices[videoDeviceIndex++] = device.deviceId;
+                            }
+                        });
+                        if (videoDevices.length > 1) {
+                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                        }
+                    } catch (err: any) {
+                        console.log(err.name + ": " + err.message);
+                    }
+                }
 
                 navigator.mediaDevices.getUserMedia(hint).then(async (stream) => {
                     this.video.srcObject = stream;
@@ -159,12 +174,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                         reject(msg);
                         return null;
                     });
-                }).catch((error) => {
-                    console.error(error);
-                    reject(error);
-                });
-            }
-            else {
+            } else {
                 // reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
                 reject("Sorry, Your device does not support this experince.");
             }
@@ -172,19 +182,19 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     }
 
     public destroy(): void {
-        const video = this.video
-        document.addEventListener("stopStreaming", function() {
+        const video = this.video;
+        document.addEventListener("stopStreaming", function () {
             const stream = <MediaStream>video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {
                 const tracks = stream.getTracks();
-      
-                tracks.forEach(function(track) {
+
+                tracks.forEach(function (track) {
                     track.stop();
                 });
-      
+
                 video.srcObject = null;
-      
+
                 let currentAR = document.getElementById("app");
                 if (currentAR !== null && currentAR !== undefined) {
                     currentAR.remove();

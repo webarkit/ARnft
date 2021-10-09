@@ -33,8 +33,8 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
-import ARnft from './ARnft'
+import ARnft from "./ARnft";
 
 export default {
-    ARnft
-}
+    ARnft,
+};

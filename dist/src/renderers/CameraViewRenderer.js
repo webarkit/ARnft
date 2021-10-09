@@ -1,7 +1,19 @@
 export class CameraViewRenderer {
+    canvas_process;
+    context_process;
+    video;
+    _facing;
+    vw;
+    vh;
+    w;
+    h;
+    pw;
+    ph;
+    ox;
+    oy;
     constructor(video) {
-        this.canvas_process = document.createElement('canvas');
-        this.context_process = this.canvas_process.getContext('2d');
+        this.canvas_process = document.createElement("canvas");
+        this.context_process = this.canvas_process.getContext("2d");
         this.video = video;
     }
     getFacing() {
@@ -42,18 +54,36 @@ export class CameraViewRenderer {
         this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
     initialize(videoSettings) {
-        this._facing = videoSettings.facingMode || 'environment';
+        this._facing = videoSettings.facingMode || "environment";
         const constraints = {};
         const mediaDevicesConstraints = {};
         return new Promise(async (resolve, reject) => {
             if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
                 var hint = {
-                    "audio": false,
-                    "video": {
+                    audio: false,
+                    video: {
                         facingMode: this._facing,
-                        width: { min: 480, max: 640 }
-                    }
+                        width: { min: 480, max: 640 },
+                    },
                 };
+                if (navigator.mediaDevices.enumerateDevices) {
+                    try {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        var videoDevices = [];
+                        var videoDeviceIndex = 0;
+                        devices.forEach(function (device) {
+                            if (device.kind == "videoinput") {
+                                videoDevices[videoDeviceIndex++] = device.deviceId;
+                            }
+                        });
+                        if (videoDevices.length > 1) {
+                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                        }
+                    }
+                    catch (err) {
+                        console.log(err.name + ": " + err.message);
+                    }
+                }
                 navigator.mediaDevices.getUserMedia(hint).then(async (stream) => {
                     this.video.srcObject = stream;
                     this.video = await new Promise((resolve, reject) => {
@@ -62,12 +92,14 @@ export class CameraViewRenderer {
                         this.prepareImage();
                         resolve(true);
                         return value;
-                    }).catch((msg) => {
+                    })
+                        .catch((msg) => {
                         console.log(msg);
                         reject(msg);
                         return null;
                     });
-                }).catch((error) => {
+                })
+                    .catch((error) => {
                     console.error(error);
                     reject(error);
                 });
