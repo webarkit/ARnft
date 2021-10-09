@@ -41,7 +41,6 @@
     "@types/stats.js": "^0.17.0",
     "@types/uuid": "^8.3.0",
     "babel-loader": "^8.2.2",
-    "custom-event": "^1.0.1",
     "prettier": "^2.4.1",
     "rimraf": "^3.0.2",
     "stats.js": "^0.17.0",
