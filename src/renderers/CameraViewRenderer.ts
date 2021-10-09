@@ -174,7 +174,12 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                         reject(msg);
                         return null;
                     });
-            } else {
+                }).catch((error) => {
+                    console.error(error);
+                    reject(error);
+                });
+            }
+            else {
                 // reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
                 reject("Sorry, Your device does not support this experince.");
             }
