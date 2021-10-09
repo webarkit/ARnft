@@ -6,6 +6,7 @@ export default class NFTWorker {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
+        this.target = window || global;
         this.uuid = uuid;
         this.name = name;
     }
@@ -16,7 +17,7 @@ export default class NFTWorker {
                 resolve(true);
             });
             const worker = this.worker;
-            document.addEventListener("terminateWorker", function () {
+            this.target.addEventListener("terminateWorker", function () {
                 worker.postMessage({ type: "stop" });
                 worker.terminate();
             });
@@ -40,7 +41,7 @@ export default class NFTWorker {
             let pw = Math.max(w, (h / 3) * 4);
             let ph = Math.max(h, (w / 4) * 3);
             const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
-            document.dispatchEvent(setWindowSizeEvent);
+            this.target.dispatchEvent(setWindowSizeEvent);
             this.worker.postMessage({
                 type: "load",
                 pw: pw,
@@ -66,7 +67,7 @@ export default class NFTWorker {
                         const projectionMatrixEvent = new CustomEvent("getProjectionMatrix", {
                             detail: { proj: proj },
                         });
-                        document.dispatchEvent(projectionMatrixEvent);
+                        this.target.dispatchEvent(projectionMatrixEvent);
                         break;
                     }
                     case "endLoading": {
@@ -91,7 +92,7 @@ export default class NFTWorker {
                         const nftEvent = new CustomEvent("getNFTData-" + this.uuid + "-" + this.name, {
                             detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
                         });
-                        document.dispatchEvent(nftEvent);
+                        this.target.dispatchEvent(nftEvent);
                         break;
                     }
                     case "found": {
@@ -105,7 +106,7 @@ export default class NFTWorker {
                     case "error": {
                         console.log("NFTWorker : error");
                         var event = new Event("nftError");
-                        document.dispatchEvent(event);
+                        this.target.dispatchEvent(event);
                         break;
                     }
                 }
@@ -127,23 +128,24 @@ export default class NFTWorker {
             const nftTrackingLostEvent = new CustomEvent("nftTrackingLost-" + this.uuid + "-" + this.name, {
                 detail: { name: this.name },
             });
-            document.dispatchEvent(nftTrackingLostEvent);
+            this.target.dispatchEvent(nftTrackingLostEvent);
         }
         else {
             world = JSON.parse(msg.matrixGL_RH);
             const matrixGLrhEvent = new CustomEvent("getMatrixGL_RH-" + this.uuid + "-" + this.name, {
                 detail: { matrixGL_RH: world, name: this.name },
             });
-            document.dispatchEvent(matrixGLrhEvent);
+            this.target.dispatchEvent(matrixGLrhEvent);
         }
     }
     destroy() { }
     static stopNFT() {
+        const target = window || global;
         console.log("Stop NFT");
         var event = new Event("terminateWorker");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
         var event = new Event("stopStreaming");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
     }
 }
 //# sourceMappingURL=NFTWorker.js.map

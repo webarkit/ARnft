@@ -154,7 +154,7 @@ export default class ARnft {
      */
 
     private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
-        const initEvent = new CustomEvent("initARnft");
+        const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
         console.log(
             "ARnft init() %cstart...",
