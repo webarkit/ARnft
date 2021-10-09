@@ -20,8 +20,8 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
-        document.addEventListener('initARnft', function(e){
-            console.log(e);
+        window.addEventListener('initARnft', function (e) {
+            console.log("ARnft is starting!");
         })
         ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"], ['pinball'], 'config-event.json', true)
             .then((nft) => {
@@ -76,9 +76,9 @@
                     console.log(ev);
                     console.log("lost marker");
                 })
-                setTimeout(function(){
+                setTimeout(function () {
                     nft.dispose()
-                },5000)
+                }, 5000)
             }).catch((error) => {
                 console.log(error);
             });

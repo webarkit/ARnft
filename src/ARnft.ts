@@ -161,7 +161,7 @@ export default class ARnft {
             "color: yellow; background-color: blue; border-radius: 4px; padding: 2px"
         );
         getConfig(this.configUrl);
-        document.addEventListener("getConfig", async (ev: any) => {
+        this.target.addEventListener("getConfig", async (ev: any) => {
             this.appData = ev.detail.config;
             // views
             Container.createContainer(this.appData);

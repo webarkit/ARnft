@@ -33,6 +33,7 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
+const target: EventTarget = window || global;
 /**
  * Convert degrees to radians.
  * @param degrees degree value as number.
@@ -87,7 +88,7 @@ export function getConfig(configData: string): boolean {
             const eventData = new CustomEvent("getConfig", {
                 detail: { config: response },
             });
-            document.dispatchEvent(eventData);
+            target.dispatchEvent(eventData);
             return response;
         })
         .catch(function (error) {
