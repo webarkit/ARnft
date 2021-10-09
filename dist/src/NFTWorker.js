@@ -1,14 +1,8 @@
 import Worker from "worker-loader?inline=no-fallback!./Worker";
 import { isMobile } from "./utils/ARUtils";
 export default class NFTWorker {
-    worker;
-    markerURL;
-    _processing = false;
-    vw;
-    vh;
-    uuid;
-    name;
     constructor(markerURL, w, h, uuid, name) {
+        this._processing = false;
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
@@ -45,9 +39,7 @@ export default class NFTWorker {
             let h = this.vh * pscale;
             let pw = Math.max(w, (h / 3) * 4);
             let ph = Math.max(h, (w / 4) * 3);
-            const setWindowSizeEvent = new CustomEvent("getWindowSize", {
-                detail: { sw: sw, sh: sh },
-            });
+            const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
             document.dispatchEvent(setWindowSizeEvent);
             this.worker.postMessage({
                 type: "load",
@@ -92,6 +84,7 @@ export default class NFTWorker {
                                 }, 2000);
                             }
                         }
+                        break;
                     }
                     case "nftData": {
                         const nft = JSON.parse(msg.nft);

@@ -7,18 +7,6 @@ import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
 const { version } = packageJson;
 export default class ARnft {
-    cameraView;
-    appData;
-    width;
-    height;
-    configUrl;
-    listeners;
-    markerUrl;
-    camData;
-    controllers;
-    static entities;
-    uuid;
-    version;
     constructor(width, height, configUrl) {
         this.width = width;
         this.height = height;
@@ -109,12 +97,14 @@ export default class ARnft {
             }
         }
     }
+    ;
     addEventListener(name, callback) {
         if (!this.converter().listeners[name]) {
             this.converter().listeners[name] = [];
         }
         this.converter().listeners[name].push(callback);
     }
+    ;
     removeEventListener(name, callback) {
         if (this.converter().listeners[name]) {
             let index = this.converter().listeners[name].indexOf(callback);
@@ -123,6 +113,7 @@ export default class ARnft {
             }
         }
     }
+    ;
     dispose() {
         this.disposeVideoStream();
         this.disposeNFT();

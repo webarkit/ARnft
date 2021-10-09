@@ -1,16 +1,4 @@
 export class CameraViewRenderer {
-    canvas_process;
-    context_process;
-    video;
-    _facing;
-    vw;
-    vh;
-    w;
-    h;
-    pw;
-    ph;
-    ox;
-    oy;
     constructor(video) {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d");
@@ -92,14 +80,12 @@ export class CameraViewRenderer {
                         this.prepareImage();
                         resolve(true);
                         return value;
-                    })
-                        .catch((msg) => {
+                    }).catch((msg) => {
                         console.log(msg);
                         reject(msg);
                         return null;
                     });
-                })
-                    .catch((error) => {
+                }).catch((error) => {
                     console.error(error);
                     reject(error);
                 });
