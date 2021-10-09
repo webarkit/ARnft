@@ -11,7 +11,7 @@ export default class ARnft {
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
-        this.listeners = {};
+        this.target = window || global;
         this.uuid = uuidv4();
         this.version = version;
         console.log("ARnft ", this.version);
@@ -38,11 +38,11 @@ export default class ARnft {
         });
     }
     async _initialize(markerUrls, names, stats) {
-        var event = new Event("initARnft");
-        document.dispatchEvent(event);
+        const initEvent = new CustomEvent("initARnft");
+        this.target.dispatchEvent(initEvent);
         console.log("ARnft init() %cstart...", "color: yellow; background-color: blue; border-radius: 4px; padding: 2px");
         getConfig(this.configUrl);
-        document.addEventListener("getConfig", async (ev) => {
+        this.target.addEventListener("getConfig", async (ev) => {
             this.appData = ev.detail.config;
             Container.createContainer(this.appData);
             Container.createLoading(this.appData);
@@ -83,37 +83,9 @@ export default class ARnft {
         });
         return Promise.resolve(this);
     }
-    converter() {
-        return this;
-    }
     static getEntities() {
         return this.entities;
     }
-    dispatchEvent(event) {
-        let listeners = this.converter().listeners[event.name];
-        if (listeners) {
-            for (let i = 0; i < listeners.length; i++) {
-                listeners[i].call(this, event);
-            }
-        }
-    }
-    ;
-    addEventListener(name, callback) {
-        if (!this.converter().listeners[name]) {
-            this.converter().listeners[name] = [];
-        }
-        this.converter().listeners[name].push(callback);
-    }
-    ;
-    removeEventListener(name, callback) {
-        if (this.converter().listeners[name]) {
-            let index = this.converter().listeners[name].indexOf(callback);
-            if (index > -1) {
-                this.converter().listeners[name].splice(index, 1);
-            }
-        }
-    }
-    ;
     dispose() {
         this.disposeVideoStream();
         this.disposeNFT();

@@ -135,7 +135,7 @@ export default class NFTWorker {
             let pw: number = Math.max(w, (h / 3) * 4);
             let ph: number = Math.max(h, (w / 4) * 3);
 
-            const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
+            const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
             this.target.dispatchEvent(setWindowSizeEvent);
 
             this.worker.postMessage({
@@ -161,7 +161,7 @@ export default class NFTWorker {
                         proj[5] *= ratioH;
                         proj[9] *= ratioH;
                         proj[13] *= ratioH;
-                        const projectionMatrixEvent = new CustomEvent("getProjectionMatrix", {
+                        const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
                             detail: { proj: proj },
                         });
                         this.target.dispatchEvent(projectionMatrixEvent);
@@ -187,7 +187,7 @@ export default class NFTWorker {
                     }
                     case "nftData": {
                         const nft = JSON.parse(msg.nft);
-                        const nftEvent = new CustomEvent("getNFTData-" + this.uuid + "-" + this.name, {
+                        const nftEvent = new CustomEvent<object>("getNFTData-" + this.uuid + "-" + this.name, {
                             detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
                         });
                         this.target.dispatchEvent(nftEvent);
@@ -231,14 +231,14 @@ export default class NFTWorker {
             // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903
             //if (world) {
             world = null;
-            const nftTrackingLostEvent = new CustomEvent("nftTrackingLost-" + this.uuid + "-" + this.name, {
+            const nftTrackingLostEvent = new CustomEvent<object>("nftTrackingLost-" + this.uuid + "-" + this.name, {
                 detail: { name: this.name },
             });
             this.target.dispatchEvent(nftTrackingLostEvent);
             //}
         } else {
             world = JSON.parse(msg.matrixGL_RH);
-            const matrixGLrhEvent = new CustomEvent("getMatrixGL_RH-" + this.uuid + "-" + this.name, {
+            const matrixGLrhEvent = new CustomEvent<object>("getMatrixGL_RH-" + this.uuid + "-" + this.name, {
                 detail: { matrixGL_RH: world, name: this.name },
             });
             this.target.dispatchEvent(matrixGLrhEvent);

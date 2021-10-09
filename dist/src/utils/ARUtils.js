@@ -1,3 +1,4 @@
+const target = window || global;
 export function degreesToRadians(degrees) {
     return degrees * (Math.PI / 180);
 }
@@ -25,7 +26,7 @@ export function getConfig(configData) {
         const eventData = new CustomEvent("getConfig", {
             detail: { config: response },
         });
-        document.dispatchEvent(eventData);
+        target.dispatchEvent(eventData);
         return response;
     })
         .catch(function (error) {

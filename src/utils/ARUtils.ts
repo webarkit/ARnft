@@ -85,7 +85,7 @@ export function getConfig(configData: string): boolean {
         .then((response) => {
             // printing the response only for testing
             //console.log(response);
-            const eventData = new CustomEvent("getConfig", {
+            const eventData = new CustomEvent<object>("getConfig", {
                 detail: { config: response },
             });
             target.dispatchEvent(eventData);
