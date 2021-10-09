@@ -172,7 +172,6 @@ export default class ARnft {
                 statsMain = new Stats();
                 statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
                 document.getElementById("stats1").appendChild(statsMain.dom);
-
                 statsWorker = new Stats();
                 statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
                 document.getElementById("stats2").appendChild(statsWorker.dom);
@@ -235,7 +234,7 @@ export default class ARnft {
                 listeners[i].call(this, event);
             }
         }
-    }
+    };
 
     /**
      * Add an event listener to the ARnft instance. Choose the name
@@ -248,7 +247,7 @@ export default class ARnft {
             this.converter().listeners[name] = [];
         }
         this.converter().listeners[name].push(callback);
-    }
+    };
 
     /**
      * Remove an event listener from the ARnft instance. Choose the name
@@ -263,7 +262,7 @@ export default class ARnft {
                 this.converter().listeners[name].splice(index, 1);
             }
         }
-    }
+    };
 
     /**
      * Dispose the Video stream and the NFTWorker.

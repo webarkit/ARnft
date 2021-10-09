@@ -242,7 +242,38 @@ export default class NFTWorker {
             });
             document.dispatchEvent(matrixGLrhEvent);
         }
+        this._processing = false;
+        trackUpdate();
+      };
+      let renderU = () => {
+        renderUpdate()
+        window.requestAnimationFrame(renderU)
+      }
+      renderU();
+      this.process(imageData);
+    });
+  };
+
+  /**
+   * dispatch an event listener if the marker is lost or the matrix of the marker
+   * if found.
+   * @param msg message from the worker.
+   */
+  public found(msg: any) {
+    let world: any;
+    if (!msg) {
+      // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903 
+      //if (world) {
+      world = null
+      const nftTrackingLostEvent = new CustomEvent('nftTrackingLost-' + this.uuid + '-' + this.name, { detail: { name: this.name } })
+      document.dispatchEvent(nftTrackingLostEvent)
+      //}
+    } else {
+      world = JSON.parse(msg.matrixGL_RH)
+      const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world, name: this.name } })
+      document.dispatchEvent(matrixGLrhEvent)
     }
+  }
 
     public destroy(): void {}
 
