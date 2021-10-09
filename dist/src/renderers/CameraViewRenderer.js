@@ -1,4 +1,16 @@
 export class CameraViewRenderer {
+    canvas_process;
+    context_process;
+    video;
+    _facing;
+    vw;
+    vh;
+    w;
+    h;
+    pw;
+    ph;
+    ox;
+    oy;
     constructor(video) {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d");
@@ -27,9 +39,25 @@ export class CameraViewRenderer {
                         width: { min: 480, max: 640 },
                     },
                 };
-                navigator.mediaDevices
-                    .getUserMedia(hint)
-                    .then(async (stream) => {
+                if (navigator.mediaDevices.enumerateDevices) {
+                    try {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        var videoDevices = [];
+                        var videoDeviceIndex = 0;
+                        devices.forEach(function (device) {
+                            if (device.kind == "videoinput") {
+                                videoDevices[videoDeviceIndex++] = device.deviceId;
+                            }
+                        });
+                        if (videoDevices.length > 1) {
+                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                        }
+                    }
+                    catch (err) {
+                        console.log(err.name + ": " + err.message);
+                    }
+                }
+                navigator.mediaDevices.getUserMedia(hint).then(async (stream) => {
                     this.video.srcObject = stream;
                     this.video = await new Promise((resolve, reject) => {
                         this.video.onloadedmetadata = () => resolve(this.video);

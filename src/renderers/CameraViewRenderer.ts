@@ -105,6 +105,23 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                         width: { min: 480, max: 640 },
                     },
                 };
+                if (navigator.mediaDevices.enumerateDevices) {
+                    try {
+                        const devices = await navigator.mediaDevices.enumerateDevices();
+                        var videoDevices = [] as Array<string>;
+                        var videoDeviceIndex = 0;
+                        devices.forEach(function (device) {
+                            if (device.kind == "videoinput") {
+                                videoDevices[videoDeviceIndex++] = device.deviceId;
+                            }
+                        });
+                        if (videoDevices.length > 1) {
+                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                        }
+                    } catch (err: any) {
+                        console.log(err.name + ": " + err.message);
+                    }
+                }
 
                 navigator.mediaDevices
                     .getUserMedia(hint)
