@@ -4,6 +4,7 @@ export default class NFTWorker {
     private _processing;
     private vw;
     private vh;
+    private target;
     private uuid;
     private name;
     constructor(markerURL: string, w: number, h: number, uuid: string, name: string);

@@ -71,10 +71,13 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     private ox: number;
     private oy: number;
 
+    private target: EventTarget;
+
     constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d");
         this.video = video;
+        this.target = window || global;
     }
 
     // Getters
@@ -188,7 +191,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public destroy(): void {
         const video = this.video;
-        document.addEventListener("stopStreaming", function () {
+        this.target.addEventListener("stopStreaming", function () {
             const stream = <MediaStream>video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {
