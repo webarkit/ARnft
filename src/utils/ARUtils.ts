@@ -70,28 +70,29 @@ export function isIOS(): boolean {
 /**
  * Get the config data from the json file, and dispatch the data with
  * an event listener.
- * @param configData 
- * @returns 
+ * @param configData
+ * @returns
  */
 export function getConfig(configData: string): boolean {
-  fetch(configData)
-   .then(response => {
-       if (!response.ok) {
-         throw new Error("HTTP error, status = " + response.status);
-       }
-       return response.json();
-     })
-     .then((response) => {
-       // printing the response only for testing
-       //console.log(response);
-       const eventData = new CustomEvent('getConfig', { detail: { config: response } });
-       document.dispatchEvent(eventData);
-       return(response)
-     })
-     .catch(function(error) {
-         console.error(error);
-         return Promise.reject(false);
-       });
-   return true;
- }
- 
+    fetch(configData)
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error("HTTP error, status = " + response.status);
+            }
+            return response.json();
+        })
+        .then((response) => {
+            // printing the response only for testing
+            //console.log(response);
+            const eventData = new CustomEvent("getConfig", {
+                detail: { config: response },
+            });
+            document.dispatchEvent(eventData);
+            return response;
+        })
+        .catch(function (error) {
+            console.error(error);
+            return Promise.reject(false);
+        });
+    return true;
+}

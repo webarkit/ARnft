@@ -1,48 +1,5 @@
-/*
- *  Container.ts
- *  ARnft
- *
- *  This file is part of ARnft - WebARKit.
- *
- *  ARnft is free software: you can redistribute it and/or modify
- *  it under the terms of the GNU Lesser General Public License as published by
- *  the Free Software Foundation, either version 3 of the License, or
- *  (at your option) any later version.
- *
- *  ARnft is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU Lesser General Public License for more details.
- *
- *  You should have received a copy of the GNU Lesser General Public License
- *  along with ARnft.  If not, see <http://www.gnu.org/licenses/>.
- *
- *  As a special exception, the copyright holders of this library give you
- *  permission to link this library with independent modules to produce an
- *  executable, regardless of the license terms of these independent modules, and to
- *  copy and distribute the resulting executable under terms of your choice,
- *  provided that you also meet, for each linked independent module, the terms and
- *  conditions of the license of that module. An independent module is a module
- *  which is neither derived from nor based on this library. If you modify this
- *  library, you may extend this exception to your version of the library, but you
- *  are not obligated to do so. If you do not wish to do so, delete this exception
- *  statement from your version.
- *
- *  Copyright 2021 WebARKit.
- *
- *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
- *
- */
-import { ConfigData } from "../../config/ConfigData";
 export default class Container {
-    /**
-     * Create a Container for the app. Basically a div, with inside a canvas and a video.
-     * You can optionally skip the creation, just set the variable `create` to false,
-     * in your config.json file.
-     * @param configData the config.json file url.
-     * @returns the container object.
-     */
-    static createContainer(configData: ConfigData) {
+    static createContainer(configData) {
         if (configData.container.create) {
             const container = document.createElement("div");
             container.id = "app";
@@ -60,7 +17,8 @@ export default class Container {
             var containerEvent = new Event("containerEvent");
             document.dispatchEvent(containerEvent);
             return { container: container, canvas: canvas, video: video };
-        } else {
+        }
+        else {
             const container = document.getElementById(configData.container.containerName);
             const canvas = document.getElementById(configData.container.canvasName);
             var containerEvent = new Event("containerEvent");
@@ -68,13 +26,7 @@ export default class Container {
             return { container: container, canvas: canvas };
         }
     }
-
-    /**
-     * Create  the necessary html for the stats.
-     * @param create true or false.
-     * @param configData the config.json file url.
-     */
-    static createStats(create: boolean, configData: ConfigData) {
+    static createStats(create, configData) {
         if (create && configData.stats.createHtml) {
             const stats = document.createElement("div");
             stats.id = "stats";
@@ -99,12 +51,7 @@ export default class Container {
             document.body.insertBefore(stats, loading);
         }
     }
-
-    /**
-     * Create the html to display the loading message.
-     * @param configData the config.json file url.
-     */
-    static createLoading(configData: ConfigData) {
+    static createLoading(configData) {
         if (configData.loading.create) {
             const loader = document.createElement("div");
             loader.id = "loading";
@@ -120,3 +67,4 @@ export default class Container {
         }
     }
 }
+//# sourceMappingURL=Container.js.map

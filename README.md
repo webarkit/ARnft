@@ -30,9 +30,11 @@ http://localhost:8000/examples/arNFT_example.html
 
 Download the zipped dist lib package from the releases page: [webarkit/ARnft/releases](https://github.com/webarkit/ARnft/releases)
 and use it in a script tag:
+
 ```html
 <script src="path/to/dist/ARnft.js"></script>
 ```
+
 or you can use raw.githack services (for development):
 
 ```html
@@ -48,11 +50,13 @@ or raw.cdn (for production, you need to add the hash):
 or if you want to import as a module with npm:
 
 ```javascript
-import { ARnft } from '@webarkit/ar-nft';
+import { ARnft } from "@webarkit/ar-nft";
 ```
 
 ## Examples
+
 Test the examples in the `/examples` folder:
+
 - `arNft_container_example.html` Example with an alternative container.
 - `arNFT_event_example.html` Example with objVisibility and eventListener.
 - `arNFT_example.html` The simplest example displaying a red cube.
@@ -64,27 +68,41 @@ Test the examples in the `/examples` folder:
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
 
 ## Documentation
+
 You can build the docs with this command:
 `yarn docs`
-Then run a live server and go to the docs folder. 
+Then run a live server and go to the docs folder.
 
 ## Features
 
 - **NFT** (**N**atural **F**eature **T**racking) Markers, read my article: [NFT natural feature tracking with jsartoolkit5](https://www.kalwaltart.com/blog/2020/01/21/nft-natural-feature-tracking-with-jsartoolkit5/)
-- **ES6** standard. You can install it as a npm package and use it as a module (experimental). Install it with:
+- **ES6** standard. You can install it as a npm package and use it as a module (experimental). Install it with npm:
 
 ```
 npm i @webarkit/ar-nft
 ```
 
+or with yarn:
+
+```
+yarn add @webarkit/ar-nft
+```
+
 - Configuration data in an External .json file.
 
-## Build
+## Format the code with Prettier
+We are using [Prettier](https://prettier.io/) as code formatter. You only need to run the `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted, before to format, run instead: `yarn format-check`
 
+## Build
+If you make changes to the code, run these commands to build the distribution libray, install all the dependencies with:
 ```
 yarn --include=dev i
 ```
-
+For a development build, that is the code will be rebuilt for every changes, run:
 ```
-yarn run build-ts
+yarn dev-ts
+```
+Instead for a production build, with more optimizations in the code and smaller size, run:
+```
+yarn build-ts
 ```
