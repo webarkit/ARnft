@@ -35,6 +35,8 @@ jobs:
         run: |
           git branch --delete --force dist || true
           git checkout --orphan dist
+          git config --local user.email "abot@nomail.com"
+          git config --local user.name "github-actions[bot]"
           git add -f dist
           git commit -m "Rebuild dist folder [github-ci]"
       - name: Push changes
