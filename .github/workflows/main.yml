@@ -31,6 +31,13 @@ jobs:
           name: dist
           path: |
             dist
+      - name: "rebuild dist folder for dist branch"
+        run: |
+          git branch --delete --force dist
+          git checkout --orphan dist
+          git add -f dist
+          git commit -m "Rebuild dist folder [github-ci]"
+          git push -f origin dist
       - name: Publish if version has been updated
         uses: pascalgn/npm-publish-action@1.3.8
         with: # All of theses inputs are optional
