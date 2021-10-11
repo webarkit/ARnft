@@ -8,12 +8,15 @@ import packageJson from "../package.json";
 const { version } = packageJson;
 export default class ARnft {
     constructor(width, height, configUrl) {
+        this._fps = 15;
+        this._lastTime = 0;
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
         this.target = window || global;
         this.uuid = uuidv4();
         this.version = version;
+        this.setFPS(this._fps);
         console.log("ARnft ", this.version);
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
@@ -38,7 +41,7 @@ export default class ARnft {
         });
     }
     async _initialize(markerUrls, names, stats) {
-        const initEvent = new CustomEvent("initARnft");
+        const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
         console.log("ARnft init() %cstart...", "color: yellow; background-color: blue; border-radius: 4px; padding: 2px");
         getConfig(this.configUrl);
@@ -75,7 +78,7 @@ export default class ARnft {
                 });
                 this.controllers[index].process(this.cameraView.getImage());
                 let update = () => {
-                    this.controllers[index].process(this.cameraView.getImage());
+                    this._update();
                     requestAnimationFrame(update);
                 };
                 update();
@@ -83,8 +86,23 @@ export default class ARnft {
         });
         return Promise.resolve(this);
     }
+    setFPS(value) {
+        this._fps = 1000 / value;
+    }
     static getEntities() {
         return this.entities;
+    }
+    _update() {
+        let time = Date.now();
+        let imageData;
+        if ((time - this._lastTime) > this._fps) {
+            imageData = this.cameraView.getImage();
+            this._lastTime = time;
+        }
+        this.controllers.forEach(element => {
+            if (imageData)
+                element.process(imageData);
+        });
     }
     dispose() {
         this.disposeVideoStream();
