@@ -6,10 +6,14 @@ import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
 const { version } = packageJson;
-export default class ARnft {
-    constructor(width, height, configUrl) {
+const eventEmitter = require('events');
+export default class ARnft extends eventEmitter {
+    constructor() {
+        super(...arguments);
         this._fps = 15;
         this._lastTime = 0;
+    }
+    load(width, height, configUrl) {
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
@@ -20,14 +24,16 @@ export default class ARnft {
         console.log("ARnft ", this.version);
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
-        const _arnft = new ARnft(width, height, configUrl);
+        const _arnft = new ARnft();
+        _arnft.load(width, height, configUrl);
         return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
             console.error(error);
             return Promise.reject(false);
         });
     }
     static async initWithEntities(width, height, entities, configUrl, stats) {
-        const _arnft = new ARnft(width, height, configUrl);
+        const _arnft = new ARnft();
+        _arnft.load(width, height, configUrl);
         this.entities = entities;
         let markerUrls = this.entities.map((entity) => {
             return entity.markerUrl;
