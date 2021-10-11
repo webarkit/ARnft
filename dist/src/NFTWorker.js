@@ -1,5 +1,5 @@
 import Worker from "worker-loader?inline=no-fallback!./Worker";
-import { isMobile } from "./utils/ARUtils";
+import { getWindowSize } from "./utils/ARnftUtils";
 export default class NFTWorker {
     constructor(markerURL, w, h, uuid, name) {
         this._processing = false;
@@ -32,14 +32,7 @@ export default class NFTWorker {
     }
     load(cameraURL, imageData, renderUpdate, trackUpdate) {
         return new Promise((resolve, reject) => {
-            var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
-            var sscale = isMobile() ? window.outerWidth / this.vw : 1;
-            let sw = this.vw * sscale;
-            let sh = this.vh * sscale;
-            let w = this.vw * pscale;
-            let h = this.vh * pscale;
-            let pw = Math.max(w, (h / 3) * 4);
-            let ph = Math.max(h, (w / 4) * 3);
+            let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
             const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
             this.target.dispatchEvent(setWindowSizeEvent);
             this.worker.postMessage({
@@ -103,15 +96,12 @@ export default class NFTWorker {
                         this.found(null);
                         break;
                     }
-                    case "error": {
-                        console.log("NFTWorker : error");
-                        var event = new Event("nftError");
-                        this.target.dispatchEvent(event);
-                        break;
-                    }
                 }
                 this._processing = false;
                 trackUpdate();
+            };
+            this.worker.onerror = (err) => {
+                console.error("Worker error from NFTWorker: ", err);
             };
             let renderU = () => {
                 renderUpdate();
@@ -137,6 +127,18 @@ export default class NFTWorker {
             });
             this.target.dispatchEvent(matrixGLrhEvent);
         }
+    }
+    getUuid() {
+        return this.uuid;
+    }
+    getName() {
+        return this.name;
+    }
+    getMarkerUrl() {
+        return this.markerURL;
+    }
+    getEventTarget() {
+        return this.target;
     }
     destroy() { }
     static stopNFT() {

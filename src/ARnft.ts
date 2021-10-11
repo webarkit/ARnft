@@ -206,9 +206,7 @@ export default class ARnft {
                     }
                 );
 
-                //this.controllers[index].process(this.cameraView.getImage());
                 let update = () => {
-                    //this.controllers[index].process(this.cameraView.getImage());
                     this._update()
                     requestAnimationFrame(update);
                 };
