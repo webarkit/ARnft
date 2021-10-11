@@ -1,10 +1,11 @@
 import { ConfigData } from "./config/ConfigData";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
+declare const eventEmitter: any;
 interface Entity {
     name: string;
     markerUrl: string;
 }
-export default class ARnft {
+export default class ARnft extends eventEmitter {
     cameraView: CameraViewRenderer;
     appData: ConfigData;
     width: number;
@@ -20,7 +21,7 @@ export default class ARnft {
     private version;
     private _fps;
     private _lastTime;
-    constructor(width: number, height: number, configUrl: string);
+    load(width: number, height: number, configUrl: string): void;
     static init(width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object>;
     static initWithEntities(width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object>;
     private _initialize;

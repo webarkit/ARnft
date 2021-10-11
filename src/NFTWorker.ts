@@ -174,6 +174,7 @@ export default class NFTWorker {
                                 }, 2000);
                             }
                             const nftEvent = new CustomEvent<object>("nftDataLoaded-" + this.uuid);
+                            console.log('nft data lodaded');
                             this.target.dispatchEvent(nftEvent);
                         }
                         break;

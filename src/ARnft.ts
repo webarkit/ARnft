@@ -42,13 +42,14 @@ import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
 const { version } = packageJson;
+const eventEmitter = require('events');
 
 interface Entity {
     name: string;
     markerUrl: string;
 }
 
-export default class ARnft {
+export default class ARnft extends eventEmitter {
     public cameraView: CameraViewRenderer;
     public appData: ConfigData;
     public width: number;
@@ -75,7 +76,7 @@ export default class ARnft {
      * @param height (number) the height in pixels of the video camera.
      * @param configUrl (string) the url of the config.json file
      */
-    constructor(width: number, height: number, configUrl: string) {
+    load(width: number, height: number, configUrl: string) {
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
@@ -107,7 +108,8 @@ export default class ARnft {
         configUrl: string,
         stats: boolean
     ): Promise<object> {
-        const _arnft = new ARnft(width, height, configUrl);
+        const _arnft = new ARnft();
+        _arnft.load(width, height, configUrl);
         return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
             console.error(error);
             return Promise.reject(false);
@@ -134,7 +136,8 @@ export default class ARnft {
         configUrl: string,
         stats: boolean
     ): Promise<object> {
-        const _arnft = new ARnft(width, height, configUrl);
+        const _arnft = new ARnft();
+        _arnft.load(width, height, configUrl);
         this.entities = entities;
         let markerUrls = this.entities.map((entity) => {
             return entity.markerUrl;
