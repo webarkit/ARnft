@@ -26,6 +26,7 @@ export default class ARnft {
     private _initialize;
     setFPS(value: number): void;
     static getEntities(): Entity[];
+    getEventTarget(): EventTarget;
     private _update;
     dispose(): void;
     disposeNFT(): void;

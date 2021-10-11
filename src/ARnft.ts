@@ -224,6 +224,10 @@ export default class ARnft {
         return this.entities;
     }
 
+    public getEventTarget(): EventTarget {
+        return this.target;
+    }
+
     private _update(): void {
         let time: number = Date.now();
         let imageData: ImageData;

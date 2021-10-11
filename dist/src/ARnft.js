@@ -91,6 +91,9 @@ export default class ARnft {
     static getEntities() {
         return this.entities;
     }
+    getEventTarget() {
+        return this.target;
+    }
     _update() {
         let time = Date.now();
         let imageData;
