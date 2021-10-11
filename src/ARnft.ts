@@ -37,7 +37,7 @@ import Container from "./utils/html/Container";
 import { ConfigData } from "./config/ConfigData";
 import Stats from "stats.js";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
-import { getConfig } from "./utils/ARUtils";
+import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
@@ -62,6 +62,8 @@ export default class ARnft {
     private target: EventTarget;
     private uuid: string;
     private version: string;
+    private _fps: number = 15;
+    private _lastTime: number = 0;
 
     /**
      * The **ARnft** constructor to create a new instance of the ARnft class.
@@ -80,6 +82,8 @@ export default class ARnft {
         this.target = window || global;
         this.uuid = uuidv4();
         this.version = version;
+        // set default fps at 15
+        this.setFPS(this._fps);
         console.log("ARnft ", this.version);
     }
 
@@ -202,9 +206,10 @@ export default class ARnft {
                     }
                 );
 
-                this.controllers[index].process(this.cameraView.getImage());
+                //this.controllers[index].process(this.cameraView.getImage());
                 let update = () => {
-                    this.controllers[index].process(this.cameraView.getImage());
+                    //this.controllers[index].process(this.cameraView.getImage());
+                    this._update()
                     requestAnimationFrame(update);
                 };
                 update();
@@ -213,8 +218,26 @@ export default class ARnft {
         return Promise.resolve(this);
     }
 
+    public setFPS(value: number): void {
+        this._fps = 1000 / value;
+    }
+
     public static getEntities() {
         return this.entities;
+    }
+
+    private _update(): void {
+        let time: number = Date.now();
+        let imageData: ImageData;
+        if ((time - this._lastTime) > this._fps) {
+            imageData = this.cameraView.getImage();
+            this._lastTime = time;
+        }
+
+        this.controllers.forEach(element => {
+            if (imageData)
+                element.process(imageData);
+        });
     }
 
     /**
