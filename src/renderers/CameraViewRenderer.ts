@@ -45,8 +45,9 @@ export interface ScreenData {
 }
 
 export interface ICameraViewRenderer {
-    getHeight(): number;
-    getWidth(): number;
+    facing: string;
+    height: number;
+    width: number;
     getImage(): ImageData;
 }
 
@@ -55,7 +56,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     private context_process: CanvasRenderingContext2D;
 
-    public video: HTMLVideoElement;
+    public _video: HTMLVideoElement;
 
     private _facing: string;
 
@@ -76,46 +77,45 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d");
-        this.video = video;
+        this._video = video;
         this.target = window || global;
     }
 
     // Getters
-
-    public getFacing(): string {
+    public get facing(): string {
         return this._facing;
     }
 
-    public getHeight(): number {
+    public get height(): number {
         return this.vh;
     }
 
-    public getWidth(): number {
+    public get width(): number {
         return this.vw;
     }
 
-    public getVideo(): HTMLVideoElement {
-        return this.video;
+    public get video(): HTMLVideoElement {
+        return this._video;
     }
 
-    public getCanvasProcess(): HTMLCanvasElement {
+    public get canvasProcess(): HTMLCanvasElement {
         return this.canvas_process;
     }
 
-    public getContexProcess(): CanvasRenderingContext2D {
+    public get contextProcess(): CanvasRenderingContext2D {
         return this.context_process;
     }
 
     public getImage(): ImageData {
-        this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+        this.context_process.drawImage(this._video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
         return this.context_process.getImageData(0, 0, this.pw, this.ph);
     }
 
     public prepareImage(): void {
-        this.vw = this.video.videoWidth;
-        this.vh = this.video.videoHeight;
+        this.vw = this._video.videoWidth;
+        this.vh = this._video.videoHeight;
 
-        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+        var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
 
         this.w = this.vw * pscale;
         this.h = this.vh * pscale;
@@ -127,18 +127,18 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         this.canvas_process.width = this.pw;
         this.canvas_process.height = this.ph;
 
-        this.context_process.fillStyle = 'black';
+        this.context_process.fillStyle = "black";
         this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
 
-    public initialize(videoSettings: VideoSettingData): Promise<boolean> {
+    public async initialize(videoSettings: VideoSettingData): Promise<boolean> {
         this._facing = videoSettings.facingMode || "environment";
 
         const constraints = {};
         const mediaDevicesConstraints = {};
 
-        return new Promise<boolean>(async (resolve, reject) => {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            try {
                 var hint: any = {
                     audio: false,
                     video: {
@@ -147,50 +147,37 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                     },
                 };
                 if (navigator.mediaDevices.enumerateDevices) {
-                    try {
-                        const devices = await navigator.mediaDevices.enumerateDevices();
-                        var videoDevices = [] as Array<string>;
-                        var videoDeviceIndex = 0;
-                        devices.forEach(function (device) {
-                            if (device.kind == "videoinput") {
-                                videoDevices[videoDeviceIndex++] = device.deviceId;
-                            }
-                        });
-                        if (videoDevices.length > 1) {
-                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    var videoDevices = [] as Array<string>;
+                    var videoDeviceIndex = 0;
+                    devices.forEach(function (device) {
+                        if (device.kind == "videoinput") {
+                            videoDevices[videoDeviceIndex++] = device.deviceId;
                         }
-                    } catch (err: any) {
-                        console.log(err.name + ": " + err.message);
+                    });
+                    if (videoDevices.length > 1) {
+                        hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
                     }
                 }
+                const stream = await navigator.mediaDevices.getUserMedia(hint);
 
-                navigator.mediaDevices.getUserMedia(hint).then(async (stream) => {
-                    this.video.srcObject = stream;
-                    this.video = await new Promise<HTMLVideoElement>((resolve, reject) => {
-                        this.video.onloadedmetadata = () => resolve(this.video);
-                    }).then((value) => {
-                        this.prepareImage()
-                        resolve(true);
-                        return value;
-                    }).catch((msg) => {
-                        console.log(msg);
-                        reject(msg);
-                        return null;
-                    });
-                }).catch((error) => {
-                    console.error(error);
-                    reject(error);
+                this._video.srcObject = stream;
+                this._video = await new Promise<HTMLVideoElement>((resolve) => {
+                    this._video.onloadedmetadata = () => resolve(this._video);
                 });
+                this.prepareImage();
+                return true;
+            } catch (error) {
+                return Promise.reject(error);
             }
-            else {
-                // reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
-                reject("Sorry, Your device does not support this experince.");
-            }
-        });
+        } else {
+            // reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
+            return Promise.reject("Sorry, Your device does not support this experince.");
+        }
     }
 
     public destroy(): void {
-        const video = this.video;
+        const video = this._video;
         this.target.addEventListener("stopStreaming", function () {
             const stream = <MediaStream>video.srcObject;
             console.log("stop streaming");

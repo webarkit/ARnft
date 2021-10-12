@@ -255,7 +255,7 @@ export default class NFTWorker {
         console.log("Stop NFT");
         var event = new Event("terminateWorker");
         //console.log(NFTWorker);
-        
+
         target.dispatchEvent(event);
         var event = new Event("stopStreaming");
         target.dispatchEvent(event);
