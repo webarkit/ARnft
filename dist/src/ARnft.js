@@ -77,7 +77,7 @@ export default class ARnft {
                     }
                 });
                 let update = () => {
-                    this._update();
+                    this._internalUpdate();
                     requestAnimationFrame(update);
                 };
                 update();
@@ -94,7 +94,7 @@ export default class ARnft {
     getEventTarget() {
         return this.target;
     }
-    _update() {
+    _internalUpdate() {
         let time = Date.now();
         let imageData;
         if ((time - this._lastTime) > this._fps) {
