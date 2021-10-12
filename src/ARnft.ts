@@ -211,7 +211,7 @@ export default class ARnft {
             });
         });
 
-        this.target.addEventListener('nftLoaded', async (ev: any) => {
+        this.target.addEventListener('nftLoaded-'+this.uuid, async (ev: any) => {
             
             const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
                 return nftWorker.isReady() === false;

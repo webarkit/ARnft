@@ -187,7 +187,7 @@ export default class NFTWorker {
                             }
                         }
                         this.ready = true;
-                        this.target.dispatchEvent(new CustomEvent<object>("nftLoaded"));
+                        this.target.dispatchEvent(new CustomEvent<object>("nftLoaded-" + this.uuid));
                         break;
                     }
                     case "nftData": {
