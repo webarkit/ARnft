@@ -54,7 +54,6 @@ export default class ARnft {
     public width: number;
     public height: number;
     public configUrl: string;
-    public listeners: object;
     public markerUrl: string;
     public camData: string;
     private controllers: NFTWorker[];
@@ -62,8 +61,6 @@ export default class ARnft {
     private target: EventTarget;
     private uuid: string;
     private version: string;
-    private _fps: number = 15;
-    private _lastTime: number = 0;
 
     /**
      * The **ARnft** constructor to create a new instance of the ARnft class.
@@ -82,8 +79,6 @@ export default class ARnft {
         this.target = window || global;
         this.uuid = uuidv4();
         this.version = version;
-        // set default fps at 15
-        this.setFPS(this._fps);
         console.log("ARnft ", this.version);
     }
 
@@ -215,10 +210,6 @@ export default class ARnft {
             });
         });
         return Promise.resolve(this);
-    }
-
-    public setFPS(value: number): void {
-        this._fps = 1000 / value;
     }
 
     public static getEntities() {

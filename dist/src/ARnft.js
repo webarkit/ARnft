@@ -8,15 +8,12 @@ import packageJson from "../package.json";
 const { version } = packageJson;
 export default class ARnft {
     constructor(width, height, configUrl) {
-        this._fps = 15;
-        this._lastTime = 0;
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
         this.target = window || global;
         this.uuid = uuidv4();
         this.version = version;
-        this.setFPS(this._fps);
         console.log("ARnft ", this.version);
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
@@ -86,26 +83,11 @@ export default class ARnft {
         });
         return Promise.resolve(this);
     }
-    setFPS(value) {
-        this._fps = 1000 / value;
-    }
     static getEntities() {
         return this.entities;
     }
     getEventTarget() {
         return this.target;
-    }
-    _internalUpdate() {
-        let time = Date.now();
-        let imageData;
-        if ((time - this._lastTime) > this._fps) {
-            imageData = this.cameraView.getImage();
-            this._lastTime = time;
-        }
-        this.controllers.forEach(element => {
-            if (imageData)
-                element.process(imageData);
-        });
     }
     dispose() {
         this.disposeVideoStream();
