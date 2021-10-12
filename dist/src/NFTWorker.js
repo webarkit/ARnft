@@ -1,11 +1,12 @@
-import Worker from 'worker-loader?inline=no-fallback!./Worker';
-import { isMobile } from './utils/ARUtils';
+import Worker from "worker-loader?inline=no-fallback!./Worker";
+import { isMobile } from "./utils/ARUtils";
 export default class NFTWorker {
     constructor(markerURL, w, h, uuid, name) {
         this._processing = false;
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
+        this.target = window || global;
         this.uuid = uuid;
         this.name = name;
     }
@@ -16,8 +17,8 @@ export default class NFTWorker {
                 resolve(true);
             });
             const worker = this.worker;
-            document.addEventListener("terminateWorker", function () {
-                worker.postMessage({ type: 'stop' });
+            this.target.addEventListener("terminateWorker", function () {
+                worker.postMessage({ type: "stop" });
                 worker.terminate();
             });
         });
@@ -27,11 +28,11 @@ export default class NFTWorker {
             return;
         }
         this._processing = true;
-        this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
+        this.worker.postMessage({ type: "process", imagedata: imageData }, [imageData.data.buffer]);
     }
     load(cameraURL, imageData, renderUpdate, trackUpdate) {
         return new Promise((resolve, reject) => {
-            var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
+            var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
             var sscale = isMobile() ? window.outerWidth / this.vw : 1;
             let sw = this.vw * sscale;
             let sh = this.vh * sscale;
@@ -39,19 +40,19 @@ export default class NFTWorker {
             let h = this.vh * pscale;
             let pw = Math.max(w, (h / 3) * 4);
             let ph = Math.max(h, (w / 4) * 3);
-            const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } });
-            document.dispatchEvent(setWindowSizeEvent);
+            const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
+            this.target.dispatchEvent(setWindowSizeEvent);
             this.worker.postMessage({
-                type: 'load',
+                type: "load",
                 pw: pw,
                 ph: ph,
                 camera_para: cameraURL,
-                marker: this.markerURL
+                marker: this.markerURL,
             });
             this.worker.onmessage = (ev) => {
                 var msg = ev.data;
                 switch (msg.type) {
-                    case 'loaded': {
+                    case "loaded": {
                         var proj = JSON.parse(msg.proj);
                         const ratioW = pw / w;
                         const ratioH = ph / h;
@@ -63,15 +64,17 @@ export default class NFTWorker {
                         proj[5] *= ratioH;
                         proj[9] *= ratioH;
                         proj[13] *= ratioH;
-                        const projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } });
-                        document.dispatchEvent(projectionMatrixEvent);
+                        const projectionMatrixEvent = new CustomEvent("getProjectionMatrix", {
+                            detail: { proj: proj },
+                        });
+                        this.target.dispatchEvent(projectionMatrixEvent);
                         break;
                     }
                     case "endLoading": {
                         if (msg.end == true) {
-                            const loader = document.getElementById('loading');
+                            const loader = document.getElementById("loading");
                             if (loader) {
-                                loader.querySelector('.loading-text').innerText = 'Start the tracking!';
+                                loader.querySelector(".loading-text").innerText = "Start the tracking!";
                                 setTimeout(function () {
                                     if (loader.parentElement == null) {
                                         return;
@@ -84,24 +87,26 @@ export default class NFTWorker {
                         }
                         break;
                     }
-                    case 'nftData': {
+                    case "nftData": {
                         const nft = JSON.parse(msg.nft);
-                        const nftEvent = new CustomEvent('getNFTData-' + this.uuid + '-' + this.name, { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } });
-                        document.dispatchEvent(nftEvent);
+                        const nftEvent = new CustomEvent("getNFTData-" + this.uuid + "-" + this.name, {
+                            detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
+                        });
+                        this.target.dispatchEvent(nftEvent);
                         break;
                     }
-                    case 'found': {
+                    case "found": {
                         this.found(msg);
                         break;
                     }
-                    case 'not found': {
+                    case "not found": {
                         this.found(null);
                         break;
                     }
-                    case 'error': {
+                    case "error": {
                         console.log("NFTWorker : error");
                         var event = new Event("nftError");
-                        document.dispatchEvent(event);
+                        this.target.dispatchEvent(event);
                         break;
                     }
                 }
@@ -116,28 +121,31 @@ export default class NFTWorker {
             this.process(imageData);
         });
     }
-    ;
     found(msg) {
         let world;
         if (!msg) {
             world = null;
-            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost-' + this.uuid + '-' + this.name, { detail: { name: this.name } });
-            document.dispatchEvent(nftTrackingLostEvent);
+            const nftTrackingLostEvent = new CustomEvent("nftTrackingLost-" + this.uuid + "-" + this.name, {
+                detail: { name: this.name },
+            });
+            this.target.dispatchEvent(nftTrackingLostEvent);
         }
         else {
             world = JSON.parse(msg.matrixGL_RH);
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world, name: this.name } });
-            document.dispatchEvent(matrixGLrhEvent);
+            const matrixGLrhEvent = new CustomEvent("getMatrixGL_RH-" + this.uuid + "-" + this.name, {
+                detail: { matrixGL_RH: world, name: this.name },
+            });
+            this.target.dispatchEvent(matrixGLrhEvent);
         }
     }
-    destroy() {
-    }
+    destroy() { }
     static stopNFT() {
+        const target = window || global;
         console.log("Stop NFT");
         var event = new Event("terminateWorker");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
         var event = new Event("stopStreaming");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
     }
 }
 //# sourceMappingURL=NFTWorker.js.map

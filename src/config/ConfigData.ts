@@ -68,7 +68,7 @@ export interface VideoSettingData {
 }
 
 export interface StatsData {
-    createHtml: boolean
+    createHtml: boolean;
 }
 
 export interface ScreenData {

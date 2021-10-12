@@ -1,5 +1,5 @@
-import ARnft from './ARnft';
+import ARnft from "./ARnft";
 export default {
-    ARnft
+    ARnft,
 };
 //# sourceMappingURL=index.js.map

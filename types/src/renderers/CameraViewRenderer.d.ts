@@ -25,10 +25,16 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     private ph;
     private ox;
     private oy;
+    private target;
     constructor(video: HTMLVideoElement);
+    getFacing(): string;
     getHeight(): number;
     getWidth(): number;
+    getVideo(): HTMLVideoElement;
+    getCanvasProcess(): HTMLCanvasElement;
+    getContexProcess(): CanvasRenderingContext2D;
     getImage(): ImageData;
+    prepareImage(): void;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;
     destroy(): void;
 }
