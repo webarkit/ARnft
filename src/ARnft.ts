@@ -212,10 +212,18 @@ export default class ARnft {
         return Promise.resolve(this);
     }
 
+    /**
+     *
+     * @returns all the entities
+     */
     public static getEntities() {
         return this.entities;
     }
 
+    /**
+     *
+     * @returns the event target
+     */
     public getEventTarget(): EventTarget {
         return this.target;
     }
