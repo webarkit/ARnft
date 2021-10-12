@@ -76,8 +76,9 @@ export default class ARnft {
                         statsWorker.update();
                     }
                 });
+                this.controllers[index].process(this.cameraView.getImage());
                 let update = () => {
-                    this._internalUpdate();
+                    this.controllers[index].process(this.cameraView.getImage());
                     requestAnimationFrame(update);
                 };
                 update();

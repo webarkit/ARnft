@@ -206,8 +206,9 @@ export default class ARnft {
                     }
                 );
 
+                this.controllers[index].process(this.cameraView.getImage());
                 let update = () => {
-                    this._internalUpdate()
+                    this.controllers[index].process(this.cameraView.getImage());
                     requestAnimationFrame(update);
                 };
                 update();
@@ -226,20 +227,6 @@ export default class ARnft {
 
     public getEventTarget(): EventTarget {
         return this.target;
-    }
-
-    private _internalUpdate(): void {
-        let time: number = Date.now();
-        let imageData: ImageData;
-        if ((time - this._lastTime) > this._fps) {
-            imageData = this.cameraView.getImage();
-            this._lastTime = time;
-        }
-
-        this.controllers.forEach(element => {
-            if (imageData)
-                element.process(imageData);
-        });
     }
 
     /**

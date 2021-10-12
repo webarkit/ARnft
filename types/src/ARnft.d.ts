@@ -27,7 +27,6 @@ export default class ARnft {
     setFPS(value: number): void;
     static getEntities(): Entity[];
     getEventTarget(): EventTarget;
-    private _internalUpdate;
     dispose(): void;
     disposeNFT(): void;
     disposeVideoStream(): void;
