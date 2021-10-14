@@ -79,7 +79,6 @@ export default class ARnft {
     public width: number;
     public height: number;
     public configUrl: string;
-    public listeners: Record<string, any>;
     public markerUrl: string;
     public camData: string;
     public autoUpdate: boolean;
