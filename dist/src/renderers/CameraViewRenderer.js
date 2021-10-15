@@ -1,9 +1,11 @@
 export class CameraViewRenderer {
     constructor(video) {
+        this.lastCache = 0;
         this.canvas_process = document.createElement("canvas");
-        this.context_process = this.canvas_process.getContext("2d");
+        this.context_process = this.canvas_process.getContext("2d", { alpha: false });
         this.video = video;
         this.target = window || global;
+        this.targetFrameRate = 30;
     }
     getFacing() {
         return this._facing;
@@ -24,22 +26,28 @@ export class CameraViewRenderer {
         return this.context_process;
     }
     getImage() {
-        this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
-        return this.context_process.getImageData(0, 0, this.pw, this.ph);
+        const now = Date.now();
+        if (now - this.lastCache > 1000 / this.targetFrameRate) {
+            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
+            this.imageDataCache = Array.from(imageData.data);
+            this.lastCache = now;
+        }
+        return new ImageData(new Uint8ClampedArray(this.imageDataCache), this.pw, this.ph);
     }
     prepareImage() {
         this.vw = this.video.videoWidth;
         this.vh = this.video.videoHeight;
-        var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
-        this.w = this.vw * pscale;
-        this.h = this.vh * pscale;
-        this.pw = Math.max(this.w, (this.h / 3) * 4);
-        this.ph = Math.max(this.h, (this.w / 4) * 3);
-        this.ox = (this.pw - this.w) / 2;
-        this.oy = (this.ph - this.h) / 2;
+        var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
+        this.w = Math.floor(this.vw * pscale);
+        this.h = Math.floor(this.vh * pscale);
+        this.pw = Math.floor(Math.max(this.w, (this.h / 3) * 4));
+        this.ph = Math.floor(Math.max(this.h, (this.w / 4) * 3));
+        this.ox = Math.floor((this.pw - this.w) / 2);
+        this.oy = Math.floor((this.ph - this.h) / 2);
         this.canvas_process.width = this.pw;
         this.canvas_process.height = this.ph;
-        this.context_process.fillStyle = 'black';
+        this.context_process.fillStyle = "black";
         this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
     initialize(videoSettings) {
@@ -73,20 +81,25 @@ export class CameraViewRenderer {
                         console.log(err.name + ": " + err.message);
                     }
                 }
-                navigator.mediaDevices.getUserMedia(hint).then(async (stream) => {
+                navigator.mediaDevices
+                    .getUserMedia(hint)
+                    .then(async (stream) => {
                     this.video.srcObject = stream;
                     this.video = await new Promise((resolve, reject) => {
                         this.video.onloadedmetadata = () => resolve(this.video);
-                    }).then((value) => {
+                    })
+                        .then((value) => {
                         this.prepareImage();
                         resolve(true);
                         return value;
-                    }).catch((msg) => {
+                    })
+                        .catch((msg) => {
                         console.log(msg);
                         reject(msg);
                         return null;
                     });
-                }).catch((error) => {
+                })
+                    .catch((error) => {
                     console.error(error);
                     reject(error);
                 });

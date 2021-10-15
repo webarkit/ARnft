@@ -26,6 +26,9 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     private ox;
     private oy;
     private target;
+    private targetFrameRate;
+    private imageDataCache;
+    private lastCache;
     constructor(video: HTMLVideoElement);
     getFacing(): string;
     getHeight(): number;
