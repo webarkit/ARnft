@@ -24,7 +24,6 @@ export default class ARnft {
     width: number;
     height: number;
     configUrl: string;
-    listeners: Record<string, any>;
     markerUrl: string;
     camData: string;
     autoUpdate: boolean;

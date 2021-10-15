@@ -240,20 +240,18 @@ export default class ARnft {
                         }
                     }
                 );
-
-                let update = () => {
-                    requestAnimationFrame(update);
-                    if (!this.autoUpdate) return;
-                    this.controllers[index].process(this.cameraView.getImage());
-                };
-                if (this.autoUpdate) {
-                    this.controllers[index].process(this.cameraView.getImage());
-                }
-                requestAnimationFrame(update);
             });
             this.initialized = true;
         });
-        return Promise.resolve(this);
+
+        let _update = () => {
+            requestAnimationFrame(_update);
+            if (!this.initialized || !this.autoUpdate) return;
+            const image = this.cameraView.getImage();
+            this.controllers.forEach((controller) => controller.process(image));
+        };
+        requestAnimationFrame(_update);
+        return this;
     }
 
     /**
