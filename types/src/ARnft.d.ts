@@ -40,6 +40,7 @@ export default class ARnft {
     private _initialize;
     update(): void;
     static getEntities(): IEntity[];
+    getEventTarget(): EventTarget;
     dispose(): void;
     disposeNFT(): void;
     disposeVideoStream(): void;

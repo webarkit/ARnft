@@ -37,7 +37,7 @@ import Container from "./utils/html/Container";
 import { ConfigData } from "./config/ConfigData";
 import Stats from "stats.js";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
-import { getConfig } from "./utils/ARUtils";
+import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
@@ -267,6 +267,14 @@ export default class ARnft {
 
     public static getEntities(): IEntity[] {
         return this.entities;
+    }
+
+    /**
+     *
+     * @returns the event target
+     */
+    public getEventTarget(): EventTarget {
+        return this.target;
     }
 
     /**
