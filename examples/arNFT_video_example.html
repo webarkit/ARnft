@@ -54,7 +54,9 @@
                     sceneThreejs.initRenderer();
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
-                    nftAddTJS.addVideo('arvideo', 'pinball', 180, false);
+                    // Set width, height and width and height number of segments of the PlaneGeometry.
+                    let imgConfig = {w: 1, h: 1, ws: 1, hs: 1};
+                    nftAddTJS.addVideo('arvideo', 'pinball', 180, imgConfig, false);
 
                     const tick = () => {
                         sceneThreejs.draw();
