@@ -9,6 +9,7 @@ export default class NFTWorker {
         this.target = window || global;
         this.uuid = uuid;
         this.name = name;
+        this.ready = false;
     }
     initialize(cameraURL, imageData, renderUpdate, trackUpdate) {
         return new Promise((resolve, reject) => {
@@ -85,6 +86,8 @@ export default class NFTWorker {
                                 }, 2000);
                             }
                         }
+                        this.ready = true;
+                        this.target.dispatchEvent(new CustomEvent("nftLoaded-" + this.uuid));
                         break;
                     }
                     case "nftData": {
@@ -138,6 +141,8 @@ export default class NFTWorker {
             this.target.dispatchEvent(matrixGLrhEvent);
         }
     }
+    isReady() { return this.ready; }
+    ;
     destroy() { }
     static stopNFT() {
         const target = window || global;

@@ -51,6 +51,8 @@ export default class NFTWorker {
     private uuid: string;
     private name: string;
 
+    protected ready: boolean;
+
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
      * @param markerURL the marker url of the NFT marker.
@@ -65,6 +67,7 @@ export default class NFTWorker {
         this.target = window || global;
         this.uuid = uuid;
         this.name = name;
+        this.ready = false;
     }
 
     /**
@@ -183,6 +186,8 @@ export default class NFTWorker {
                                 }, 2000);
                             }
                         }
+                        this.ready = true;
+                        this.target.dispatchEvent(new CustomEvent<object>("nftLoaded-" + this.uuid));
                         break;
                     }
                     case "nftData": {
@@ -245,6 +250,7 @@ export default class NFTWorker {
         }
     }
 
+    public isReady() {return this.ready};
     public destroy(): void {}
 
     /**

@@ -38,7 +38,7 @@ export default class ARnft {
         });
     }
     async _initialize(markerUrls, names, stats) {
-        const initEvent = new CustomEvent("initARnft");
+        const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
         console.log("ARnft init() %cstart...", "color: yellow; background-color: blue; border-radius: 4px; padding: 2px");
         getConfig(this.configUrl);
@@ -80,6 +80,14 @@ export default class ARnft {
                 };
                 update();
             });
+        });
+        this.target.addEventListener('nftLoaded-' + this.uuid, async (ev) => {
+            const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
+                return nftWorker.isReady() === false;
+            });
+            if (nftWorkersNotReady.length === 0) {
+                this.target.dispatchEvent(new CustomEvent("ARnftIsReady"));
+            }
         });
         return Promise.resolve(this);
     }
