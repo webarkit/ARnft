@@ -10,7 +10,6 @@ export default class ARnft {
     width: number;
     height: number;
     configUrl: string;
-    listeners: object;
     markerUrl: string;
     camData: string;
     private controllers;
@@ -23,6 +22,7 @@ export default class ARnft {
     static initWithEntities(width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object>;
     private _initialize;
     static getEntities(): Entity[];
+    getEventTarget(): EventTarget;
     dispose(): void;
     disposeNFT(): void;
     disposeVideoStream(): void;

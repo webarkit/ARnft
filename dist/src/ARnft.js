@@ -1,7 +1,7 @@
 import Container from "./utils/html/Container";
 import Stats from "stats.js";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
-import { getConfig } from "./utils/ARUtils";
+import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
@@ -93,6 +93,9 @@ export default class ARnft {
     }
     static getEntities() {
         return this.entities;
+    }
+    getEventTarget() {
+        return this.target;
     }
     dispose() {
         this.disposeVideoStream();

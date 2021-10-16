@@ -37,7 +37,7 @@ import Container from "./utils/html/Container";
 import { ConfigData } from "./config/ConfigData";
 import Stats from "stats.js";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
-import { getConfig } from "./utils/ARUtils";
+import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
@@ -54,7 +54,6 @@ export default class ARnft {
     public width: number;
     public height: number;
     public configUrl: string;
-    public listeners: object;
     public markerUrl: string;
     public camData: string;
     private controllers: NFTWorker[];
@@ -224,8 +223,20 @@ export default class ARnft {
         return Promise.resolve(this);
     }
 
+    /**
+     *
+     * @returns all the entities
+     */
     public static getEntities() {
         return this.entities;
+    }
+
+    /**
+     *
+     * @returns the event target
+     */
+    public getEventTarget(): EventTarget {
+        return this.target;
     }
 
     /**
