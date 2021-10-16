@@ -2,7 +2,7 @@
 
 <img src="examples/Data/arNFT-logo.gif" width="250px"/>
 
-A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/kalwalt/jsartoolkitnFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It use [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
+A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/webarkit/jsartoolkitnFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It use [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
 
 ## Start using it !
 
@@ -63,6 +63,7 @@ Test the examples in the `/examples` folder:
 - `arNFT_gltf_brave_robot_example.html` More advanced example with a gltf model and threejs events.
 - `arNFT_gltf_example.html` Example showing a gltf model (Duck).
 - `arNFT_image_example.html` Example showing an image.
+- `arNFT_multi_example.html` Example with multi NFT markers.
 - `arNFT_video_example.html` Example showing a video.
 
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
@@ -91,7 +92,7 @@ yarn add @webarkit/ar-nft
 - Configuration data in an External .json file.
 
 ## Format the code with Prettier
-We are using [Prettier](https://prettier.io/) as code formatter. You only need to run the `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted, before to format, run instead: `yarn format-check`
+We are using [Prettier](https://prettier.io/) as code formatter. You only need to run `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted run instead: `yarn format-check`
 
 ## Build
 If you make changes to the code, run these commands to build the distribution libray, install all the dependencies with:

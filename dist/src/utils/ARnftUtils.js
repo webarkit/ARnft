@@ -14,6 +14,17 @@ export function isIOS() {
     }
     return false;
 }
+export function getWindowSize(vw, vh) {
+    var pscale = 320 / Math.max(vw, (vh / 3) * 4);
+    var sscale = isMobile() ? window.outerWidth / vw : 1;
+    let sw = vw * sscale;
+    let sh = vh * sscale;
+    let w = vw * pscale;
+    let h = vh * pscale;
+    let pw = Math.max(w, (h / 3) * 4);
+    let ph = Math.max(h, (w / 4) * 3);
+    return [sw, sh, pw, ph, w, h];
+}
 export function getConfig(configData) {
     fetch(configData)
         .then((response) => {
@@ -35,4 +46,4 @@ export function getConfig(configData) {
     });
     return true;
 }
-//# sourceMappingURL=ARUtils.js.map
+//# sourceMappingURL=ARnftUtils.js.map

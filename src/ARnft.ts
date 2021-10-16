@@ -37,7 +37,7 @@ import Container from "./utils/html/Container";
 import { ConfigData } from "./config/ConfigData";
 import Stats from "stats.js";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
-import { getConfig } from "./utils/ARUtils";
+import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
@@ -47,17 +47,18 @@ interface Entity {
     name: string;
     markerUrl: string;
 }
+
 export default class ARnft {
     public cameraView: CameraViewRenderer;
     public appData: ConfigData;
     public width: number;
     public height: number;
     public configUrl: string;
-    public listeners: object;
     public markerUrl: string;
     public camData: string;
     private controllers: NFTWorker[];
     private static entities: Entity[];
+    private target: EventTarget;
     private uuid: string;
     private version: string;
 
@@ -75,7 +76,7 @@ export default class ARnft {
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
-        this.listeners = {};
+        this.target = window || global;
         this.uuid = uuidv4();
         this.version = version;
         console.log("ARnft ", this.version);
@@ -152,14 +153,14 @@ export default class ARnft {
      */
 
     private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
-        var event = new Event("initARnft");
-        document.dispatchEvent(event);
+        const initEvent = new Event("initARnft");
+        this.target.dispatchEvent(initEvent);
         console.log(
             "ARnft init() %cstart...",
             "color: yellow; background-color: blue; border-radius: 4px; padding: 2px"
         );
         getConfig(this.configUrl);
-        document.addEventListener("getConfig", async (ev: any) => {
+        this.target.addEventListener("getConfig", async (ev: any) => {
             this.appData = ev.detail.config;
             // views
             Container.createContainer(this.appData);
@@ -208,61 +209,35 @@ export default class ARnft {
                 update();
             });
         });
+
+        this.target.addEventListener('nftLoaded-'+this.uuid, async (ev: any) => {
+            
+            const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
+                return nftWorker.isReady() === false;
+            });
+
+            if (nftWorkersNotReady.length === 0) {
+                this.target.dispatchEvent(new CustomEvent<object>("ARnftIsReady"));
+            }
+        });
         return Promise.resolve(this);
     }
 
     /**
-     * Used only by the ARnft functions.
-     * @returns
+     *
+     * @returns all the entities
      */
-    private converter(): any {
-        return this;
-    }
-
     public static getEntities() {
         return this.entities;
     }
 
     /**
-     * Dispatch an event from the ARnft instance.
-     * @param event set the event to dispatch.
+     *
+     * @returns the event target
      */
-    public dispatchEvent(event: { name: string; target: any; data?: object }) {
-        let listeners = this.converter().listeners[event.name];
-        if (listeners) {
-            for (let i = 0; i < listeners.length; i++) {
-                listeners[i].call(this, event);
-            }
-        }
-    };
-
-    /**
-     * Add an event listener to the ARnft instance. Choose the name
-     * of the event to listen, and set the callback.
-     * @param name the name of the event to listen.
-     * @param callback callback function.
-     */
-    public addEventListener(name: string, callback: object) {
-        if (!this.converter().listeners[name]) {
-            this.converter().listeners[name] = [];
-        }
-        this.converter().listeners[name].push(callback);
-    };
-
-    /**
-     * Remove an event listener from the ARnft instance. Choose the name
-     * of the event to remove and set the callback.
-     * @param name name of the event to remove.
-     * @param callback callback function.
-     */
-    public removeEventListener(name: string, callback: object) {
-        if (this.converter().listeners[name]) {
-            let index = this.converter().listeners[name].indexOf(callback);
-            if (index > -1) {
-                this.converter().listeners[name].splice(index, 1);
-            }
-        }
-    };
+    public getEventTarget(): EventTarget {
+        return this.target;
+    }
 
     /**
      * Dispose the Video stream and the NFTWorker.

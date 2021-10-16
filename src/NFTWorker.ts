@@ -34,7 +34,7 @@
  *
  */
 import Worker from "worker-loader?inline=no-fallback!./Worker";
-import { isMobile } from "./utils/ARUtils";
+import { getWindowSize } from "./utils/ARnftUtils";
 
 export default class NFTWorker {
     private worker: Worker;
@@ -46,8 +46,12 @@ export default class NFTWorker {
     private vw: number;
     private vh: number;
 
+    private target: EventTarget;
+
     private uuid: string;
     private name: string;
+
+    protected ready: boolean;
 
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
@@ -60,8 +64,10 @@ export default class NFTWorker {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
+        this.target = window || global;
         this.uuid = uuid;
         this.name = name;
+        this.ready = false;
     }
 
     /**
@@ -85,7 +91,7 @@ export default class NFTWorker {
                 resolve(true);
             });
             const worker = this.worker;
-            document.addEventListener("terminateWorker", function () {
+            this.target.addEventListener("terminateWorker", function () {
                 worker.postMessage({ type: "stop" });
                 worker.terminate();
             });
@@ -121,19 +127,10 @@ export default class NFTWorker {
         trackUpdate: () => void
     ): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
-            var sscale = isMobile() ? window.outerWidth / this.vw : 1;
+            let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
 
-            let sw = this.vw * sscale;
-            let sh = this.vh * sscale;
-
-            let w: number = this.vw * pscale;
-            let h: number = this.vh * pscale;
-            let pw: number = Math.max(w, (h / 3) * 4);
-            let ph: number = Math.max(h, (w / 4) * 3);
-
-            const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
-            document.dispatchEvent(setWindowSizeEvent);
+            const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
+            this.target.dispatchEvent(setWindowSizeEvent);
 
             this.worker.postMessage({
                 type: "load",
@@ -158,10 +155,10 @@ export default class NFTWorker {
                         proj[5] *= ratioH;
                         proj[9] *= ratioH;
                         proj[13] *= ratioH;
-                        const projectionMatrixEvent = new CustomEvent("getProjectionMatrix", {
+                        const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
                             detail: { proj: proj },
                         });
-                        document.dispatchEvent(projectionMatrixEvent);
+                        this.target.dispatchEvent(projectionMatrixEvent);
                         break;
                     }
                     case "endLoading": {
@@ -180,14 +177,16 @@ export default class NFTWorker {
                                 }, 2000);
                             }
                         }
+                        this.ready = true;
+                        this.target.dispatchEvent(new CustomEvent<object>("nftLoaded-" + this.uuid));
                         break;
                     }
                     case "nftData": {
                         const nft = JSON.parse(msg.nft);
-                        const nftEvent = new CustomEvent("getNFTData-" + this.uuid + "-" + this.name, {
+                        const nftEvent = new CustomEvent<object>("getNFTData-" + this.uuid + "-" + this.name, {
                             detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
                         });
-                        document.dispatchEvent(nftEvent);
+                        this.target.dispatchEvent(nftEvent);
                         break;
                     }
                     case "found": {
@@ -198,15 +197,12 @@ export default class NFTWorker {
                         this.found(null);
                         break;
                     }
-                    case "error": {
-                        console.log("NFTWorker : error");
-                        var event = new Event("nftError");
-                        document.dispatchEvent(event);
-                        break;
-                    }
                 }
                 this._processing = false;
                 trackUpdate();
+            };
+            this.worker.onerror = (err: any) => {
+                console.error("Worker error from NFTWorker: ", err);
             };
             let renderU = () => {
                 renderUpdate();
@@ -228,18 +224,35 @@ export default class NFTWorker {
             // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903
             //if (world) {
             world = null;
-            const nftTrackingLostEvent = new CustomEvent("nftTrackingLost-" + this.uuid + "-" + this.name, {
+            const nftTrackingLostEvent = new CustomEvent<object>("nftTrackingLost-" + this.uuid + "-" + this.name, {
                 detail: { name: this.name },
             });
-            document.dispatchEvent(nftTrackingLostEvent);
+            this.target.dispatchEvent(nftTrackingLostEvent);
             //}
         } else {
             world = JSON.parse(msg.matrixGL_RH);
-            const matrixGLrhEvent = new CustomEvent("getMatrixGL_RH-" + this.uuid + "-" + this.name, {
+            const matrixGLrhEvent = new CustomEvent<object>("getMatrixGL_RH-" + this.uuid + "-" + this.name, {
                 detail: { matrixGL_RH: world, name: this.name },
             });
-            document.dispatchEvent(matrixGLrhEvent);
+            this.target.dispatchEvent(matrixGLrhEvent);
         }
+    }
+
+    public isReady() {return this.ready};
+    public getUuid(): string {
+        return this.uuid;
+    }
+
+    public getName(): string {
+        return this.name;
+    }
+
+    public getMarkerUrl(): string {
+        return this.markerURL;
+    }
+
+    public getEventTarget(): EventTarget {
+        return this.target;
     }
 
     public destroy(): void {}
@@ -248,11 +261,12 @@ export default class NFTWorker {
      * Stop the NFT tracking and the video streaming.
      */
     static stopNFT() {
+        const target = window || global;
         console.log("Stop NFT");
         var event = new Event("terminateWorker");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
         var event = new Event("stopStreaming");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
     }
 }
 

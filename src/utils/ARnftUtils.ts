@@ -33,6 +33,7 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
+const target: EventTarget = window || global;
 /**
  * Convert degrees to radians.
  * @param degrees degree value as number.
@@ -68,6 +69,26 @@ export function isIOS(): boolean {
 }
 
 /**
+ * Get the Window sizevideo dimensions, used internally in the NFTWorker.
+ * @param vw the video width
+ * @param hv the video height
+ * @returns an array of values.
+ */
+export function getWindowSize(vw: number, vh: number): Array<number> {
+    var pscale = 320 / Math.max(vw, (vh / 3) * 4);
+    var sscale = isMobile() ? window.outerWidth / vw : 1;
+
+    let sw = vw * sscale;
+    let sh = vh * sscale;
+
+    let w: number = vw * pscale;
+    let h: number = vh * pscale;
+    let pw: number = Math.max(w, (h / 3) * 4);
+    let ph: number = Math.max(h, (w / 4) * 3);
+    return [sw, sh, pw, ph, w, h];
+}
+
+/**
  * Get the config data from the json file, and dispatch the data with
  * an event listener.
  * @param configData
@@ -84,10 +105,10 @@ export function getConfig(configData: string): boolean {
         .then((response) => {
             // printing the response only for testing
             //console.log(response);
-            const eventData = new CustomEvent("getConfig", {
+            const eventData = new CustomEvent<object>("getConfig", {
                 detail: { config: response },
             });
-            document.dispatchEvent(eventData);
+            target.dispatchEvent(eventData);
             return response;
         })
         .catch(function (error) {

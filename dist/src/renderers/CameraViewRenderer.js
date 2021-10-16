@@ -3,6 +3,7 @@ export class CameraViewRenderer {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d");
         this.video = video;
+        this.target = window || global;
     }
     getFacing() {
         return this._facing;
@@ -97,7 +98,7 @@ export class CameraViewRenderer {
     }
     destroy() {
         const video = this.video;
-        document.addEventListener("stopStreaming", function () {
+        this.target.addEventListener("stopStreaming", function () {
             const stream = video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {
