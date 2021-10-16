@@ -33,7 +33,7 @@ export default class ARnft {
     private uuid;
     private version;
     private initialized;
-    constructor(width: number, height: number, configUrl: string, autoUpdate?: boolean);
+    constructor(width: number, height: number, configUrl: string);
     static init(width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object>;
     static initWithEntities(width: number, height: number, entities: IEntity[], configUrl: string, stats: boolean): Promise<object>;
     static initWithConfig(params: INameInitConfig | IEntityInitConfig): Promise<ARnft>;

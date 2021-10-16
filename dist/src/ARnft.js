@@ -7,14 +7,13 @@ import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
 const { version } = packageJson;
 export default class ARnft {
-    constructor(width, height, configUrl, autoUpdate = true) {
+    constructor(width, height, configUrl) {
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
         this.target = window || global;
         this.uuid = uuidv4();
         this.version = version;
-        this.autoUpdate = autoUpdate;
         console.log("ARnft ", this.version);
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
@@ -24,24 +23,26 @@ export default class ARnft {
         return ARnft.initWithConfig({ width, height, entities, configUrl, stats });
     }
     static async initWithConfig(params) {
-        const _arnft = new ARnft(params.width, params.height, params.configUrl, params.autoUpdate);
-        const nameParams = params;
+        const _arnft = new ARnft(params.width, params.height, params.configUrl);
+        _arnft.autoUpdate = params.autoUpdate;
         try {
-            if (nameParams.names != null && nameParams.markerUrls != null) {
-                return await _arnft._initialize(nameParams.markerUrls, nameParams.names, nameParams.stats);
-            }
+            let markerUrls;
+            let names;
+            const nameParams = params;
             const entityParams = params;
-            if (entityParams.entities != null) {
-                this.entities = entityParams.entities;
-                let markerUrls = this.entities.map((entity) => {
-                    return entity.markerUrl;
-                });
-                let names = this.entities.map((entity) => {
-                    return entity.name;
-                });
-                return await _arnft._initialize(markerUrls, names, params.stats);
+            if (nameParams.markerUrls != null && nameParams.names != null) {
+                markerUrls = nameParams.markerUrls;
+                names = nameParams.names;
             }
-            throw new Error("markerUrls or entities can't be undefined");
+            else if (entityParams.entities != null) {
+                this.entities = entityParams.entities;
+                markerUrls = this.entities.map((x) => x.markerUrl);
+                names = this.entities.map((x) => x.name);
+            }
+            else {
+                throw "markerUrls or entities can't be undefined";
+            }
+            return await _arnft._initialize(markerUrls, names, params.stats);
         }
         catch (error) {
             console.error(error);
@@ -88,6 +89,14 @@ export default class ARnft {
                 });
             });
             this.initialized = true;
+        });
+        this.target.addEventListener("nftLoaded-" + this.uuid, () => {
+            const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
+                return nftWorker.isReady() === false;
+            });
+            if (nftWorkersNotReady.length === 0) {
+                this.target.dispatchEvent(new CustomEvent("ARnftIsReady"));
+            }
         });
         let _update = () => {
             requestAnimationFrame(_update);
