@@ -44,8 +44,9 @@ jobs:
           git commit -m "Rebuild dist folder [github-ci]"
       - name: Push changes
         uses: ad-m/github-push-action@master
+        env:
+            INPUT_GITHUB_TOKEN: ${{ secrets.ARNFT_TOKEN }}
         with:
-          github_token: ${{ secrets.ARNFT_TOKEN }}
           branch: dist
           force: true
       - name: Publish if version has been updated
