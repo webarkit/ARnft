@@ -8,14 +8,15 @@ export interface ScreenData {
     max: number;
 }
 export interface ICameraViewRenderer {
-    getHeight(): number;
-    getWidth(): number;
+    facing: string;
+    height: number;
+    width: number;
     getImage(): ImageData;
 }
 export declare class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process;
     private context_process;
-    video: HTMLVideoElement;
+    _video: HTMLVideoElement;
     private _facing;
     private vw;
     private vh;
@@ -27,12 +28,12 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     private oy;
     private target;
     constructor(video: HTMLVideoElement);
-    getFacing(): string;
-    getHeight(): number;
-    getWidth(): number;
-    getVideo(): HTMLVideoElement;
-    getCanvasProcess(): HTMLCanvasElement;
-    getContexProcess(): CanvasRenderingContext2D;
+    get facing(): string;
+    get height(): number;
+    get width(): number;
+    get video(): HTMLVideoElement;
+    get canvasProcess(): HTMLCanvasElement;
+    get contextProcess(): CanvasRenderingContext2D;
     getImage(): ImageData;
     prepareImage(): void;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;

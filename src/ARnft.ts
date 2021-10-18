@@ -43,9 +43,34 @@ import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
 const { version } = packageJson;
 
-interface Entity {
+interface IEntity {
     name: string;
     markerUrl: string;
+}
+
+interface IInitConfig {
+    /** the width in pixels of the video camera. */
+    width: number;
+    /** the height in pixels of the video camera. */
+    height: number;
+    /** the url of the config.json file. */
+    configUrl: string;
+    /** true if you want the stats. */
+    stats?: boolean;
+    /** false if you want to maintain it yourself */
+    autoUpdate?: boolean;
+}
+
+interface INameInitConfig extends IInitConfig {
+    /** the Array of url of the markers (without the extension) */
+    markerUrls: Array<string>;
+    /** the names of the markers */
+    names: Array<string>;
+}
+
+interface IEntityInitConfig extends IInitConfig {
+    /** the Array of Entity. */
+    entities: IEntity[];
 }
 
 export default class ARnft {
@@ -56,11 +81,13 @@ export default class ARnft {
     public configUrl: string;
     public markerUrl: string;
     public camData: string;
+    public autoUpdate: boolean;
     private controllers: NFTWorker[];
-    private static entities: Entity[];
+    private static entities: IEntity[];
     private target: EventTarget;
     private uuid: string;
     private version: string;
+    private initialized: boolean;
 
     /**
      * The **ARnft** constructor to create a new instance of the ARnft class.
@@ -71,6 +98,7 @@ export default class ARnft {
      * @param width (number) the width in pixels of the video camera.
      * @param height (number) the height in pixels of the video camera.
      * @param configUrl (string) the url of the config.json file
+     * @param {Boolean} autoUpdate (boolean) default true, false if you want to maintain it yourself
      */
     constructor(width: number, height: number, configUrl: string) {
         this.width = width;
@@ -102,11 +130,7 @@ export default class ARnft {
         configUrl: string,
         stats: boolean
     ): Promise<object> {
-        const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
-            console.error(error);
-            return Promise.reject(false);
-        });
+        return ARnft.initWithConfig({ width, height, markerUrls, names, configUrl, stats });
     }
 
     /**
@@ -125,22 +149,36 @@ export default class ARnft {
     static async initWithEntities(
         width: number,
         height: number,
-        entities: Entity[],
+        entities: IEntity[],
         configUrl: string,
         stats: boolean
     ): Promise<object> {
-        const _arnft = new ARnft(width, height, configUrl);
-        this.entities = entities;
-        let markerUrls = this.entities.map((entity) => {
-            return entity.markerUrl;
-        });
-        let names = this.entities.map((entity) => {
-            return entity.name;
-        });
-        return await _arnft._initialize(markerUrls, names, stats).catch((error: any) => {
+        return ARnft.initWithConfig({ width, height, entities, configUrl, stats });
+    }
+
+    static async initWithConfig(params: INameInitConfig | IEntityInitConfig) {
+        const _arnft = new ARnft(params.width, params.height, params.configUrl);
+        _arnft.autoUpdate = params.autoUpdate;
+        try {
+            let markerUrls;
+            let names;
+            const nameParams = params as INameInitConfig;
+            const entityParams = params as IEntityInitConfig;
+            if (nameParams.markerUrls != null && nameParams.names != null) {
+                markerUrls = nameParams.markerUrls;
+                names = nameParams.names;
+            } else if (entityParams.entities != null) {
+                this.entities = entityParams.entities;
+                markerUrls = this.entities.map((x) => x.markerUrl);
+                names = this.entities.map((x) => x.name);
+            } else {
+                throw "markerUrls or entities can't be undefined";
+            }
+            return await _arnft._initialize(markerUrls, names, params.stats);
+        } catch (error: any) {
             console.error(error);
-            return Promise.reject(false);
-        });
+            return Promise.reject(error);
+        }
     }
 
     /**
@@ -152,7 +190,7 @@ export default class ARnft {
      * @returns the ARnft object.
      */
 
-    private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<object> {
+    private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<this> {
         const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
         console.log(
@@ -180,10 +218,11 @@ export default class ARnft {
 
             this.controllers = [];
             this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
-            await this.cameraView.initialize(this.appData.videoSettings).catch((error: any) => {
-                console.error(error);
-                return Promise.reject(false);
-            });
+            try {
+                await this.cameraView.initialize(this.appData.videoSettings);
+            } catch (error: any) {
+                return Promise.reject(error);
+            }
             markerUrls.forEach((markerUrl: string, index: number) => {
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
                 this.controllers[index].initialize(
@@ -200,18 +239,11 @@ export default class ARnft {
                         }
                     }
                 );
-
-                this.controllers[index].process(this.cameraView.getImage());
-                let update = () => {
-                    this.controllers[index].process(this.cameraView.getImage());
-                    requestAnimationFrame(update);
-                };
-                update();
             });
+            this.initialized = true;
         });
 
-        this.target.addEventListener('nftLoaded-'+this.uuid, async (ev: any) => {
-            
+        this.target.addEventListener("nftLoaded-" + this.uuid, () => {
             const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
                 return nftWorker.isReady() === false;
             });
@@ -220,14 +252,29 @@ export default class ARnft {
                 this.target.dispatchEvent(new CustomEvent<object>("ARnftIsReady"));
             }
         });
-        return Promise.resolve(this);
+
+        let _update = () => {
+            requestAnimationFrame(_update);
+            if (!this.initialized || !this.autoUpdate) return;
+            const image = this.cameraView.getImage();
+            this.controllers.forEach((controller) => controller.process(image));
+        };
+        requestAnimationFrame(_update);
+        return this;
     }
 
     /**
-     *
-     * @returns all the entities
+     * Default autoUpdate true. If set, don't call this function. When it isn't, then you have to maintain it yourself.
      */
-    public static getEntities() {
+    public update(): void {
+        if (!this.initialized || this.autoUpdate) return;
+        if (this.cameraView != null) {
+            const image = this.cameraView.getImage();
+            this.controllers.forEach((controller) => controller.process(image));
+        }
+    }
+
+    public static getEntities(): IEntity[] {
         return this.entities;
     }
 

@@ -17,25 +17,37 @@ export default class ARnft {
         console.log("ARnft ", this.version);
     }
     static async init(width, height, markerUrls, names, configUrl, stats) {
-        const _arnft = new ARnft(width, height, configUrl);
-        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
-            console.error(error);
-            return Promise.reject(false);
-        });
+        return ARnft.initWithConfig({ width, height, markerUrls, names, configUrl, stats });
     }
     static async initWithEntities(width, height, entities, configUrl, stats) {
-        const _arnft = new ARnft(width, height, configUrl);
-        this.entities = entities;
-        let markerUrls = this.entities.map((entity) => {
-            return entity.markerUrl;
-        });
-        let names = this.entities.map((entity) => {
-            return entity.name;
-        });
-        return await _arnft._initialize(markerUrls, names, stats).catch((error) => {
+        return ARnft.initWithConfig({ width, height, entities, configUrl, stats });
+    }
+    static async initWithConfig(params) {
+        const _arnft = new ARnft(params.width, params.height, params.configUrl);
+        _arnft.autoUpdate = params.autoUpdate;
+        try {
+            let markerUrls;
+            let names;
+            const nameParams = params;
+            const entityParams = params;
+            if (nameParams.markerUrls != null && nameParams.names != null) {
+                markerUrls = nameParams.markerUrls;
+                names = nameParams.names;
+            }
+            else if (entityParams.entities != null) {
+                this.entities = entityParams.entities;
+                markerUrls = this.entities.map((x) => x.markerUrl);
+                names = this.entities.map((x) => x.name);
+            }
+            else {
+                throw "markerUrls or entities can't be undefined";
+            }
+            return await _arnft._initialize(markerUrls, names, params.stats);
+        }
+        catch (error) {
             console.error(error);
-            return Promise.reject(false);
-        });
+            return Promise.reject(error);
+        }
     }
     async _initialize(markerUrls, names, stats) {
         const initEvent = new Event("initARnft");
@@ -58,10 +70,12 @@ export default class ARnft {
             }
             this.controllers = [];
             this.cameraView = new CameraViewRenderer(document.getElementById("video"));
-            await this.cameraView.initialize(this.appData.videoSettings).catch((error) => {
-                console.error(error);
-                return Promise.reject(false);
-            });
+            try {
+                await this.cameraView.initialize(this.appData.videoSettings);
+            }
+            catch (error) {
+                return Promise.reject(error);
+            }
             markerUrls.forEach((markerUrl, index) => {
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
                 this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
@@ -73,15 +87,10 @@ export default class ARnft {
                         statsWorker.update();
                     }
                 });
-                this.controllers[index].process(this.cameraView.getImage());
-                let update = () => {
-                    this.controllers[index].process(this.cameraView.getImage());
-                    requestAnimationFrame(update);
-                };
-                update();
             });
+            this.initialized = true;
         });
-        this.target.addEventListener('nftLoaded-' + this.uuid, async (ev) => {
+        this.target.addEventListener("nftLoaded-" + this.uuid, () => {
             const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
                 return nftWorker.isReady() === false;
             });
@@ -89,7 +98,23 @@ export default class ARnft {
                 this.target.dispatchEvent(new CustomEvent("ARnftIsReady"));
             }
         });
-        return Promise.resolve(this);
+        let _update = () => {
+            requestAnimationFrame(_update);
+            if (!this.initialized || !this.autoUpdate)
+                return;
+            const image = this.cameraView.getImage();
+            this.controllers.forEach((controller) => controller.process(image));
+        };
+        requestAnimationFrame(_update);
+        return this;
+    }
+    update() {
+        if (!this.initialized || this.autoUpdate)
+            return;
+        if (this.cameraView != null) {
+            const image = this.cameraView.getImage();
+            this.controllers.forEach((controller) => controller.process(image));
+        }
     }
     static getEntities() {
         return this.entities;

@@ -238,7 +238,9 @@ export default class NFTWorker {
         }
     }
 
-    public isReady() {return this.ready};
+    public isReady() {
+        return this.ready;
+    }
     public getUuid(): string {
         return this.uuid;
     }

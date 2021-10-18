@@ -131,8 +131,9 @@ export default class NFTWorker {
             this.target.dispatchEvent(matrixGLrhEvent);
         }
     }
-    isReady() { return this.ready; }
-    ;
+    isReady() {
+        return this.ready;
+    }
     getUuid() {
         return this.uuid;
     }
