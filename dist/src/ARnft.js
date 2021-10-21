@@ -8,6 +8,7 @@ import packageJson from "../package.json";
 const { version } = packageJson;
 export default class ARnft {
     constructor(width, height, configUrl) {
+        this.autoUpdate = true;
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
@@ -24,7 +25,9 @@ export default class ARnft {
     }
     static async initWithConfig(params) {
         const _arnft = new ARnft(params.width, params.height, params.configUrl);
-        _arnft.autoUpdate = params.autoUpdate;
+        if (params.autoUpdate != null) {
+            _arnft.autoUpdate = params.autoUpdate;
+        }
         try {
             let markerUrls;
             let names;
@@ -76,17 +79,11 @@ export default class ARnft {
             catch (error) {
                 return Promise.reject(error);
             }
+            const renderUpdate = () => stats ? statsMain.update() : null;
+            const trackUpdate = () => stats ? statsWorker.update() : null;
             markerUrls.forEach((markerUrl, index) => {
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-                this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), () => {
-                    if (stats) {
-                        statsMain.update();
-                    }
-                }, () => {
-                    if (stats) {
-                        statsWorker.update();
-                    }
-                });
+                this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), renderUpdate, trackUpdate);
             });
             this.initialized = true;
         });
@@ -99,11 +96,11 @@ export default class ARnft {
             }
         });
         let _update = () => {
-            requestAnimationFrame(_update);
             if (!this.initialized || !this.autoUpdate)
-                return;
+                return requestAnimationFrame(_update);
             const image = this.cameraView.getImage();
             this.controllers.forEach((controller) => controller.process(image));
+            requestAnimationFrame(_update);
         };
         requestAnimationFrame(_update);
         return this;

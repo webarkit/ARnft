@@ -81,7 +81,7 @@ export default class ARnft {
     public configUrl: string;
     public markerUrl: string;
     public camData: string;
-    public autoUpdate: boolean;
+    public autoUpdate: boolean = true;
     private controllers: NFTWorker[];
     private static entities: IEntity[];
     private target: EventTarget;
@@ -98,7 +98,6 @@ export default class ARnft {
      * @param width (number) the width in pixels of the video camera.
      * @param height (number) the height in pixels of the video camera.
      * @param configUrl (string) the url of the config.json file
-     * @param {Boolean} autoUpdate (boolean) default true, false if you want to maintain it yourself
      */
     constructor(width: number, height: number, configUrl: string) {
         this.width = width;
@@ -158,7 +157,9 @@ export default class ARnft {
 
     static async initWithConfig(params: INameInitConfig | IEntityInitConfig) {
         const _arnft = new ARnft(params.width, params.height, params.configUrl);
-        _arnft.autoUpdate = params.autoUpdate;
+        if (params.autoUpdate != null) {
+            _arnft.autoUpdate = params.autoUpdate;
+        }
         try {
             let markerUrls;
             let names;
@@ -223,22 +224,11 @@ export default class ARnft {
             } catch (error: any) {
                 return Promise.reject(error);
             }
+            const renderUpdate = () => stats ? statsMain.update() : null;
+            const trackUpdate = () => stats ? statsWorker.update() : null;
             markerUrls.forEach((markerUrl: string, index: number) => {
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-                this.controllers[index].initialize(
-                    this.appData.cameraPara,
-                    this.cameraView.getImage(),
-                    () => {
-                        if (stats) {
-                            statsMain.update();
-                        }
-                    },
-                    () => {
-                        if (stats) {
-                            statsWorker.update();
-                        }
-                    }
-                );
+                this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), renderUpdate, trackUpdate);
             });
             this.initialized = true;
         });
@@ -254,10 +244,10 @@ export default class ARnft {
         });
 
         let _update = () => {
-            requestAnimationFrame(_update);
-            if (!this.initialized || !this.autoUpdate) return;
+            if (!this.initialized || !this.autoUpdate) return requestAnimationFrame(_update);
             const image = this.cameraView.getImage();
             this.controllers.forEach((controller) => controller.process(image));
+            requestAnimationFrame(_update);
         };
         requestAnimationFrame(_update);
         return this;
