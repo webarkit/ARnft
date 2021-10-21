@@ -11,18 +11,14 @@ export default class NFTWorker {
         this.name = name;
         this.ready = false;
     }
-    initialize(cameraURL, imageData, renderUpdate, trackUpdate) {
-        return new Promise((resolve, reject) => {
-            this.worker = new Worker();
-            this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
-                resolve(true);
-            });
-            const worker = this.worker;
-            this.target.addEventListener("terminateWorker", function () {
-                worker.postMessage({ type: "stop" });
-                worker.terminate();
-            });
+    async initialize(cameraURL, imageData, renderUpdate, trackUpdate) {
+        this.worker = new Worker();
+        const worker = this.worker;
+        this.target.addEventListener("terminateWorker", function () {
+            worker.postMessage({ type: "stop" });
+            worker.terminate();
         });
+        return await this.load(cameraURL, imageData, renderUpdate, trackUpdate);
     }
     process(imageData) {
         if (this._processing) {

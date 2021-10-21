@@ -79,23 +79,20 @@ export default class NFTWorker {
      * @param trackUpdate
      * @returns true if succesfull.
      */
-    public initialize(
+    public async initialize(
         cameraURL: string,
         imageData: ImageData,
         renderUpdate: () => void,
         trackUpdate: () => void
     ): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            this.worker = new Worker();
-            this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
-                resolve(true);
-            });
-            const worker = this.worker;
-            this.target.addEventListener("terminateWorker", function () {
-                worker.postMessage({ type: "stop" });
-                worker.terminate();
-            });
+        this.worker = new Worker();
+        const worker = this.worker;
+        this.target.addEventListener("terminateWorker", function () {
+            worker.postMessage({ type: "stop" });
+            worker.terminate();
         });
+        return await this.load(cameraURL, imageData, renderUpdate, trackUpdate);
+
     }
 
     /**
@@ -257,7 +254,7 @@ export default class NFTWorker {
         return this.target;
     }
 
-    public destroy(): void {}
+    public destroy(): void { }
 
     /**
      * Stop the NFT tracking and the video streaming.
