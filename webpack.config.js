@@ -46,7 +46,7 @@ module.exports = {
   },
   resolve: {
     alias: {
-      jsartoolkitnft: '@kalwalt/jsartoolkit-nft'
+      jsartoolkitnft: '@webarkit/jsartoolkit-nft'
     },
     extensions: ['.tsx', '.ts', '.js'],
   },
