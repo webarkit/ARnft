@@ -49,7 +49,9 @@ export default class Container {
             stats.appendChild(stats2);
             const loading = document.getElementById("loading");
             document.body.insertBefore(stats, loading);
+            return stats;
         }
+        return undefined;
     }
     static createLoading(configData) {
         if (configData.loading.create) {
@@ -64,7 +66,9 @@ export default class Container {
             loader.appendChild(logo);
             loader.appendChild(loadingMessage);
             document.body.insertBefore(loader, document.body.firstChild);
+            return loader;
         }
+        return undefined;
     }
 }
 //# sourceMappingURL=Container.js.map

@@ -92,7 +92,7 @@ yarn add @webarkit/ar-nft
 - Configuration data in an External .json file.
 
 ## Format the code with Prettier
-We are using [Prettier](https://prettier.io/) as code formatter. You only need to run the `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted, before to format, run instead: `yarn format-check`
+We are using [Prettier](https://prettier.io/) as code formatter. You only need to run `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted run instead: `yarn format-check`
 
 ## Build
 If you make changes to the code, run these commands to build the distribution libray, install all the dependencies with:

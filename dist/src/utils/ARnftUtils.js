@@ -25,25 +25,16 @@ export function getWindowSize(vw, vh) {
     let ph = Math.max(h, (w / 4) * 3);
     return [sw, sh, pw, ph, w, h];
 }
-export function getConfig(configData) {
-    fetch(configData)
-        .then((response) => {
+export async function getConfig(configData) {
+    try {
+        const response = await fetch(configData);
         if (!response.ok) {
             throw new Error("HTTP error, status = " + response.status);
         }
         return response.json();
-    })
-        .then((response) => {
-        const eventData = new CustomEvent("getConfig", {
-            detail: { config: response },
-        });
-        target.dispatchEvent(eventData);
-        return response;
-    })
-        .catch(function (error) {
-        console.error(error);
-        return Promise.reject(false);
-    });
-    return true;
+    }
+    catch (error) {
+        return Promise.reject(error);
+    }
 }
 //# sourceMappingURL=ARnftUtils.js.map

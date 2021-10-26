@@ -1,28 +1,29 @@
 export class CameraViewRenderer {
     constructor(video) {
+        this.targetFrameRate = 30;
         this.lastCache = 0;
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d", { alpha: false });
-        this.video = video;
+        this._video = video;
         this.target = window || global;
-        this.targetFrameRate = 30;
+        this.frame = 0;
     }
-    getFacing() {
+    get facing() {
         return this._facing;
     }
-    getHeight() {
+    get height() {
         return this.vh;
     }
-    getWidth() {
+    get width() {
         return this.vw;
     }
-    getVideo() {
-        return this.video;
+    get video() {
+        return this._video;
     }
-    getCanvasProcess() {
+    get canvasProcess() {
         return this.canvas_process;
     }
-    getContexProcess() {
+    get contextProcess() {
         return this.context_process;
     }
     getImage() {
@@ -30,14 +31,20 @@ export class CameraViewRenderer {
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
             this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
             const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
-            this.imageDataCache = Array.from(imageData.data);
+            if (this.imageDataCache == null) {
+                this.imageDataCache = imageData.data;
+            }
+            else {
+                this.imageDataCache.set(imageData.data);
+            }
             this.lastCache = now;
+            this.frame++;
         }
-        return new ImageData(new Uint8ClampedArray(this.imageDataCache), this.pw, this.ph);
+        return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
     }
     prepareImage() {
-        this.vw = this.video.videoWidth;
-        this.vh = this.video.videoHeight;
+        this.vw = this._video.videoWidth;
+        this.vh = this._video.videoHeight;
         var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
         this.w = Math.floor(this.vw * pscale);
         this.h = Math.floor(this.vh * pscale);
@@ -50,13 +57,13 @@ export class CameraViewRenderer {
         this.context_process.fillStyle = "black";
         this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
-    initialize(videoSettings) {
+    async initialize(videoSettings) {
         this._facing = videoSettings.facingMode || "environment";
         const constraints = {};
         const mediaDevicesConstraints = {};
-        return new Promise(async (resolve, reject) => {
-            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-                var hint = {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+            try {
+                const hint = {
                     audio: false,
                     video: {
                         facingMode: this._facing,
@@ -64,53 +71,36 @@ export class CameraViewRenderer {
                     },
                 };
                 if (navigator.mediaDevices.enumerateDevices) {
-                    try {
-                        const devices = await navigator.mediaDevices.enumerateDevices();
-                        var videoDevices = [];
-                        var videoDeviceIndex = 0;
-                        devices.forEach(function (device) {
-                            if (device.kind == "videoinput") {
-                                videoDevices[videoDeviceIndex++] = device.deviceId;
-                            }
-                        });
-                        if (videoDevices.length > 1) {
-                            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
+                    const devices = await navigator.mediaDevices.enumerateDevices();
+                    const videoDevices = [];
+                    let videoDeviceIndex = 0;
+                    devices.forEach(function (device) {
+                        if (device.kind == "videoinput") {
+                            videoDevices[videoDeviceIndex++] = device.deviceId;
                         }
-                    }
-                    catch (err) {
-                        console.log(err.name + ": " + err.message);
+                    });
+                    if (videoDevices.length > 1) {
+                        hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
                     }
                 }
-                navigator.mediaDevices
-                    .getUserMedia(hint)
-                    .then(async (stream) => {
-                    this.video.srcObject = stream;
-                    this.video = await new Promise((resolve, reject) => {
-                        this.video.onloadedmetadata = () => resolve(this.video);
-                    })
-                        .then((value) => {
-                        this.prepareImage();
-                        resolve(true);
-                        return value;
-                    })
-                        .catch((msg) => {
-                        console.log(msg);
-                        reject(msg);
-                        return null;
-                    });
-                })
-                    .catch((error) => {
-                    console.error(error);
-                    reject(error);
+                const stream = await navigator.mediaDevices.getUserMedia(hint);
+                this._video.srcObject = stream;
+                this._video = await new Promise((resolve) => {
+                    this._video.onloadedmetadata = () => resolve(this._video);
                 });
+                this.prepareImage();
+                return true;
             }
-            else {
-                reject("Sorry, Your device does not support this experince.");
+            catch (error) {
+                return Promise.reject(error);
             }
-        });
+        }
+        else {
+            return Promise.reject("Sorry, Your device does not support this experince.");
+        }
     }
     destroy() {
-        const video = this.video;
+        const video = this._video;
         this.target.addEventListener("stopStreaming", function () {
             const stream = video.srcObject;
             console.log("stop streaming");

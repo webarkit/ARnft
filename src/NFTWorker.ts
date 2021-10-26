@@ -51,6 +51,8 @@ export default class NFTWorker {
     private uuid: string;
     private name: string;
 
+    protected ready: boolean;
+
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
      * @param markerURL the marker url of the NFT marker.
@@ -65,6 +67,7 @@ export default class NFTWorker {
         this.target = window || global;
         this.uuid = uuid;
         this.name = name;
+        this.ready = false;
     }
 
     /**
@@ -76,23 +79,20 @@ export default class NFTWorker {
      * @param trackUpdate
      * @returns true if succesfull.
      */
-    public initialize(
+    public async initialize(
         cameraURL: string,
         imageData: ImageData,
         renderUpdate: () => void,
         trackUpdate: () => void
     ): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            this.worker = new Worker();
-            this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
-                resolve(true);
-            });
-            const worker = this.worker;
-            this.target.addEventListener("terminateWorker", function () {
-                worker.postMessage({ type: "stop" });
-                worker.terminate();
-            });
+        this.worker = new Worker();
+        const worker = this.worker;
+        this.target.addEventListener("terminateWorker", function () {
+            worker.postMessage({ type: "stop" });
+            worker.terminate();
         });
+        return await this.load(cameraURL, imageData, renderUpdate, trackUpdate);
+
     }
 
     /**
@@ -174,6 +174,8 @@ export default class NFTWorker {
                                 }, 2000);
                             }
                         }
+                        this.ready = true;
+                        this.target.dispatchEvent(new CustomEvent<object>("nftLoaded-" + this.uuid));
                         break;
                     }
                     case "nftData": {
@@ -233,6 +235,9 @@ export default class NFTWorker {
         }
     }
 
+    public isReady() {
+        return this.ready;
+    }
     public getUuid(): string {
         return this.uuid;
     }
@@ -249,7 +254,7 @@ export default class NFTWorker {
         return this.target;
     }
 
-    public destroy(): void {}
+    public destroy(): void { }
 
     /**
      * Stop the NFT tracking and the video streaming.
