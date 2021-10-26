@@ -1,12 +1,12 @@
 export class CameraViewRenderer {
     constructor(video) {
-        this.targetFrameRate = 30;
+        this.targetFrameRate = 60;
         this.lastCache = 0;
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d", { alpha: false });
         this._video = video;
         this.target = window || global;
-        this.frame = 0;
+        this._frame = 0;
     }
     get facing() {
         return this._facing;
@@ -20,13 +20,16 @@ export class CameraViewRenderer {
     get video() {
         return this._video;
     }
+    get frame() {
+        return this._frame;
+    }
     get canvasProcess() {
         return this.canvas_process;
     }
     get contextProcess() {
         return this.context_process;
     }
-    getImage() {
+    get image() {
         const now = Date.now();
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
             this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
@@ -38,7 +41,7 @@ export class CameraViewRenderer {
                 this.imageDataCache.set(imageData.data);
             }
             this.lastCache = now;
-            this.frame++;
+            this._frame++;
         }
         return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
     }
@@ -59,6 +62,9 @@ export class CameraViewRenderer {
     }
     async initialize(videoSettings) {
         this._facing = videoSettings.facingMode || "environment";
+        if (videoSettings.targetFrameRate != null) {
+            this.targetFrameRate = videoSettings.targetFrameRate;
+        }
         const constraints = {};
         const mediaDevicesConstraints = {};
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {

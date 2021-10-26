@@ -16,14 +16,15 @@ export default class Container {
             document.body.insertBefore(container, loading);
             var containerEvent = new Event("containerEvent");
             document.dispatchEvent(containerEvent);
-            return { container: container, canvas: canvas, video: video };
+            return { container, canvas, video };
         }
         else {
             const container = document.getElementById(configData.container.containerName);
             const canvas = document.getElementById(configData.container.canvasName);
+            const video = document.getElementById("video");
             var containerEvent = new Event("containerEvent");
             document.dispatchEvent(containerEvent);
-            return { container: container, canvas: canvas };
+            return { container, canvas, video };
         }
     }
     static createStats(create, configData) {
