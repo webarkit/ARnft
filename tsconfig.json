@@ -33,7 +33,7 @@
         "../node_modules/*",
       ],
       "jsartoolkitnft": [
-        "./node_modules/@kalwalt/jsartoolkit-nft"
+        "./node_modules/@webarkit/jsartoolkit-nft"
       ]
     }
   },
