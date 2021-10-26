@@ -51,14 +51,15 @@ ctx.onmessage = (e) => {
         }
         case "process": {
             next = msg.imagedata;
-            process(next);
+            process(next, msg.frame);
         }
     }
 };
 
 let next: any = null;
+let lastFrame: number = 0;
 let ar: any = null;
-let markerResult = null;
+let markerResult: any = null;
 
 const load = (msg: any) => {
     const basePath = self.origin;
@@ -131,18 +132,19 @@ const load = (msg: any) => {
     ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 
-const process = (next: any) => {
-    markerResult = null;
-
-    if (ar && ar.process) {
-        ar.process(next);
+const process = (next: any, frame: number) => {
+    if (frame !== lastFrame) {
+        markerResult = null;
+        if (ar && ar.process) {
+            ar.process(next);
+        }
+        lastFrame = frame;
     }
 
-    if (markerResult) {
+    if (markerResult != null) {
         ctx.postMessage(markerResult);
     } else {
         ctx.postMessage({ type: "not found" });
     }
-
     next = null;
 };

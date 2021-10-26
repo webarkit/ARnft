@@ -200,37 +200,37 @@ export default class ARnft {
         );
         getConfig(this.configUrl);
         this.target.addEventListener("getConfig", async (ev: any) => {
-            this.appData = ev.detail.config;
-            // views
-            Container.createContainer(this.appData);
-            Container.createLoading(this.appData);
-            Container.createStats(this.appData.stats.createHtml, this.appData);
-
-            let statsMain: any, statsWorker: any;
-
-            if (stats) {
-                statsMain = new Stats();
-                statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-                document.getElementById("stats1").appendChild(statsMain.dom);
-                statsWorker = new Stats();
-                statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-                document.getElementById("stats2").appendChild(statsWorker.dom);
-            }
-
-            this.controllers = [];
-            this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
             try {
+                this.appData = ev.detail.config;
+                // views
+                Container.createContainer(this.appData);
+                Container.createLoading(this.appData);
+                Container.createStats(this.appData.stats.createHtml, this.appData);
+
+                let statsMain: any, statsWorker: any;
+
+                if (stats) {
+                    statsMain = new Stats();
+                    statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+                    document.getElementById("stats1").appendChild(statsMain.dom);
+                    statsWorker = new Stats();
+                    statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+                    document.getElementById("stats2").appendChild(statsWorker.dom);
+                }
+
+                this.controllers = [];
+                this.cameraView = new CameraViewRenderer(document.getElementById("video") as HTMLVideoElement);
                 await this.cameraView.initialize(this.appData.videoSettings);
+                const renderUpdate = () => stats ? statsMain.update() : null;
+                const trackUpdate = () => stats ? statsWorker.update() : null;
+                markerUrls.forEach((markerUrl: string, index: number) => {
+                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                    this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
+                });
+                this.initialized = true;
             } catch (error: any) {
                 return Promise.reject(error);
             }
-            const renderUpdate = () => stats ? statsMain.update() : null;
-            const trackUpdate = () => stats ? statsWorker.update() : null;
-            markerUrls.forEach((markerUrl: string, index: number) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-                this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), renderUpdate, trackUpdate);
-            });
-            this.initialized = true;
         });
 
         this.target.addEventListener("nftLoaded-" + this.uuid, () => {
@@ -245,8 +245,8 @@ export default class ARnft {
 
         let _update = () => {
             if (!this.initialized || !this.autoUpdate) return requestAnimationFrame(_update);
-            const image = this.cameraView.getImage();
-            this.controllers.forEach((controller) => controller.process(image));
+            const image = this.cameraView.image;
+            this.controllers.forEach((controller) => controller.process(image, this.cameraView.frame));
             requestAnimationFrame(_update);
         };
         requestAnimationFrame(_update);
@@ -259,8 +259,8 @@ export default class ARnft {
     public update(): void {
         if (!this.initialized || this.autoUpdate) return;
         if (this.cameraView != null) {
-            const image = this.cameraView.getImage();
-            this.controllers.forEach((controller) => controller.process(image));
+            const image = this.cameraView.image;
+            this.controllers.forEach((controller) => controller.process(image, this.cameraView.frame));
         }
     }
 
