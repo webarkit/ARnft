@@ -33,24 +33,15 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
-export interface VideoSettingData {
-    width: ScreenData;
-    height: ScreenData;
-    facingMode: string;
-}
 
-export interface ScreenData {
-    min: number;
-    max: number;
-}
+import { VideoSettingData } from "../config/ConfigData";
 
 export interface ICameraViewRenderer {
     facing: string;
     height: number;
     width: number;
-    getImage(): ImageData;
+    image: ImageData;
 }
-
 export class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process: HTMLCanvasElement;
 
@@ -73,12 +64,18 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     private oy: number;
 
     private target: EventTarget;
+    private targetFrameRate: number = 60;
+    private imageDataCache: Uint8ClampedArray;
+    private _frame: number;
+
+    private lastCache: number = 0;
 
     constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement("canvas");
-        this.context_process = this.canvas_process.getContext("2d");
+        this.context_process = this.canvas_process.getContext("2d", { alpha: false });
         this._video = video;
         this.target = window || global;
+        this._frame = 0;
     }
 
     // Getters
@@ -98,6 +95,10 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return this._video;
     }
 
+    public get frame(): number {
+        return this._frame;
+    }
+
     public get canvasProcess(): HTMLCanvasElement {
         return this.canvas_process;
     }
@@ -106,9 +107,20 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return this.context_process;
     }
 
-    public getImage(): ImageData {
-        this.context_process.drawImage(this._video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
-        return this.context_process.getImageData(0, 0, this.pw, this.ph);
+    public get image(): ImageData {
+        const now = Date.now();
+        if (now - this.lastCache > 1000 / this.targetFrameRate) {
+            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
+            if (this.imageDataCache == null) {
+                this.imageDataCache = imageData.data;
+            } else {
+                this.imageDataCache.set(imageData.data);
+            }
+            this.lastCache = now;
+            this._frame++;
+        }
+        return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
     }
 
     public prepareImage(): void {
@@ -117,12 +129,13 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
         var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
 
-        this.w = this.vw * pscale;
-        this.h = this.vh * pscale;
-        this.pw = Math.max(this.w, (this.h / 3) * 4);
-        this.ph = Math.max(this.h, (this.w / 4) * 3);
-        this.ox = (this.pw - this.w) / 2;
-        this.oy = (this.ph - this.h) / 2;
+        // Void float point
+        this.w = Math.floor(this.vw * pscale);
+        this.h = Math.floor(this.vh * pscale);
+        this.pw = Math.floor(Math.max(this.w, (this.h / 3) * 4));
+        this.ph = Math.floor(Math.max(this.h, (this.w / 4) * 3));
+        this.ox = Math.floor((this.pw - this.w) / 2);
+        this.oy = Math.floor((this.ph - this.h) / 2);
 
         this.canvas_process.width = this.pw;
         this.canvas_process.height = this.ph;
@@ -133,13 +146,16 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public async initialize(videoSettings: VideoSettingData): Promise<boolean> {
         this._facing = videoSettings.facingMode || "environment";
+        if (videoSettings.targetFrameRate != null) {
+            this.targetFrameRate = videoSettings.targetFrameRate;
+        }
 
         const constraints = {};
         const mediaDevicesConstraints = {};
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
-                var hint: any = {
+                const hint: any = {
                     audio: false,
                     video: {
                         facingMode: this._facing,
@@ -148,8 +164,8 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                 };
                 if (navigator.mediaDevices.enumerateDevices) {
                     const devices = await navigator.mediaDevices.enumerateDevices();
-                    var videoDevices = [] as Array<string>;
-                    var videoDeviceIndex = 0;
+                    const videoDevices = [] as Array<string>;
+                    let videoDeviceIndex = 0;
                     devices.forEach(function (device) {
                         if (device.kind == "videoinput") {
                             videoDevices[videoDeviceIndex++] = device.deviceId;

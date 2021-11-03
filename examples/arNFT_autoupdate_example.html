@@ -69,12 +69,12 @@
 						const tick = () => {
 							now = Date.now();
     					elapsed = now - then;
-							window.requestAnimationFrame(tick);
 							sceneThreejs.draw();
 							if (elapsed > fpsInterval) {
 								then = now - (elapsed % fpsInterval);
 								nft.update();
 							}
+							window.requestAnimationFrame(tick);
 						};
 						tick();
 					});

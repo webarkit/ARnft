@@ -81,7 +81,6 @@ export default class NFTWorker {
      */
     public async initialize(
         cameraURL: string,
-        imageData: ImageData,
         renderUpdate: () => void,
         trackUpdate: () => void
     ): Promise<boolean> {
@@ -91,7 +90,7 @@ export default class NFTWorker {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
-        return await this.load(cameraURL, imageData, renderUpdate, trackUpdate);
+        return await this.load(cameraURL, renderUpdate, trackUpdate);
 
     }
 
@@ -100,13 +99,13 @@ export default class NFTWorker {
      * @param imageData the image data from the video stream.
      * @returns void
      */
-    public process(imageData: ImageData) {
+    public process(imagedata: ImageData, frame: number) {
         if (this._processing) {
             return;
         }
         this._processing = true;
 
-        this.worker.postMessage({ type: "process", imagedata: imageData }, [imageData.data.buffer]);
+        this.worker.postMessage({ type: "process", imagedata, frame }, [imagedata.data.buffer]);
     }
 
     /**
@@ -119,95 +118,92 @@ export default class NFTWorker {
      */
     protected load(
         cameraURL: string,
-        imageData: ImageData,
         renderUpdate: () => void,
         trackUpdate: () => void
     ): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
+        let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
 
-            const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
-            this.target.dispatchEvent(setWindowSizeEvent);
+        const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
+        this.target.dispatchEvent(setWindowSizeEvent);
 
-            this.worker.postMessage({
-                type: "load",
-                pw: pw,
-                ph: ph,
-                camera_para: cameraURL,
-                marker: this.markerURL,
-            });
-
-            this.worker.onmessage = (ev: any) => {
-                var msg = ev.data;
-                switch (msg.type) {
-                    case "loaded": {
-                        var proj = JSON.parse(msg.proj);
-                        const ratioW = pw / w;
-                        const ratioH = ph / h;
-                        proj[0] *= ratioW;
-                        proj[4] *= ratioW;
-                        proj[8] *= ratioW;
-                        proj[12] *= ratioW;
-                        proj[1] *= ratioH;
-                        proj[5] *= ratioH;
-                        proj[9] *= ratioH;
-                        proj[13] *= ratioH;
-                        const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
-                            detail: { proj: proj },
-                        });
-                        this.target.dispatchEvent(projectionMatrixEvent);
-                        break;
-                    }
-                    case "endLoading": {
-                        if (msg.end == true) {
-                            // removing loader page if present
-                            const loader = document.getElementById("loading");
-                            if (loader) {
-                                loader.querySelector<HTMLElement>(".loading-text").innerText = "Start the tracking!";
-                                setTimeout(function () {
-                                    if (loader.parentElement == null) {
-                                        return;
-                                    }
-                                    if (loader) {
-                                        loader.parentElement.removeChild(loader);
-                                    }
-                                }, 2000);
-                            }
-                        }
-                        this.ready = true;
-                        this.target.dispatchEvent(new CustomEvent<object>("nftLoaded-" + this.uuid));
-                        break;
-                    }
-                    case "nftData": {
-                        const nft = JSON.parse(msg.nft);
-                        const nftEvent = new CustomEvent<object>("getNFTData-" + this.uuid + "-" + this.name, {
-                            detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
-                        });
-                        this.target.dispatchEvent(nftEvent);
-                        break;
-                    }
-                    case "found": {
-                        this.found(msg);
-                        break;
-                    }
-                    case "not found": {
-                        this.found(null);
-                        break;
-                    }
-                }
-                this._processing = false;
-                trackUpdate();
-            };
-            this.worker.onerror = (err: any) => {
-                console.error("Worker error from NFTWorker: ", err);
-            };
-            let renderU = () => {
-                renderUpdate();
-                window.requestAnimationFrame(renderU);
-            };
-            renderU();
-            this.process(imageData);
+        this.worker.postMessage({
+            type: "load",
+            pw: pw,
+            ph: ph,
+            camera_para: cameraURL,
+            marker: this.markerURL,
         });
+
+        this.worker.onmessage = (ev: any) => {
+            var msg = ev.data;
+            switch (msg.type) {
+                case "loaded": {
+                    var proj = JSON.parse(msg.proj);
+                    const ratioW = pw / w;
+                    const ratioH = ph / h;
+                    proj[0] *= ratioW;
+                    proj[4] *= ratioW;
+                    proj[8] *= ratioW;
+                    proj[12] *= ratioW;
+                    proj[1] *= ratioH;
+                    proj[5] *= ratioH;
+                    proj[9] *= ratioH;
+                    proj[13] *= ratioH;
+                    const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
+                        detail: { proj: proj },
+                    });
+                    this.target.dispatchEvent(projectionMatrixEvent);
+                    break;
+                }
+                case "endLoading": {
+                    if (msg.end == true) {
+                        // removing loader page if present
+                        const loader = document.getElementById("loading");
+                        if (loader) {
+                            loader.querySelector<HTMLElement>(".loading-text").innerText = "Start the tracking!";
+                            setTimeout(function () {
+                                if (loader.parentElement == null) {
+                                    return;
+                                }
+                                if (loader) {
+                                    loader.parentElement.removeChild(loader);
+                                }
+                            }, 2000);
+                        }
+                    }
+                    this.ready = true;
+                    this.target.dispatchEvent(new CustomEvent<object>("nftLoaded-" + this.uuid));
+                    break;
+                }
+                case "nftData": {
+                    const nft = JSON.parse(msg.nft);
+                    const nftEvent = new CustomEvent<object>("getNFTData-" + this.uuid + "-" + this.name, {
+                        detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
+                    });
+                    this.target.dispatchEvent(nftEvent);
+                    break;
+                }
+                case "found": {
+                    this.found(msg);
+                    break;
+                }
+                case "not found": {
+                    this.found(null);
+                    break;
+                }
+            }
+            this._processing = false;
+            trackUpdate();
+        };
+        this.worker.onerror = (err: any) => {
+            console.error("Worker error from NFTWorker: ", err);
+        };
+        let renderU = () => {
+            renderUpdate();
+            window.requestAnimationFrame(renderU);
+        };
+        renderU();
+        return Promise.resolve(true);
     }
 
     /**
