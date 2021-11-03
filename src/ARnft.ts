@@ -225,6 +225,9 @@ export default class ARnft {
                 document.getElementById("stats2").appendChild(statsWorker.dom);
             }
 
+            var containerEvent = new Event("containerEvent");
+            document.dispatchEvent(containerEvent);
+
             this.controllers = [];
             this.cameraView = new CameraViewRenderer(this._views.video);
             return this.cameraView.initialize(this.appData.videoSettings);
@@ -235,6 +238,7 @@ export default class ARnft {
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
             });
+
             this.initialized = true;
         }).catch(function (error: any) {
             return Promise.reject(error);
@@ -252,8 +256,7 @@ export default class ARnft {
 
         let _update = () => {
             if (this.initialized && this.autoUpdate) {
-                const image = this.cameraView.image;
-                this.controllers.forEach((controller) => controller.process(image, this.cameraView.frame));
+                this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
             }
             requestAnimationFrame(_update);
         };
@@ -267,8 +270,7 @@ export default class ARnft {
     public update(): void {
         if (!this.initialized || this.autoUpdate) return;
         if (this.cameraView != null) {
-            const image = this.cameraView.image;
-            this.controllers.forEach((controller) => controller.process(image, this.cameraView.frame));
+            this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
         }
     }
 

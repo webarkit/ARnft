@@ -101,8 +101,7 @@ export async function getConfig(configData: string): Promise<any> {
             throw new Error("HTTP error, status = " + response.status);
         }
         return response.json();
-    }
-    catch (error) {
+    } catch (error) {
         return Promise.reject(error);
     }
 }

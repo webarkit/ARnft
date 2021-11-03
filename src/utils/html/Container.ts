@@ -57,15 +57,11 @@ export default class Container {
             container.appendChild(canvas);
             const loading = document.getElementById("loading");
             document.body.insertBefore(container, loading);
-            var containerEvent = new Event("containerEvent");
-            document.dispatchEvent(containerEvent);
             return { container, canvas, video };
         } else {
             const container = <HTMLDivElement>document.getElementById(configData.container.containerName);
             const canvas = <HTMLCanvasElement>document.getElementById(configData.container.canvasName);
             const video = <HTMLVideoElement>document.getElementById("video");
-            var containerEvent = new Event("containerEvent");
-            document.dispatchEvent(containerEvent);
             return { container, canvas, video };
         }
     }
