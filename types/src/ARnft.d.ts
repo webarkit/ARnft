@@ -47,14 +47,6 @@ export default class ARnft {
     static initWithConfig(params: INameInitConfig | IEntityInitConfig): Promise<ARnft>;
     private _initialize;
     initializeRaw(markerUrls: Array<string>, names: Array<string>, imagedata: ImageData): Promise<object>;
-    private converter;
-    dispatchEvent(event: {
-        name: string;
-        target: any;
-        data?: object;
-    }): void;
-    addEventListener(name: string, callback: object): void;
-    removeEventListener(name: string, callback: object): void;
     update(): void;
     static getEntities(): IEntity[];
     getEventTarget(): EventTarget;

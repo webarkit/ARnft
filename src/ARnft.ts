@@ -276,18 +276,13 @@ export default class ARnft {
             markerUrls.forEach((markerUrl: string, index: number) => {   
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
                 this.controllers[index].initialize(
-                    this.appData.cameraPara, 
-                    imagedata, 
-                    () => {
-                        
-                    },
-                    () => {
-                        
-                })
+                    this.appData.cameraPara,  
+                    () => { },
+                    () => { });
     
-                this.controllers[index].process(imagedata)
+                this.controllers[index].process(imagedata, this.cameraView.frame)
                 let update = () => {
-                this.controllers[index].process(imagedata);
+                this.controllers[index].process(imagedata, this.cameraView.frame);
                 requestAnimationFrame(update);
                 }
                 update()

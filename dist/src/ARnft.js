@@ -86,7 +86,22 @@ export default class ARnft {
         }).catch(function (error) {
             return Promise.reject(error);
         });
-        return Promise.resolve(this);
+        this.target.addEventListener("nftLoaded-" + this.uuid, () => {
+            const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
+                return nftWorker.isReady() === false;
+            });
+            if (nftWorkersNotReady.length === 0) {
+                this.target.dispatchEvent(new CustomEvent("ARnftIsReady"));
+            }
+        });
+        let _update = () => {
+            if (this.initialized && this.autoUpdate) {
+                this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
+            }
+            requestAnimationFrame(_update);
+        };
+        _update();
+        return this;
     }
     async initializeRaw(markerUrls, names, imagedata) {
         var event = new Event("initARnft");
@@ -101,18 +116,15 @@ export default class ARnft {
                 this.controllers[index].initialize(this.appData.cameraPara, imagedata, () => {
                 }, () => {
                 });
-                this.controllers[index].process(imagedata);
+                this.controllers[index].process(imagedata, this.cameraView.frame);
                 let update = () => {
-                    this.controllers[index].process(imagedata);
+                    this.controllers[index].process(imagedata, this.cameraView.frame);
                     requestAnimationFrame(update);
                 };
                 update();
             });
         });
         return Promise.resolve(this);
-    }
-    converter() {
-        return this;
     }
     update() {
         if (!this.initialized || this.autoUpdate)
