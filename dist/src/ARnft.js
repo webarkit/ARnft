@@ -56,13 +56,12 @@ export default class ARnft {
         const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
         console.log("ARnft init() %cstart...", "color: yellow; background-color: blue; border-radius: 4px; padding: 2px");
-        getConfig(this.configUrl);
-        this.target.addEventListener("getConfig", async (ev) => {
-            this.appData = ev.detail.config;
-            Container.createContainer(this.appData);
-            Container.createLoading(this.appData);
-            Container.createStats(this.appData.stats.createHtml, this.appData);
-            let statsMain, statsWorker;
+        let statsMain, statsWorker;
+        getConfig(this.configUrl).then((data) => {
+            this.appData = data;
+            this._views = Container.createContainer(this.appData);
+            this._views.loading = Container.createLoading(this.appData);
+            this._views.stats = Container.createStats(this.appData.stats.createHtml, this.appData);
             if (stats) {
                 statsMain = new Stats();
                 statsMain.showPanel(0);
@@ -71,21 +70,21 @@ export default class ARnft {
                 statsWorker.showPanel(0);
                 document.getElementById("stats2").appendChild(statsWorker.dom);
             }
+            var containerEvent = new Event("containerEvent");
+            document.dispatchEvent(containerEvent);
             this.controllers = [];
-            this.cameraView = new CameraViewRenderer(document.getElementById("video"));
-            try {
-                await this.cameraView.initialize(this.appData.videoSettings);
-            }
-            catch (error) {
-                return Promise.reject(error);
-            }
+            this.cameraView = new CameraViewRenderer(this._views.video);
+            return this.cameraView.initialize(this.appData.videoSettings);
+        }).then(() => {
             const renderUpdate = () => stats ? statsMain.update() : null;
             const trackUpdate = () => stats ? statsWorker.update() : null;
             markerUrls.forEach((markerUrl, index) => {
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-                this.controllers[index].initialize(this.appData.cameraPara, this.cameraView.getImage(), renderUpdate, trackUpdate);
+                this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
             });
             this.initialized = true;
+        }).catch(function (error) {
+            return Promise.reject(error);
         });
         this.target.addEventListener("nftLoaded-" + this.uuid, () => {
             const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
@@ -96,21 +95,19 @@ export default class ARnft {
             }
         });
         let _update = () => {
-            if (!this.initialized || !this.autoUpdate)
-                return requestAnimationFrame(_update);
-            const image = this.cameraView.getImage();
-            this.controllers.forEach((controller) => controller.process(image));
+            if (this.initialized && this.autoUpdate) {
+                this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
+            }
             requestAnimationFrame(_update);
         };
-        requestAnimationFrame(_update);
+        _update();
         return this;
     }
     update() {
         if (!this.initialized || this.autoUpdate)
             return;
         if (this.cameraView != null) {
-            const image = this.cameraView.getImage();
-            this.controllers.forEach((controller) => controller.process(image));
+            this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
         }
     }
     static getEntities() {
@@ -118,6 +115,9 @@ export default class ARnft {
     }
     getEventTarget() {
         return this.target;
+    }
+    get views() {
+        return Object.freeze(this._views);
     }
     dispose() {
         this.disposeVideoStream();

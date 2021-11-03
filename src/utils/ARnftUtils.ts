@@ -94,26 +94,14 @@ export function getWindowSize(vw: number, vh: number): Array<number> {
  * @param configData
  * @returns
  */
-export function getConfig(configData: string): boolean {
-    fetch(configData)
-        .then((response) => {
-            if (!response.ok) {
-                throw new Error("HTTP error, status = " + response.status);
-            }
-            return response.json();
-        })
-        .then((response) => {
-            // printing the response only for testing
-            //console.log(response);
-            const eventData = new CustomEvent<object>("getConfig", {
-                detail: { config: response },
-            });
-            target.dispatchEvent(eventData);
-            return response;
-        })
-        .catch(function (error) {
-            console.error(error);
-            return Promise.reject(false);
-        });
-    return true;
+export async function getConfig(configData: string): Promise<any> {
+    try {
+        const response = await fetch(configData);
+        if (!response.ok) {
+            throw new Error("HTTP error, status = " + response.status);
+        }
+        return response.json();
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }

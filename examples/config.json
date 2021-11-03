@@ -15,7 +15,8 @@
       "min": 480,
       "max": 600
     },
-    "facingMode": "environment"
+    "facingMode": "environment",
+    "targetFrameRate" : 30
   },
   "loading": {
     "create": true,

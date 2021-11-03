@@ -14,11 +14,12 @@ ctx.onmessage = (e) => {
         }
         case "process": {
             next = msg.imagedata;
-            process(next);
+            process(next, msg.frame);
         }
     }
 };
 let next = null;
+let lastFrame = 0;
 let ar = null;
 let markerResult = null;
 const load = (msg) => {
@@ -90,12 +91,15 @@ const load = (msg) => {
     console.debug("Loading camera at:", cameraParamUrl);
     ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
-const process = (next) => {
-    markerResult = null;
-    if (ar && ar.process) {
-        ar.process(next);
+const process = (next, frame) => {
+    if (frame !== lastFrame) {
+        markerResult = null;
+        if (ar && ar.process) {
+            ar.process(next);
+        }
+        lastFrame = frame;
     }
-    if (markerResult) {
+    if (markerResult != null) {
         ctx.postMessage(markerResult);
     }
     else {
