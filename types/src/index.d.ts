@@ -1,4 +1,4 @@
-import ARnft from './ARnft';
+import ARnft from "./ARnft";
 declare const _default: {
     ARnft: typeof ARnft;
 };

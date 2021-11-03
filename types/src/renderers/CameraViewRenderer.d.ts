@@ -1,21 +1,14 @@
-export interface VideoSettingData {
-    width: ScreenData;
-    height: ScreenData;
-    facingMode: string;
-}
-export interface ScreenData {
-    min: number;
-    max: number;
-}
+import { VideoSettingData } from "../config/ConfigData";
 export interface ICameraViewRenderer {
-    getHeight(): number;
-    getWidth(): number;
-    getImage(): ImageData;
+    facing: string;
+    height: number;
+    width: number;
+    image: ImageData;
 }
 export declare class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process;
     private context_process;
-    video: HTMLVideoElement;
+    _video: HTMLVideoElement;
     private _facing;
     private vw;
     private vh;
@@ -25,10 +18,21 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     private ph;
     private ox;
     private oy;
+    private target;
+    private targetFrameRate;
+    private imageDataCache;
+    private _frame;
+    private lastCache;
     constructor(video: HTMLVideoElement);
-    getHeight(): number;
-    getWidth(): number;
-    getImage(): ImageData;
+    get facing(): string;
+    get height(): number;
+    get width(): number;
+    get video(): HTMLVideoElement;
+    get frame(): number;
+    get canvasProcess(): HTMLCanvasElement;
+    get contextProcess(): CanvasRenderingContext2D;
+    get image(): ImageData;
+    prepareImage(): void;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;
     destroy(): void;
 }

@@ -30,8 +30,6 @@
                 cube.position.z = 90;
                 cube.scale.set(180, 180, 180);
 
-                let root = new THREE.Object3D();
-                root.matrixAutoUpdate = false;
                 document.addEventListener('containerEvent', function (ev) {
 
                     let canvas = document.getElementById('canvas');
@@ -72,7 +70,7 @@
                 })
             }).catch((error) => {
                 console.log(error);
-            });            
+            });
     </script>
 
 </body>

@@ -1,143 +1,153 @@
-import Worker from 'worker-loader?inline=no-fallback!./Worker';
-import { isMobile } from './utils/ARUtils';
+import Worker from "worker-loader?inline=no-fallback!./Worker";
+import { getWindowSize } from "./utils/ARnftUtils";
 export default class NFTWorker {
     constructor(markerURL, w, h, uuid, name) {
         this._processing = false;
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
+        this.target = window || global;
         this.uuid = uuid;
         this.name = name;
+        this.ready = false;
     }
-    initialize(cameraURL, imageData, renderUpdate, trackUpdate) {
-        return new Promise((resolve, reject) => {
-            this.worker = new Worker();
-            this.load(cameraURL, imageData, renderUpdate, trackUpdate).then(() => {
-                resolve(true);
-            });
-            const worker = this.worker;
-            document.addEventListener("terminateWorker", function () {
-                worker.postMessage({ type: 'stop' });
-                worker.terminate();
-            });
+    async initialize(cameraURL, renderUpdate, trackUpdate) {
+        this.worker = new Worker();
+        const worker = this.worker;
+        this.target.addEventListener("terminateWorker", function () {
+            worker.postMessage({ type: "stop" });
+            worker.terminate();
         });
+        return await this.load(cameraURL, renderUpdate, trackUpdate);
     }
-    process(imageData) {
+    process(imagedata, frame) {
         if (this._processing) {
             return;
         }
         this._processing = true;
-        this.worker.postMessage({ type: 'process', imagedata: imageData }, [imageData.data.buffer]);
+        this.worker.postMessage({ type: "process", imagedata, frame }, [imagedata.data.buffer]);
     }
-    load(cameraURL, imageData, renderUpdate, trackUpdate) {
-        return new Promise((resolve, reject) => {
-            var pscale = 320 / Math.max(this.vw, this.vh / 3 * 4);
-            var sscale = isMobile() ? window.outerWidth / this.vw : 1;
-            let sw = this.vw * sscale;
-            let sh = this.vh * sscale;
-            let w = this.vw * pscale;
-            let h = this.vh * pscale;
-            let pw = Math.max(w, (h / 3) * 4);
-            let ph = Math.max(h, (w / 4) * 3);
-            const setWindowSizeEvent = new CustomEvent('getWindowSize', { detail: { sw: sw, sh: sh } });
-            document.dispatchEvent(setWindowSizeEvent);
-            this.worker.postMessage({
-                type: 'load',
-                pw: pw,
-                ph: ph,
-                camera_para: cameraURL,
-                marker: this.markerURL
-            });
-            this.worker.onmessage = (ev) => {
-                var msg = ev.data;
-                switch (msg.type) {
-                    case 'loaded': {
-                        var proj = JSON.parse(msg.proj);
-                        const ratioW = pw / w;
-                        const ratioH = ph / h;
-                        proj[0] *= ratioW;
-                        proj[4] *= ratioW;
-                        proj[8] *= ratioW;
-                        proj[12] *= ratioW;
-                        proj[1] *= ratioH;
-                        proj[5] *= ratioH;
-                        proj[9] *= ratioH;
-                        proj[13] *= ratioH;
-                        const projectionMatrixEvent = new CustomEvent('getProjectionMatrix', { detail: { proj: proj } });
-                        document.dispatchEvent(projectionMatrixEvent);
-                        break;
-                    }
-                    case "endLoading": {
-                        if (msg.end == true) {
-                            const loader = document.getElementById('loading');
-                            if (loader) {
-                                loader.querySelector('.loading-text').innerText = 'Start the tracking!';
-                                setTimeout(function () {
-                                    if (loader.parentElement == null) {
-                                        return;
-                                    }
-                                    if (loader) {
-                                        loader.parentElement.removeChild(loader);
-                                    }
-                                }, 2000);
-                            }
-                        }
-                        break;
-                    }
-                    case 'nftData': {
-                        const nft = JSON.parse(msg.nft);
-                        const nftEvent = new CustomEvent('getNFTData-' + this.uuid + '-' + this.name, { detail: { dpi: nft.dpi, width: nft.width, height: nft.height } });
-                        document.dispatchEvent(nftEvent);
-                        break;
-                    }
-                    case 'found': {
-                        this.found(msg);
-                        break;
-                    }
-                    case 'not found': {
-                        this.found(null);
-                        break;
-                    }
-                    case 'error': {
-                        console.log("NFTWorker : error");
-                        var event = new Event("nftError");
-                        document.dispatchEvent(event);
-                        break;
-                    }
-                }
-                this._processing = false;
-                trackUpdate();
-            };
-            let renderU = () => {
-                renderUpdate();
-                window.requestAnimationFrame(renderU);
-            };
-            renderU();
-            this.process(imageData);
+    load(cameraURL, renderUpdate, trackUpdate) {
+        let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
+        const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
+        this.target.dispatchEvent(setWindowSizeEvent);
+        this.worker.postMessage({
+            type: "load",
+            pw: pw,
+            ph: ph,
+            camera_para: cameraURL,
+            marker: this.markerURL,
         });
+        this.worker.onmessage = (ev) => {
+            var msg = ev.data;
+            switch (msg.type) {
+                case "loaded": {
+                    var proj = JSON.parse(msg.proj);
+                    const ratioW = pw / w;
+                    const ratioH = ph / h;
+                    proj[0] *= ratioW;
+                    proj[4] *= ratioW;
+                    proj[8] *= ratioW;
+                    proj[12] *= ratioW;
+                    proj[1] *= ratioH;
+                    proj[5] *= ratioH;
+                    proj[9] *= ratioH;
+                    proj[13] *= ratioH;
+                    const projectionMatrixEvent = new CustomEvent("getProjectionMatrix", {
+                        detail: { proj: proj },
+                    });
+                    this.target.dispatchEvent(projectionMatrixEvent);
+                    break;
+                }
+                case "endLoading": {
+                    if (msg.end == true) {
+                        const loader = document.getElementById("loading");
+                        if (loader) {
+                            loader.querySelector(".loading-text").innerText = "Start the tracking!";
+                            setTimeout(function () {
+                                if (loader.parentElement == null) {
+                                    return;
+                                }
+                                if (loader) {
+                                    loader.parentElement.removeChild(loader);
+                                }
+                            }, 2000);
+                        }
+                    }
+                    this.ready = true;
+                    this.target.dispatchEvent(new CustomEvent("nftLoaded-" + this.uuid));
+                    break;
+                }
+                case "nftData": {
+                    const nft = JSON.parse(msg.nft);
+                    const nftEvent = new CustomEvent("getNFTData-" + this.uuid + "-" + this.name, {
+                        detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
+                    });
+                    this.target.dispatchEvent(nftEvent);
+                    break;
+                }
+                case "found": {
+                    this.found(msg);
+                    break;
+                }
+                case "not found": {
+                    this.found(null);
+                    break;
+                }
+            }
+            this._processing = false;
+            trackUpdate();
+        };
+        this.worker.onerror = (err) => {
+            console.error("Worker error from NFTWorker: ", err);
+        };
+        let renderU = () => {
+            renderUpdate();
+            window.requestAnimationFrame(renderU);
+        };
+        renderU();
+        return Promise.resolve(true);
     }
-    ;
     found(msg) {
         let world;
         if (!msg) {
             world = null;
-            const nftTrackingLostEvent = new CustomEvent('nftTrackingLost-' + this.uuid + '-' + this.name, { detail: { name: this.name } });
-            document.dispatchEvent(nftTrackingLostEvent);
+            const nftTrackingLostEvent = new CustomEvent("nftTrackingLost-" + this.uuid + "-" + this.name, {
+                detail: { name: this.name },
+            });
+            this.target.dispatchEvent(nftTrackingLostEvent);
         }
         else {
             world = JSON.parse(msg.matrixGL_RH);
-            const matrixGLrhEvent = new CustomEvent('getMatrixGL_RH-' + this.uuid + '-' + this.name, { detail: { matrixGL_RH: world, name: this.name } });
-            document.dispatchEvent(matrixGLrhEvent);
+            const matrixGLrhEvent = new CustomEvent("getMatrixGL_RH-" + this.uuid + "-" + this.name, {
+                detail: { matrixGL_RH: world, name: this.name },
+            });
+            this.target.dispatchEvent(matrixGLrhEvent);
         }
     }
-    destroy() {
+    isReady() {
+        return this.ready;
     }
+    getUuid() {
+        return this.uuid;
+    }
+    getName() {
+        return this.name;
+    }
+    getMarkerUrl() {
+        return this.markerURL;
+    }
+    getEventTarget() {
+        return this.target;
+    }
+    destroy() { }
     static stopNFT() {
+        const target = window || global;
         console.log("Stop NFT");
         var event = new Event("terminateWorker");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
         var event = new Event("stopStreaming");
-        document.dispatchEvent(event);
+        target.dispatchEvent(event);
     }
 }
 //# sourceMappingURL=NFTWorker.js.map

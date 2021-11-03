@@ -1,8 +1,29 @@
 import { ConfigData } from "./config/ConfigData";
 import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
-interface Entity {
+interface IEntity {
     name: string;
     markerUrl: string;
+}
+interface IInitConfig {
+    width: number;
+    height: number;
+    configUrl: string;
+    stats?: boolean;
+    autoUpdate?: boolean;
+}
+interface INameInitConfig extends IInitConfig {
+    markerUrls: Array<string>;
+    names: Array<string>;
+}
+interface IEntityInitConfig extends IInitConfig {
+    entities: IEntity[];
+}
+interface IViews {
+    container: HTMLDivElement;
+    canvas: HTMLCanvasElement;
+    video: HTMLVideoElement;
+    loading?: HTMLElement;
+    stats?: HTMLElement;
 }
 export default class ARnft {
     cameraView: CameraViewRenderer;
@@ -10,20 +31,23 @@ export default class ARnft {
     width: number;
     height: number;
     configUrl: string;
-    listeners: object;
     markerUrl: string;
     camData: string;
+    autoUpdate: boolean;
     private controllers;
     private static entities;
+    private target;
     private uuid;
     private version;
+    private initialized;
+    private _views;
     constructor(width: number, height: number, configUrl: string);
     static init(width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object>;
-    static initWithEntities(width: number, height: number, entities: Entity[], configUrl: string, stats: boolean): Promise<object>;
+    static initWithEntities(width: number, height: number, entities: IEntity[], configUrl: string, stats: boolean): Promise<object>;
+    static initWithConfig(params: INameInitConfig | IEntityInitConfig): Promise<ARnft>;
     private _initialize;
     initializeRaw(markerUrls: Array<string>, names: Array<string>, imagedata: ImageData): Promise<object>;
     private converter;
-    static getEntities(): Entity[];
     dispatchEvent(event: {
         name: string;
         target: any;
@@ -31,6 +55,10 @@ export default class ARnft {
     }): void;
     addEventListener(name: string, callback: object): void;
     removeEventListener(name: string, callback: object): void;
+    update(): void;
+    static getEntities(): IEntity[];
+    getEventTarget(): EventTarget;
+    get views(): Readonly<IViews>;
     dispose(): void;
     disposeNFT(): void;
     disposeVideoStream(): void;

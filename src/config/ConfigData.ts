@@ -65,10 +65,11 @@ export interface VideoSettingData {
     width: ScreenData;
     height: ScreenData;
     facingMode: string;
+    targetFrameRate: number;
 }
 
 export interface StatsData {
-    createHtml: boolean
+    createHtml: boolean;
 }
 
 export interface ScreenData {
