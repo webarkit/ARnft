@@ -70,6 +70,8 @@ export default class ARnft {
                 statsWorker.showPanel(0);
                 document.getElementById("stats2").appendChild(statsWorker.dom);
             }
+            var containerEvent = new Event("containerEvent");
+            document.dispatchEvent(containerEvent);
             this.controllers = [];
             this.cameraView = new CameraViewRenderer(this._views.video);
             return this.cameraView.initialize(this.appData.videoSettings);
@@ -94,8 +96,7 @@ export default class ARnft {
         });
         let _update = () => {
             if (this.initialized && this.autoUpdate) {
-                const image = this.cameraView.image;
-                this.controllers.forEach((controller) => controller.process(image, this.cameraView.frame));
+                this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
             }
             requestAnimationFrame(_update);
         };
@@ -106,8 +107,7 @@ export default class ARnft {
         if (!this.initialized || this.autoUpdate)
             return;
         if (this.cameraView != null) {
-            const image = this.cameraView.image;
-            this.controllers.forEach((controller) => controller.process(image, this.cameraView.frame));
+            this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
         }
     }
     static getEntities() {

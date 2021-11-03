@@ -14,16 +14,12 @@ export default class Container {
             container.appendChild(canvas);
             const loading = document.getElementById("loading");
             document.body.insertBefore(container, loading);
-            var containerEvent = new Event("containerEvent");
-            document.dispatchEvent(containerEvent);
             return { container, canvas, video };
         }
         else {
             const container = document.getElementById(configData.container.containerName);
             const canvas = document.getElementById(configData.container.canvasName);
             const video = document.getElementById("video");
-            var containerEvent = new Event("containerEvent");
-            document.dispatchEvent(containerEvent);
             return { container, canvas, video };
         }
     }
