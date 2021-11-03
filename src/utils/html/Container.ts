@@ -59,13 +59,14 @@ export default class Container {
             document.body.insertBefore(container, loading);
             var containerEvent = new Event("containerEvent");
             document.dispatchEvent(containerEvent);
-            return { container: container, canvas: canvas, video: video };
+            return { container, canvas, video };
         } else {
-            const container = document.getElementById(configData.container.containerName);
-            const canvas = document.getElementById(configData.container.canvasName);
+            const container = <HTMLDivElement>document.getElementById(configData.container.containerName);
+            const canvas = <HTMLCanvasElement>document.getElementById(configData.container.canvasName);
+            const video = <HTMLVideoElement>document.getElementById("video");
             var containerEvent = new Event("containerEvent");
             document.dispatchEvent(containerEvent);
-            return { container: container, canvas: canvas };
+            return { container, canvas, video };
         }
     }
 
@@ -97,7 +98,9 @@ export default class Container {
             stats.appendChild(stats2);
             const loading = document.getElementById("loading");
             document.body.insertBefore(stats, loading);
+            return stats;
         }
+        return undefined;
     }
 
     /**
@@ -117,6 +120,8 @@ export default class Container {
             loader.appendChild(logo);
             loader.appendChild(loadingMessage);
             document.body.insertBefore(loader, document.body.firstChild);
+            return loader;
         }
+        return undefined;
     }
 }

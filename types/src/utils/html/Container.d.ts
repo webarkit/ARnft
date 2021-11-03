@@ -4,11 +4,7 @@ export default class Container {
         container: HTMLDivElement;
         canvas: HTMLCanvasElement;
         video: HTMLVideoElement;
-    } | {
-        container: HTMLElement;
-        canvas: HTMLElement;
-        video?: undefined;
     };
-    static createStats(create: boolean, configData: ConfigData): void;
-    static createLoading(configData: ConfigData): void;
+    static createStats(create: boolean, configData: ConfigData): HTMLDivElement;
+    static createLoading(configData: ConfigData): HTMLDivElement;
 }

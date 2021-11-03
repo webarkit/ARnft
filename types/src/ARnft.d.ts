@@ -18,6 +18,13 @@ interface INameInitConfig extends IInitConfig {
 interface IEntityInitConfig extends IInitConfig {
     entities: IEntity[];
 }
+interface IViews {
+    container: HTMLDivElement;
+    canvas: HTMLCanvasElement;
+    video: HTMLVideoElement;
+    loading?: HTMLElement;
+    stats?: HTMLElement;
+}
 export default class ARnft {
     cameraView: CameraViewRenderer;
     appData: ConfigData;
@@ -33,6 +40,7 @@ export default class ARnft {
     private uuid;
     private version;
     private initialized;
+    private _views;
     constructor(width: number, height: number, configUrl: string);
     static init(width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object>;
     static initWithEntities(width: number, height: number, entities: IEntity[], configUrl: string, stats: boolean): Promise<object>;
@@ -41,6 +49,7 @@ export default class ARnft {
     update(): void;
     static getEntities(): IEntity[];
     getEventTarget(): EventTarget;
+    get views(): Readonly<IViews>;
     dispose(): void;
     disposeNFT(): void;
     disposeVideoStream(): void;
