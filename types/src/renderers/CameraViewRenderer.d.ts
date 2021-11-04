@@ -1,7 +1,7 @@
 import { VideoSettingData } from "../config/ConfigData";
 export interface ICameraViewRenderer {
     facing: string;
-    frame: number;
+    readonly frame: number;
     getFrame: () => number;
     height: number;
     width: number;
