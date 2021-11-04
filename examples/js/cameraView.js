@@ -3,7 +3,6 @@ class cameraView {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d", { alpha: false });
         this._video = video;
-        this.target = window || global;
         this._frame = 0;
         this.lastCache = 0;
     }

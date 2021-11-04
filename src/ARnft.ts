@@ -294,7 +294,7 @@ export default class ARnft {
             document.dispatchEvent(containerEvent);
 
             this.controllers = [];
-            //cameraView = new CameraViewRenderer(this._views.video);
+
             return cameraView.initialize(this.appData.videoSettings);
         }).then(() => {
             const renderUpdate = () => stats ? statsMain.update() : null;
