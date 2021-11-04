@@ -198,7 +198,6 @@ export default class ARnft {
      * @param stats choose if you want the stats.
      * @returns the ARnft object.
      */
-
     private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<this> {
         const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
@@ -264,6 +263,16 @@ export default class ARnft {
         return this;
     }
 
+    /**
+     * Used for a custom initialization of the camera and mediaStream. It create the html Container,
+     * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker. You must provide
+     * your own cameraView based on the ICameraViewRenderer interface.
+     * @param markerUrls the url Array of the markers.
+     * @param names the names of the markers.
+     * @param cameraView the own CameraViewRenderer class instance.
+     * @param stats choose if you want the stats.
+     * @returns the ARnft object.
+     */
     public async initializeRaw(markerUrls: Array<string>, names: Array<string>, cameraView: ICameraViewRenderer, stats: boolean): Promise<this> {
         const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
