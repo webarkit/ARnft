@@ -53,7 +53,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public _video: HTMLVideoElement;
 
-    private _facing: string;
+    private _facing: VideoSettingData["facingMode"];
 
     private vw: number;
     private vh: number;
@@ -183,7 +183,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                     audio: false,
                     video: {
                         facingMode: this._facing,
-                        width: { min: 480, max: 640 },
+                        width: { min: videoSettings.width.min, max: videoSettings.width.max },
                     },
                 };
                 if (navigator.mediaDevices.enumerateDevices) {
@@ -211,8 +211,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                 return Promise.reject(error);
             }
         } else {
-            // reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
-            return Promise.reject("Sorry, Your device does not support this experince.");
+            return Promise.reject("Sorry, Your device does not support this experience.");
         }
     }
 
