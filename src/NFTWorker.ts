@@ -79,11 +79,7 @@ export default class NFTWorker {
      * @param trackUpdate
      * @returns true if succesfull.
      */
-    public async initialize(
-        cameraURL: string,
-        renderUpdate: () => void,
-        trackUpdate: () => void
-    ): Promise<boolean> {
+    public async initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
         this.worker = new Worker();
         const worker = this.worker;
         this.target.addEventListener("terminateWorker", function () {
@@ -91,7 +87,6 @@ export default class NFTWorker {
             worker.terminate();
         });
         return await this.load(cameraURL, renderUpdate, trackUpdate);
-
     }
 
     /**
@@ -116,11 +111,7 @@ export default class NFTWorker {
      * @param trackUpdate trackUpdate for the stats.
      * @returns true if succesfull.
      */
-    protected load(
-        cameraURL: string,
-        renderUpdate: () => void,
-        trackUpdate: () => void
-    ): Promise<boolean> {
+    protected load(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
         let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
 
         const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
@@ -250,7 +241,7 @@ export default class NFTWorker {
         return this.target;
     }
 
-    public destroy(): void { }
+    public destroy(): void {}
 
     /**
      * Stop the NFT tracking and the video streaming.
