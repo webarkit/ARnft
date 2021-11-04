@@ -174,9 +174,6 @@ export class CameraViewRenderer implements ICameraViewRenderer {
             this.targetFrameRate = videoSettings.targetFrameRate;
         }
 
-        const constraints = {};
-        const mediaDevicesConstraints = {};
-
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
                 const hint: any = {
