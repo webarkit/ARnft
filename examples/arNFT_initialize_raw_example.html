@@ -23,7 +23,7 @@
     </a>
     <script src="js/third_party/three.js/three.min.js"></script>
     <script src="js/ARnftThreejs.js"></script>
-    <script src="js/cameraView.js"></script>
+    <script src="js/cameraViewRenderer.js"></script>
     <script src="../dist/ARnft.js"></script>
 
     <script>
@@ -34,7 +34,7 @@
             console.log("start here")
 
             const arnft = new ARnft.ARnft(640, 480, 'config.json');
-            let camV = new cameraView(video)
+            let camV = new cameraViewRenderer(video)
             console.log(camV);
             await arnft.initializeRaw(["examples/DataNFT/pinball"], ['pinball'], camV, true)
                 .then((nft) => {
