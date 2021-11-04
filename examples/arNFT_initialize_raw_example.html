@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ARnft example showing a simple red cube</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+    <link rel="stylesheet" href="css/nft-style.css">
+
+
+</head>
+
+<body>
+    <div id="app">
+        <video loop autoplay muted playsinline id="video">
+        </video>
+
+        <canvas id="canvas"></canvas>
+    </div>
+    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+        class="ui marker" target="_blank">
+        🖼 Marker Image
+    </a>
+    <script src="js/third_party/three.js/three.min.js"></script>
+    <script src="js/ARnftThreejs.js"></script>
+    <script src="js/cameraView.js"></script>
+    <script src="../dist/ARnft.js"></script>
+
+    <script>
+        //var container = document.getElementById('app');
+        var video = document.getElementById('video');
+        //var canvas = document.getElementById('canvas');
+        //var context = canvas.getContext('2d');
+
+        var imageData;
+        async function init(video) {
+
+
+                console.log("start here")
+
+                const arnft = new ARnft.ARnft(640, 480, 'config.json');
+                let camV = new cameraView(video)
+                console.log(camV);
+                await arnft.initializeRaw(["examples/DataNFT/pinball"], ['pinball'], camV, true)
+                    .then((nft) => {
+                        console.log("loaded ARnft");
+                    })
+
+            }
+        init(video)
+    </script>
+
+
+</body>
+
+</html>

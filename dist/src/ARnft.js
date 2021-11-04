@@ -107,24 +107,19 @@ export default class ARnft {
         var event = new Event("initARnft");
         document.dispatchEvent(event);
         console.log('ARnft init() %cstart...', 'color: yellow; background-color: blue; border-radius: 4px; padding: 2px');
-        getConfig(this.configUrl);
-        document.addEventListener('getConfig', async (ev) => {
-            this.appData = ev.detail.config;
+        getConfig(this.configUrl).then((data) => {
+            this.appData = data;
             this.controllers = [];
+        }).then(() => {
             markerUrls.forEach((markerUrl, index) => {
                 this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-                this.controllers[index].initialize(this.appData.cameraPara, imagedata, () => {
-                }, () => {
-                });
-                this.controllers[index].process(imagedata, this.cameraView.frame);
-                let update = () => {
-                    this.controllers[index].process(imagedata, this.cameraView.frame);
-                    requestAnimationFrame(update);
-                };
-                update();
+                this.controllers[index].initialize(this.appData.cameraPara, () => { }, () => { });
+                this.initialized = true;
             });
+        }).catch(function (error) {
+            return Promise.reject(error);
         });
-        return Promise.resolve(this);
+        return this;
     }
     update() {
         if (!this.initialized || this.autoUpdate)

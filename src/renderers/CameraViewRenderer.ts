@@ -38,9 +38,13 @@ import { VideoSettingData } from "../config/ConfigData";
 
 export interface ICameraViewRenderer {
     facing: string;
+    frame: number;
+    getFrame: () => number;
     height: number;
     width: number;
-    image: ImageData;
+    readonly image: ImageData;
+    getImage: () => ImageData;
+    initialize: (videoSettings: VideoSettingData) => Promise<boolean>
 }
 export class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process: HTMLCanvasElement;
@@ -105,6 +109,26 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public get contextProcess(): CanvasRenderingContext2D {
         return this.context_process;
+    }
+
+    public getFrame(): number {
+        return this._frame;
+    }
+
+    public getImage(): ImageData {
+        const now = Date.now();
+        if (now - this.lastCache > 1000 / this.targetFrameRate) {
+            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
+            if (this.imageDataCache == null) {
+                this.imageDataCache = imageData.data;
+            } else {
+                this.imageDataCache.set(imageData.data);
+            }
+            this.lastCache = now;
+            this._frame++;
+        }
+        return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
     }
 
     public get image(): ImageData {
