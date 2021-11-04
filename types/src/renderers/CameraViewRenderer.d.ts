@@ -8,6 +8,7 @@ export interface ICameraViewRenderer {
     readonly image: ImageData;
     getImage: () => ImageData;
     initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
+    destroy: () => void;
 }
 export declare class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process;

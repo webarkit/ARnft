@@ -44,7 +44,8 @@ export interface ICameraViewRenderer {
     width: number;
     readonly image: ImageData;
     getImage: () => ImageData;
-    initialize: (videoSettings: VideoSettingData) => Promise<boolean>
+    initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
+    destroy: () => void;
 }
 export class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process: HTMLCanvasElement;
