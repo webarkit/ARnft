@@ -38,9 +38,14 @@ import { VideoSettingData } from "../config/ConfigData";
 
 export interface ICameraViewRenderer {
     facing: string;
+    readonly frame: number;
+    getFrame: () => number;
     height: number;
     width: number;
-    image: ImageData;
+    readonly image: ImageData;
+    getImage: () => ImageData;
+    initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
+    destroy: () => void;
 }
 export class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process: HTMLCanvasElement;
@@ -49,7 +54,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public _video: HTMLVideoElement;
 
-    private _facing: string;
+    private _facing: VideoSettingData["facingMode"];
 
     private vw: number;
     private vh: number;
@@ -107,6 +112,26 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return this.context_process;
     }
 
+    public getFrame(): number {
+        return this._frame;
+    }
+
+    public getImage(): ImageData {
+        const now = Date.now();
+        if (now - this.lastCache > 1000 / this.targetFrameRate) {
+            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
+            if (this.imageDataCache == null) {
+                this.imageDataCache = imageData.data;
+            } else {
+                this.imageDataCache.set(imageData.data);
+            }
+            this.lastCache = now;
+            this._frame++;
+        }
+        return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
+    }
+
     public get image(): ImageData {
         const now = Date.now();
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
@@ -150,16 +175,13 @@ export class CameraViewRenderer implements ICameraViewRenderer {
             this.targetFrameRate = videoSettings.targetFrameRate;
         }
 
-        const constraints = {};
-        const mediaDevicesConstraints = {};
-
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
                 const hint: any = {
                     audio: false,
                     video: {
                         facingMode: this._facing,
-                        width: { min: 480, max: 640 },
+                        width: { min: videoSettings.width.min, max: videoSettings.width.max },
                     },
                 };
                 if (navigator.mediaDevices.enumerateDevices) {
@@ -187,8 +209,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                 return Promise.reject(error);
             }
         } else {
-            // reject("No navigator.mediaDevices && navigator.mediaDevices.getUserMedia");
-            return Promise.reject("Sorry, Your device does not support this experince.");
+            return Promise.reject("Sorry, Your device does not support this experience.");
         }
     }
 

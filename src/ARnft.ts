@@ -36,7 +36,7 @@
 import Container from "./utils/html/Container";
 import { ConfigData } from "./config/ConfigData";
 import Stats from "stats.js";
-import { CameraViewRenderer } from "./renderers/CameraViewRenderer";
+import { CameraViewRenderer, ICameraViewRenderer } from "./renderers/CameraViewRenderer";
 import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker";
 import { v4 as uuidv4 } from "uuid";
@@ -198,7 +198,6 @@ export default class ARnft {
      * @param stats choose if you want the stats.
      * @returns the ARnft object.
      */
-
     private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<this> {
         const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
@@ -208,41 +207,44 @@ export default class ARnft {
         );
 
         let statsMain: any, statsWorker: any;
-        getConfig(this.configUrl).then((data) => {
-            this.appData = data;
+        getConfig(this.configUrl)
+            .then((data) => {
+                this.appData = data;
 
-            // views
-            this._views = Container.createContainer(this.appData);
-            this._views.loading = Container.createLoading(this.appData);
-            this._views.stats = Container.createStats(this.appData.stats.createHtml, this.appData);
+                // views
+                this._views = Container.createContainer(this.appData);
+                this._views.loading = Container.createLoading(this.appData);
+                this._views.stats = Container.createStats(this.appData.stats.createHtml, this.appData);
 
-            if (stats) {
-                statsMain = new Stats();
-                statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-                document.getElementById("stats1").appendChild(statsMain.dom);
-                statsWorker = new Stats();
-                statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-                document.getElementById("stats2").appendChild(statsWorker.dom);
-            }
+                if (stats) {
+                    statsMain = new Stats();
+                    statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+                    document.getElementById("stats1").appendChild(statsMain.dom);
+                    statsWorker = new Stats();
+                    statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+                    document.getElementById("stats2").appendChild(statsWorker.dom);
+                }
 
-            var containerEvent = new Event("containerEvent");
-            document.dispatchEvent(containerEvent);
+                var containerEvent = new Event("containerEvent");
+                document.dispatchEvent(containerEvent);
 
-            this.controllers = [];
-            this.cameraView = new CameraViewRenderer(this._views.video);
-            return this.cameraView.initialize(this.appData.videoSettings);
-        }).then(() => {
-            const renderUpdate = () => stats ? statsMain.update() : null;
-            const trackUpdate = () => stats ? statsWorker.update() : null;
-            markerUrls.forEach((markerUrl: string, index: number) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
-                this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
+                this.controllers = [];
+                this.cameraView = new CameraViewRenderer(this._views.video);
+                return this.cameraView.initialize(this.appData.videoSettings);
+            })
+            .then(() => {
+                const renderUpdate = () => (stats ? statsMain.update() : null);
+                const trackUpdate = () => (stats ? statsWorker.update() : null);
+                markerUrls.forEach((markerUrl: string, index: number) => {
+                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                    this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
+                });
+
+                this.initialized = true;
+            })
+            .catch(function (error: any) {
+                return Promise.reject(error);
             });
-
-            this.initialized = true;
-        }).catch(function (error: any) {
-            return Promise.reject(error);
-        });
 
         this.target.addEventListener("nftLoaded-" + this.uuid, () => {
             const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
@@ -256,7 +258,94 @@ export default class ARnft {
 
         let _update = () => {
             if (this.initialized && this.autoUpdate) {
-                this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
+                this.controllers.forEach((controller) =>
+                    controller.process(this.cameraView.image, this.cameraView.frame)
+                );
+            }
+            requestAnimationFrame(_update);
+        };
+        _update();
+        return this;
+    }
+
+    /**
+     * Used for a custom initialization of the camera and mediaStream. It create the html Container,
+     * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker. You must provide
+     * your own cameraView based on the ICameraViewRenderer interface.
+     * @param markerUrls the url Array of the markers.
+     * @param names the names of the markers.
+     * @param cameraView the own CameraViewRenderer class instance.
+     * @param stats choose if you want the stats.
+     * @returns the ARnft object.
+     */
+    public async initializeRaw(
+        markerUrls: Array<string>,
+        names: Array<string>,
+        cameraView: ICameraViewRenderer,
+        stats: boolean
+    ): Promise<this> {
+        const initEvent = new Event("initARnft");
+        this.target.dispatchEvent(initEvent);
+        console.log(
+            "ARnft init() %cstart...",
+            "color: yellow; background-color: blue; border-radius: 4px; padding: 2px"
+        );
+
+        let statsMain: any, statsWorker: any;
+        getConfig(this.configUrl)
+            .then((data) => {
+                this.appData = data;
+
+                // views
+                this._views = Container.createContainer(this.appData);
+                this._views.loading = Container.createLoading(this.appData);
+                this._views.stats = Container.createStats(this.appData.stats.createHtml, this.appData);
+
+                if (stats) {
+                    statsMain = new Stats();
+                    statsMain.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+                    document.getElementById("stats1").appendChild(statsMain.dom);
+                    statsWorker = new Stats();
+                    statsWorker.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+                    document.getElementById("stats2").appendChild(statsWorker.dom);
+                }
+
+                var containerEvent = new Event("containerEvent");
+                document.dispatchEvent(containerEvent);
+
+                this.controllers = [];
+
+                return cameraView.initialize(this.appData.videoSettings);
+            })
+            .then(() => {
+                const renderUpdate = () => (stats ? statsMain.update() : null);
+                const trackUpdate = () => (stats ? statsWorker.update() : null);
+                markerUrls.forEach((markerUrl: string, index: number) => {
+                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                    this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
+                });
+
+                this.initialized = true;
+            })
+            .catch(function (error: any) {
+                return Promise.reject(error);
+            });
+
+        this.target.addEventListener("nftLoaded-" + this.uuid, () => {
+            const nftWorkersNotReady = this.controllers.filter((nftWorker) => {
+                return nftWorker.isReady() === false;
+            });
+
+            if (nftWorkersNotReady.length === 0) {
+                this.target.dispatchEvent(new CustomEvent<object>("ARnftIsReady"));
+            }
+        });
+
+        let _update = () => {
+            if (this.initialized && this.autoUpdate) {
+                this.controllers.forEach((controller) =>
+                    controller.process(cameraView.getImage(), cameraView.getFrame())
+                );
             }
             requestAnimationFrame(_update);
         };

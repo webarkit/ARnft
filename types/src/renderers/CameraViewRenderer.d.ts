@@ -1,9 +1,14 @@
 import { VideoSettingData } from "../config/ConfigData";
 export interface ICameraViewRenderer {
     facing: string;
+    readonly frame: number;
+    getFrame: () => number;
     height: number;
     width: number;
-    image: ImageData;
+    readonly image: ImageData;
+    getImage: () => ImageData;
+    initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
+    destroy: () => void;
 }
 export declare class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process;
@@ -31,6 +36,8 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     get frame(): number;
     get canvasProcess(): HTMLCanvasElement;
     get contextProcess(): CanvasRenderingContext2D;
+    getFrame(): number;
+    getImage(): ImageData;
     get image(): ImageData;
     prepareImage(): void;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;
