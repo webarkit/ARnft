@@ -34,8 +34,7 @@
             console.log("start here")
 
             const arnft = new ARnft.ARnft(640, 480, 'config.json');
-            let camV = new cameraViewRenderer(video)
-            console.log(camV);
+            const camV = new cameraViewRenderer(video)
             await arnft.initializeRaw(["examples/DataNFT/pinball"], ['pinball'], camV, true)
                 .then((nft) => {
                     console.log("loaded ARnft");
