@@ -59,8 +59,7 @@
                     scene.add(directionalLight)
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
-                    nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb', 'pinball', 40, 80, 80, 80, false);
-
+                    nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb', 'pinball', 80, false);
                     const tick = () => {
                         sceneThreejs.draw();
                         window.requestAnimationFrame(tick)
