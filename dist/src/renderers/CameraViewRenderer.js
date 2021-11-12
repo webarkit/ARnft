@@ -29,6 +29,25 @@ export class CameraViewRenderer {
     get contextProcess() {
         return this.context_process;
     }
+    getFrame() {
+        return this._frame;
+    }
+    getImage() {
+        const now = Date.now();
+        if (now - this.lastCache > 1000 / this.targetFrameRate) {
+            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
+            if (this.imageDataCache == null) {
+                this.imageDataCache = imageData.data;
+            }
+            else {
+                this.imageDataCache.set(imageData.data);
+            }
+            this.lastCache = now;
+            this._frame++;
+        }
+        return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
+    }
     get image() {
         const now = Date.now();
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
@@ -65,15 +84,13 @@ export class CameraViewRenderer {
         if (videoSettings.targetFrameRate != null) {
             this.targetFrameRate = videoSettings.targetFrameRate;
         }
-        const constraints = {};
-        const mediaDevicesConstraints = {};
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
                 const hint = {
                     audio: false,
                     video: {
                         facingMode: this._facing,
-                        width: { min: 480, max: 640 },
+                        width: { min: videoSettings.width.min, max: videoSettings.width.max },
                     },
                 };
                 if (navigator.mediaDevices.enumerateDevices) {
@@ -102,7 +119,7 @@ export class CameraViewRenderer {
             }
         }
         else {
-            return Promise.reject("Sorry, Your device does not support this experince.");
+            return Promise.reject("Sorry, Your device does not support this experience.");
         }
     }
     destroy() {
