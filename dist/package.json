@@ -1,6 +1,6 @@
 {
     "name": "@webarkit/ar-nft",
-    "version": "0.12.2",
+    "version": "0.13.0",
     "main": "dist/ARnft.js",
     "types": "types/src/index.d.ts",
     "description": "WebAR Javscript library for markerless AR",
