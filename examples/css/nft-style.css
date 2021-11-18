@@ -74,6 +74,21 @@ html {
   text-decoration: none;
 }
 
+#dispose {
+  right: 25rem;
+  bottom: 0;
+  z-index: 200;
+  margin: 0.5rem;
+  padding: 0.25rem 0.5rem;
+
+  font-size: 0.75rem;
+  color: red;
+  background-color: rgba(210, 30,0,0)
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
 #app {
   position: fixed;
   top: 0;
