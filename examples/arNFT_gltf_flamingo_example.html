@@ -59,6 +59,7 @@
                         scene.add(directionalLight);
 
                         let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                        nftAddTJS.oef = true;
                         let mixers = [];
                         let clock = new THREE.Clock();
                         function modelAnimation(gltf) {
