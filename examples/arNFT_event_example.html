@@ -14,6 +14,7 @@
         class="ui marker" target="_blank">
         🖼 Marker Image
     </a>
+    <div class="ui" id="dispose" title="click to dispose ARnft and the video stream" onclick="window.closeVideo()">Dispose ARnft</div>
 
     <script src="js/third_party/three.js/three.min.js"></script>
     <script src="js/ARnftThreejs.js"></script>
@@ -23,6 +24,7 @@
         window.addEventListener('initARnft', function (e) {
             console.log("ARnft is starting!");
         })
+        let nftOut;
         ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"], ['pinball'], 'config-event.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
@@ -57,8 +59,7 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
-                        true);
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid, true);
                     sceneThreejs.initRenderer();
 
                     let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
@@ -72,16 +73,22 @@
                     tick()
                 })
 
-                document.addEventListener('nftTrackingLost-' + nft.uuid + '-' + 'pinball', function (ev) {
-                    console.log(ev);
+                window.addEventListener('nftTrackingLost-' + nft.uuid + '-' + 'pinball', function (ev) {
+                    //console.log(ev);
                     console.log("lost marker");
                 })
-                setTimeout(function () {
-                    nft.dispose()
-                }, 5000)
+                nftOut = nft;
             }).catch((error) => {
                 console.log(error);
             });
+
+            window.closeVideo = function () {
+                if (nftOut) {
+                    nftOut.dispose();
+                } else {
+                    console.error("Trying to close before opened");
+                }
+            }
     </script>
 </body>
 
