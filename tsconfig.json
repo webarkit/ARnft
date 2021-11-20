@@ -49,7 +49,7 @@
       "src/ARnft.ts",
       "src/NFTWorker.ts",
       "src/config/ConfigData.ts",
-      "src/utils/ARUtils.ts",
+      "src/utils/ARnftUtils.ts",
       "src/utils/html/Container.ts",
       "src/renderers/CameraViewRenderer.ts"
     ],
