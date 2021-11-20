@@ -2,7 +2,7 @@
 
 <img src="examples/Data/arNFT-logo.gif" width="250px"/>
 
-A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/webarkit/jsartoolkitnFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It use [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
+A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/webarkit/jsartoolkitNFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It use [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
 
 ## Start using it !
 
@@ -10,15 +10,19 @@ A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT
 
 `git clone https://github.com/webarkit/ARnft.git`
 
-:two: &nbsp; Install the npm packages:
+:two: &nbsp; Install the npm packages with yarn:
 
 `yarn install`
+
+or with npm:
+
+`npm install`
 
 :three: &nbsp; Run the node server:
 
 `http-server . -p 8000`
 
-:four: &nbsp; Go to the example:
+:four: &nbsp; Go to the examples:
 
 http://localhost:8000/examples/arNFT_example.html
 
@@ -57,12 +61,15 @@ import { ARnft } from "@webarkit/ar-nft";
 
 Test the examples in the `/examples` folder:
 
-- `arNft_container_example.html` Example with an alternative container.
+- `arNFT_autoupdate_example.html` Example with the autopdate routine.
+- `arNFT_container_example.html` Example with an alternative container.
 - `arNFT_event_example.html` Example with objVisibility and eventListener.
 - `arNFT_example.html` The simplest example displaying a red cube.
 - `arNFT_gltf_brave_robot_example.html` More advanced example with a gltf model and threejs events.
 - `arNFT_gltf_example.html` Example showing a gltf model (Duck).
+- `arNFT_gltf_flamingo_example.html` Example showing an animated gltf model (Flamingo).
 - `arNFT_image_example.html` Example showing an image.
+- `arNFT_initialize_raw_example.html` Example using the custom initialize function for the CameraRenderer (video).
 - `arNFT_multi_example.html` Example with multi NFT markers.
 - `arNFT_video_example.html` Example showing a video.
 
