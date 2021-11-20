@@ -3,6 +3,7 @@
 ![github forks](https://flat.badgen.net/github/forks/webarkit/ARnft)
 ![npm package version](https://flat.badgen.net/npm/v/@webarkit/ar-nft)
 ![Dependabot Badge](https://flat.badgen.net/dependabot/thepracticaldev/dev.to?icon=dependabot)
+![twitter](https://flat.badgen.net/twitter/follow/WebarkitO)
 
 # ARnft - WebAR with NFT
 
@@ -80,6 +81,10 @@ Test the examples in the `/examples` folder:
 - `arNFT_video_example.html` Example showing a video.
 
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
+
+## Donate
+Donate to **ARnft** ![opencollective](https://flat.badgen.net/badge/icon/opencollective?icon=opencollective&label) ![backers](https://flat.badgen.net/opencollective/backers/arnft)
+
 
 ## Documentation
 
