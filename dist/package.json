@@ -1,6 +1,6 @@
 {
     "name": "@webarkit/ar-nft",
-    "version": "0.13.0",
+    "version": "0.13.1",
     "main": "dist/ARnft.js",
     "types": "types/src/index.d.ts",
     "description": "WebAR Javscript library for markerless AR",
@@ -15,6 +15,8 @@
         "jsartoolkit5",
         "jsartoolkitNFT",
         "NFT",
+        "Natural Feature Tracking",
+        "image tracking",
         "markerless"
     ],
     "author": {
@@ -34,21 +36,21 @@
         "url": "https://github.com/webarkit/ARnft/issues"
     },
     "devDependencies": {
-        "@babel/core": "^7.13.10",
-        "@babel/plugin-transform-runtime": "^7.13.10",
-        "@babel/preset-env": "^7.13.10",
+        "@babel/core": "^7.16.0",
+        "@babel/plugin-transform-runtime": "^7.16.4",
+        "@babel/preset-env": "^7.16.4",
         "@types/node": "^14.14.10",
         "@types/stats.js": "^0.17.0",
-        "@types/uuid": "^8.3.0",
-        "babel-loader": "^8.2.2",
+        "@types/uuid": "^8.3.3",
+        "babel-loader": "^8.2.3",
         "prettier": "^2.4.1",
         "rimraf": "^3.0.2",
         "stats.js": "^0.17.0",
-        "ts-loader": "^8.1.0",
-        "typedoc": "^0.22.5",
-        "typescript": "^4.1.2",
-        "webpack": "^5.4.0",
-        "webpack-cli": "^4.5.0",
+        "ts-loader": "^9.2.6",
+        "typedoc": "^0.22.9",
+        "typescript": "^4.3.0",
+        "webpack": "^5.64.2",
+        "webpack-cli": "^4.9.1",
         "worker-loader": "^3.0.8"
     },
     "scripts": {
@@ -64,7 +66,7 @@
     },
     "dependencies": {
         "@webarkit/jsartoolkit-nft": "^0.9.7",
-        "terser-webpack-plugin": "^5.1.1",
+        "terser-webpack-plugin": "^5.2.5",
         "uuid": "^8.3.2"
     }
 }
