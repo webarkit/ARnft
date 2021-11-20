@@ -1,3 +1,9 @@
+![github releases](https://flat.badgen.net/github/release/webarkit/ARnft)
+![github stars](https://flat.badgen.net/github/stars/webarkit/ARnft)
+![github forks](https://flat.badgen.net/github/forks/webarkit/ARnft)
+![npm package version](https://flat.badgen.net/npm/v/@webarkit/ar-nft)
+![Dependabot Badge](https://flat.badgen.net/dependabot/thepracticaldev/dev.to?icon=dependabot)
+
 # ARnft - WebAR with NFT
 
 <img src="examples/Data/arNFT-logo.gif" width="250px"/>
