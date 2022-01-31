@@ -54,15 +54,14 @@ const load = (msg) => {
             }
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrl);
-        ar.loadNFTMarker(nftMarkerUrl)
-            .then((nft) => {
-            ctx.postMessage({ type: "nftData", nft: JSON.stringify(nft) });
-            ar.trackNFTMarkerId(nft.id);
-            console.log("loadNFTMarker -> ", nft.id);
-            console.log(nft);
-            ctx.postMessage({ type: "endLoading", end: true });
-        })
-            .catch((err) => {
+        ar.loadNFTMarker(nftMarkerUrl, (id) => {
+            ar.trackNFTMarkerId(id);
+            let marker = ar.getNFTData(ar.id, 0);
+            console.log("nftMarker data: ", marker);
+            postMessage({ type: "markerInfos", marker: marker });
+            console.log("loadNFTMarker -> ", id);
+            postMessage({ type: "endLoading", end: true });
+        }).catch((err) => {
             console.error("Error in loading marker on Worker", err);
         });
         ctx.postMessage({ type: "loaded", proj: JSON.stringify(cameraMatrix) });
