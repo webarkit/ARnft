@@ -50,6 +50,7 @@ module.exports = {
     minimizer: [
       new TerserPlugin({
         parallel: true,
+        extractComments: false
       }),
     ],
   },
