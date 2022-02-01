@@ -184,10 +184,11 @@ export default class ARnft {
                 throw "markerUrls or entities can't be undefined";
             }
             return await _arnft._initialize(markerUrls, names, params.stats);
-        } catch (error) { 
-            if ((error as {code: string}).code) {
+        } catch (error) {
+            if ((error as { code: string }).code) {
                 console.error(error);
-            return Promise.reject(error); }
+                return Promise.reject(error);
+            }
         }
     }
 
