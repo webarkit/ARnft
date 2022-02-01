@@ -16,12 +16,6 @@ module.exports = {
     publicPath: "auto"
   },
   externals: {
-    three: {
-      commonjs: 'three',
-      commonjs2: 'three',
-      amd: 'three',
-      root: 'THREE' // indicates global variable
-    },
     stats: {
       commonjs: 'stats.js',
       commonjs2: 'stats.js',
