@@ -1,4 +1,5 @@
 const path = require('path')
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: './src/index.ts',
@@ -49,5 +50,13 @@ module.exports = {
       jsartoolkitnft: '@webarkit/jsartoolkit-nft'
     },
     extensions: ['.tsx', '.ts', '.js'],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+      }),
+    ],
   },
 }
