@@ -1,16 +1,8 @@
 import Worker from "worker-loader?inline=no-fallback!./Worker";
 import { getWindowSize } from "./utils/ARnftUtils";
 export default class NFTWorker {
-    worker;
-    markerURL;
-    _processing = false;
-    vw;
-    vh;
-    target;
-    uuid;
-    name;
-    ready;
     constructor(markerURL, w, h, uuid, name) {
+        this._processing = false;
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
