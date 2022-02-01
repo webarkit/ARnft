@@ -12,7 +12,7 @@ module.exports = {
     // @see: https://github.com/webpack/webpack/issues/3929
     libraryExport: 'default',
     // @see: https://github.com/webpack/webpack/issues/6522
-    globalObject: 'typeof self !== \'undefined\' ? self : this',
+    globalObject: "typeof self !== 'undefined' ? self : this",
     publicPath: "auto"
   },
   externals: {
