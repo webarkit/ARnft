@@ -54,12 +54,12 @@ const load = (msg) => {
             }
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrl);
-        ar.loadNFTMarker(nftMarkerUrl)
-            .then((nft) => {
-            ctx.postMessage({ type: "nftData", nft: JSON.stringify(nft) });
-            ar.trackNFTMarkerId(nft.id);
-            console.log("loadNFTMarker -> ", nft.id);
-            console.log(nft);
+        ar.loadNFTMarker(nftMarkerUrl, (id) => {
+            let marker = ar.getNFTData(ar.id, 0);
+            ctx.postMessage({ type: "markerInfos", marker: marker });
+            ar.trackNFTMarkerId(id);
+            console.log("loadNFTMarker -> ", id);
+            console.log(id);
             ctx.postMessage({ type: "endLoading", end: true });
         })
             .catch((err) => {

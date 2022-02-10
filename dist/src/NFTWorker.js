@@ -78,10 +78,10 @@ export default class NFTWorker {
                     this.target.dispatchEvent(new CustomEvent("nftLoaded-" + this.uuid));
                     break;
                 }
-                case "nftData": {
-                    const nft = JSON.parse(msg.nft);
+                case "markerInfos": {
+                    const marker = msg.marker;
                     const nftEvent = new CustomEvent("getNFTData-" + this.uuid + "-" + this.name, {
-                        detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
+                        detail: { dpi: marker.dpi, width: marker.width, height: marker.height },
                     });
                     this.target.dispatchEvent(nftEvent);
                     break;
