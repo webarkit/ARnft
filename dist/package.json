@@ -61,7 +61,7 @@
         "ecstatic": "^4.1.4"
     },
     "dependencies": {
-        "@webarkit/jsartoolkit-nft": "^0.9.7",
+        "@webarkit/jsartoolkit-nft": "^1.0.0",
         "terser-webpack-plugin": "^5.2.5",
         "uuid": "^8.3.2"
     }
