@@ -57,9 +57,7 @@
         "format": "prettier --write ."
     },
     "license": "LGPL-3.0",
-    "resolutions": {
-        "ecstatic": "^4.1.4"
-    },
+    "resolutions": {},
     "dependencies": {
         "@webarkit/jsartoolkit-nft": "^1.0.0",
         "terser-webpack-plugin": "^5.2.5",
