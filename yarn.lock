@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.15.4":
-  version "7.16.7"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.16.7.tgz#03ff99f64106588c9c403c6ecb8c3bafbbdff1fa"
-  integrity sha512-9E9FJowqAsytyOY6LG+1KuueckRL+aQW+mKvXRXnuFGyRAyepJPmEo9vgMfXUA6O9u3IeEdv9MAkppFcaQwogQ==
+"@babel/runtime@^7.16.7":
+  version "7.17.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.2.tgz#66f68591605e59da47523c631416b18508779941"
+  integrity sha512-hzeyJyMA1YGdJTuWU0e/j4wKXrU4OMFvY2MSlaI9B7VQb0r5cxTE3EAIS2Q7Tn2RIcDkRvTA/v2JsAEhxe99uw==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -60,13 +60,13 @@
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
   integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
 
-"@webarkit/jsartoolkit-nft@^0.9.7":
-  version "0.9.7"
-  resolved "https://registry.yarnpkg.com/@webarkit/jsartoolkit-nft/-/jsartoolkit-nft-0.9.7.tgz#65023219d221e785a353c85a83e12ccdc93f8921"
-  integrity sha512-Qm6lfiLt7c3tDn2c36id94z35AiI+BpcoGc+SrXqIWNZaWJt5Rurl1dsGU9+HknHHtUcKGv7sKTHAXWevmAMDA==
+"@webarkit/jsartoolkit-nft@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@webarkit/jsartoolkit-nft/-/jsartoolkit-nft-1.0.0.tgz#7f10429be0e825e8f8153531fd895b7f11ce1026"
+  integrity sha512-rD5NDscsrZtpli7RUr2fNGGmXwo/WqM1zYSw4exZv48Gli6TyPKkCychtwOEQR+jL/Jr69QhRcykHNRuP1Njkg==
   dependencies:
-    "@babel/runtime" "^7.15.4"
-    axios "^0.23.0"
+    "@babel/runtime" "^7.16.7"
+    axios "^0.24.0"
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
@@ -248,10 +248,10 @@ ansi-styles@^4.1.0:
   dependencies:
     color-convert "^2.0.1"
 
-axios@^0.23.0:
-  version "0.23.0"
-  resolved "https://registry.yarnpkg.com/axios/-/axios-0.23.0.tgz#b0fa5d0948a8d1d75e3d5635238b6c4625b05149"
-  integrity sha512-NmvAE4i0YAv5cKq8zlDoPd1VLKAqX5oLuZKs8xkJa4qi6RGn0uhCYFjWtHHC9EM/MwOwYWOs53W+V0aqEXq1sg==
+axios@^0.24.0:
+  version "0.24.0"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-0.24.0.tgz#804e6fa1e4b9c5288501dd9dff56a7a0940d20d6"
+  integrity sha512-Q6cWsys88HoPgAaFAVUb0WpPk0O8iTeisR9IMqy9G8AbO4NlpVknrnQS03zzF9PGAWgO3cgletO3VjV/P7VztA==
   dependencies:
     follow-redirects "^1.14.4"
 
