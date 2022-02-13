@@ -183,7 +183,7 @@ export default class ARnft {
             } else {
                 throw "markerUrls or entities can't be undefined";
             }
-            return await _arnft._initialize(markerUrls, names, params.stats);
+            return await _arnft._initialize([markerUrls], names, params.stats);
         } catch (error) {
             if ((error as { code: string }).code) {
                 console.error(error);
@@ -200,7 +200,7 @@ export default class ARnft {
      * @param stats choose if you want the stats.
      * @returns the ARnft object.
      */
-    private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<this> {
+    private async _initialize(markerUrls: Array<Array<string>>, names: Array<string>, stats: boolean): Promise<this> {
         const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
         console.log(
@@ -237,7 +237,7 @@ export default class ARnft {
             .then(() => {
                 const renderUpdate = () => (stats ? statsMain.update() : null);
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
-                markerUrls.forEach((markerUrl: string, index: number) => {
+                markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });
@@ -281,7 +281,7 @@ export default class ARnft {
      * @returns the ARnft object.
      */
     public async initializeRaw(
-        markerUrls: Array<string>,
+        markerUrls: Array<Array<string>>,
         names: Array<string>,
         cameraView: ICameraViewRenderer,
         stats: boolean
@@ -322,7 +322,7 @@ export default class ARnft {
             .then(() => {
                 const renderUpdate = () => (stats ? statsMain.update() : null);
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
-                markerUrls.forEach((markerUrl: string, index: number) => {
+                markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });

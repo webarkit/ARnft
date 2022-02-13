@@ -46,7 +46,7 @@ export default class ARnft {
     static initWithEntities(width: number, height: number, entities: IEntity[], configUrl: string, stats: boolean): Promise<object>;
     static initWithConfig(params: INameInitConfig | IEntityInitConfig): Promise<ARnft>;
     private _initialize;
-    initializeRaw(markerUrls: Array<string>, names: Array<string>, cameraView: ICameraViewRenderer, stats: boolean): Promise<this>;
+    initializeRaw(markerUrls: Array<Array<string>>, names: Array<string>, cameraView: ICameraViewRenderer, stats: boolean): Promise<this>;
     update(): void;
     static getEntities(): IEntity[];
     getEventTarget(): EventTarget;

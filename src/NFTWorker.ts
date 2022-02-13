@@ -60,8 +60,8 @@ export default class NFTWorker {
      * @param h the height of the camera.
      * @param uuid the uuid of the marker assigned by the ARnft constructor.
      */
-    constructor(markerURL: string, w: number, h: number, uuid: string, name: string) {
-        this.markerURL = markerURL;
+    constructor(markerURL: Array<string>, w: number, h: number, uuid: string, name: string) {
+        this.markerURL = markerURL;  
         this.vw = w;
         this.vh = h;
         this.target = window || global;

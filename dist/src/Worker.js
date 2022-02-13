@@ -37,23 +37,28 @@ const load = (msg) => {
         });
         const regexM = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
         const reM = regexM.test(msg.marker);
-        if (reM == true) {
-            if (msg.addPath) {
-                nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker;
+        console.log(msg.marker);
+        console.log(msg.marker.length);
+        for (var i = 0; i < msg.marker.length; i++) {
+            if (reM == true) {
+                if (msg.addPath) {
+                    nftMarkerUrl[i] = basePath + "/" + msg.addPath + "/" + msg.marker;
+                }
+                else {
+                    nftMarkerUrl[i] = msg.marker;
+                }
             }
-            else {
-                nftMarkerUrl = msg.marker;
-            }
-        }
-        else if (reM == false) {
-            if (msg.addPath) {
-                nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker;
-            }
-            else {
-                nftMarkerUrl = basePath + "/" + msg.marker;
+            else if (reM == false) {
+                if (msg.addPath) {
+                    nftMarkerUrl[i] = basePath + "/" + msg.addPath + "/" + msg.marker;
+                }
+                else {
+                    nftMarkerUrl[i] = basePath + "/" + msg.marker;
+                }
             }
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrl);
+        console.log(nftMarkerUrl);
         ar.loadNFTMarker(nftMarkerUrl, (id) => {
             let marker = ar.getNFTData(ar.id, 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
