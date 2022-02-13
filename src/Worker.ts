@@ -63,7 +63,9 @@ let markerResult: any = null;
 
 const load = (msg: any) => {
     const basePath = self.origin;
-    let cameraParamUrl: string, nftMarkerUrl: string;
+    let cameraParamUrl: string;
+    let nftMarkerUrls: Array<string> = [];
+    let markerLength: number = msg.marker.length;
     console.debug("Base path:", basePath);
     const onLoad = (arController: any) => {
         ar = arController;
@@ -75,26 +77,31 @@ const load = (msg: any) => {
                 matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH),
             };
         });
-        // after the ARController is set up, we load the NFT Marker
+        // after the ARControllerNFT is set up, we load the NFT Marker
         const regexM =
             /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
         const reM = regexM.test(msg.marker);
-        if (reM == true) {
-            if (msg.addPath) {
-                nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker;
-            } else {
-                nftMarkerUrl = msg.marker;
+        
+        for(var i=0; i<markerLength; i++){
+            let nftMarkerUrl: string;
+            if (reM == true) {
+                if (msg.addPath) {
+                    nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker[i];
+                } else {
+                    nftMarkerUrls = msg.marker[i];
+                }
+            } else if (reM == false) {
+                if (msg.addPath) {
+                    nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker[i];
+                } else {
+                    nftMarkerUrl = basePath + "/" + msg.marker[i];                 
+                }
             }
-        } else if (reM == false) {
-            if (msg.addPath) {
-                nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker;
-            } else {
-                nftMarkerUrl = basePath + "/" + msg.marker;
-            }
+            nftMarkerUrls.push(nftMarkerUrl);
         }
-        console.debug("Loading NFT marker at: ", nftMarkerUrl);
-
-        ar.loadNFTMarker(nftMarkerUrl, (id: number) => {
+        console.debug("Loading NFT marker at: ", nftMarkerUrls);
+        
+        ar.loadNFTMarkers(nftMarkerUrls , (id: number) => {
             let marker = ar.getNFTData(ar.id, 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
                 ar.trackNFTMarkerId(id);
