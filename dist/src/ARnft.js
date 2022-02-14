@@ -39,13 +39,13 @@ export default class ARnft {
             }
             else if (entityParams.entities != null) {
                 this.entities = entityParams.entities;
-                markerUrls = this.entities.map((x) => x.markerUrl);
-                names = this.entities.map((x) => x.name);
+                markerUrls = this.entities.map((x) => [x.markerUrl]);
+                names = this.entities.map((x) => [x.name]);
             }
             else {
                 throw "markerUrls or entities can't be undefined";
             }
-            return await _arnft._initialize([markerUrls], names, params.stats);
+            return await _arnft._initialize(markerUrls, names, params.stats);
         }
         catch (error) {
             if (error.code) {
@@ -83,8 +83,7 @@ export default class ARnft {
             const renderUpdate = () => (stats ? statsMain.update() : null);
             const trackUpdate = () => (stats ? statsWorker.update() : null);
             markerUrls.forEach((markerUrl, index) => {
-                console.log(markerUrl);
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][index]));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
             });
             this.initialized = true;

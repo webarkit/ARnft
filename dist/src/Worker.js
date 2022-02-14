@@ -24,7 +24,9 @@ let ar = null;
 let markerResult = null;
 const load = (msg) => {
     const basePath = self.origin;
-    let cameraParamUrl, nftMarkerUrl;
+    let cameraParamUrl;
+    let nftMarkerUrls = [];
+    let markerLength = msg.marker.length;
     console.debug("Base path:", basePath);
     const onLoad = (arController) => {
         ar = arController;
@@ -37,29 +39,28 @@ const load = (msg) => {
         });
         const regexM = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
         const reM = regexM.test(msg.marker);
-        console.log(msg.marker);
-        console.log(msg.marker.length);
-        for (var i = 0; i < msg.marker.length; i++) {
+        for (var i = 0; i < markerLength; i++) {
+            let nftMarkerUrl;
             if (reM == true) {
                 if (msg.addPath) {
-                    nftMarkerUrl[i] = basePath + "/" + msg.addPath + "/" + msg.marker;
+                    nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker[i];
                 }
                 else {
-                    nftMarkerUrl[i] = msg.marker;
+                    nftMarkerUrls = msg.marker[i];
                 }
             }
             else if (reM == false) {
                 if (msg.addPath) {
-                    nftMarkerUrl[i] = basePath + "/" + msg.addPath + "/" + msg.marker;
+                    nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker[i];
                 }
                 else {
-                    nftMarkerUrl[i] = basePath + "/" + msg.marker;
+                    nftMarkerUrl = basePath + "/" + msg.marker[i];
                 }
             }
+            nftMarkerUrls.push(nftMarkerUrl);
         }
-        console.debug("Loading NFT marker at: ", nftMarkerUrl);
-        console.log(nftMarkerUrl);
-        ar.loadNFTMarker(nftMarkerUrl, (id) => {
+        console.debug("Loading NFT marker at: ", nftMarkerUrls);
+        ar.loadNFTMarkers(nftMarkerUrls, (id) => {
             let marker = ar.getNFTData(ar.id, 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
             ar.trackNFTMarkerId(id);
