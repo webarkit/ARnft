@@ -4,7 +4,6 @@ export default class NFTWorker {
     constructor(markerURL, w, h, uuid, name) {
         this._processing = false;
         this.markerURL = markerURL;
-        console.log(this.markerURL);
         this.vw = w;
         this.vh = h;
         this.target = window || global;

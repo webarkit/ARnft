@@ -22,7 +22,7 @@
     <script>
         // This example not create the Html elements for loading, stats and container app.
         // But instead you define in your html code. See 'config-container.json' for the set-up.
-        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"], ['pinball'], 'config-container.json', true)
+        ARnft.ARnft.init(640, 480, [["examples/DataNFT/pinball"]], [['pinball']], 'config-container.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
