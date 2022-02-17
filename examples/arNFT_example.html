@@ -20,7 +20,9 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
-        ARnft.ARnft.init(640, 480, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
+        let width = 640;
+        let height = 480;
+        ARnft.ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -34,7 +36,7 @@
 
                     let canvas = document.getElementById('canvas');
                     let fov = 0.8 * 180 / Math.PI;
-                    let ratio = window.clientWidth / window.clientHeight;
+                    let ratio = width / height;
                     let config = {
                         "renderer": {
                             "alpha": true,

@@ -27,13 +27,15 @@
     <script src="../dist/ARnft.js"></script>
 
     <script>
+        let width = 640;
+        let height = 480;
         var video = document.getElementById('video');
 
         async function init(video) {
 
             console.log("start here")
 
-            const arnft = new ARnft.ARnft(640, 480, 'config.json');
+            const arnft = new ARnft.ARnft(width, height, 'config.json');
             const camV = new cameraViewRenderer(video)
             await arnft.initializeRaw([["examples/DataNFT/pinball"]], [['pinball']], camV, true)
                 .then((nft) => {
@@ -50,7 +52,7 @@
 
                         let canvas = document.getElementById('canvas');
                         let fov = 0.8 * 180 / Math.PI;
-                        let ratio = window.clientWidth / window.clientHeight;
+                        let ratio = width / height;
                         let config = {
                             "renderer": {
                                 "alpha": true,
