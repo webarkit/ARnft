@@ -25,7 +25,9 @@
             { name: 'kuva', markerUrl: "examples/DataNFT/kuva" },
             { name: 'chalk_multi', markerUrl: "examples/DataNFT/chalk_multi"}
         ]
-        ARnft.ARnft.initWithEntities(640, 480, entities,  'config.json', true)
+        let width = 640;
+        let height = 480;
+        ARnft.ARnft.initWithEntities(width, height, entities,  'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -66,7 +68,7 @@
 
                     let canvas = document.getElementById('canvas');
                     let fov = 0.8 * 180 / Math.PI;
-                    let ratio = window.clientWidth / window.clientHeight;
+                    let ratio = width / height;
                     let config = {
                         "renderer": {
                             "alpha": true,
