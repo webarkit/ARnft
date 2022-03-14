@@ -14,7 +14,7 @@ export default class NFTWorker {
     async initialize(cameraURL, renderUpdate, trackUpdate) {
         this.worker = new Worker();
         const worker = this.worker;
-        this.target.addEventListener("terminateWorker", function () {
+        this.target.addEventListener("terminateWorker ${this.name}", function () {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });

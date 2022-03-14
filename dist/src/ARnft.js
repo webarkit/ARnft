@@ -179,9 +179,13 @@ export default class ARnft {
     }
     dispose() {
         this.disposeVideoStream();
-        this.disposeNFT();
+        this.disposeAllNFTs();
     }
-    disposeNFT() {
+    disposeNFT(name) {
+        var event = new Event("terminateWorker-${name}");
+        this.target.dispatchEvent(event);
+    }
+    disposeAllNFTs() {
         NFTWorker.stopNFT();
     }
     disposeVideoStream() {

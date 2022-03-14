@@ -52,7 +52,8 @@ export default class ARnft {
     getEventTarget(): EventTarget;
     get views(): Readonly<IViews>;
     dispose(): void;
-    disposeNFT(): void;
+    disposeNFT(name: string): void;
+    disposeAllNFTs(): void;
     disposeVideoStream(): void;
 }
 export {};

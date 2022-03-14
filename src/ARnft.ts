@@ -169,13 +169,19 @@ export default class ARnft {
             _arnft.autoUpdate = params.autoUpdate;
         }
         try {
-            let markerUrls;
+            let markerUrls: string[][] = [];
             let names;
             const nameParams = params as INameInitConfig;
             const entityParams = params as IEntityInitConfig;
             if (nameParams.markerUrls != null && nameParams.names != null) {
-                markerUrls = nameParams.markerUrls;
-                names = nameParams.names;
+                if(entityParams.entities == null){
+                    markerUrls = nameParams.markerUrls;
+                    console.log(markerUrls);
+                    names = nameParams.names;
+                    this.entities = names.map(function(v, k, a){ return {name: v[0], markerUrl: markerUrls[k][0]}; });
+                    console.log(names);
+                    console.log(this.entities);             
+                }
             } else if (entityParams.entities != null) {
                 this.entities = entityParams.entities;
                 markerUrls = this.entities.map((x) => [x.markerUrl]);
@@ -386,14 +392,27 @@ export default class ARnft {
      */
     public dispose() {
         this.disposeVideoStream();
-        this.disposeNFT();
+        this.disposeAllNFTs();
     }
 
     /**
      * Dispose only the NFTWorker.
      */
-    public disposeNFT() {
-        NFTWorker.stopNFT();
+    public disposeNFT(name: string) {
+        let terminateWorker = 'terminateWorker-'+ name;
+        var event = new Event(terminateWorker);
+        this.target.dispatchEvent(event);  
+    }
+
+    /**
+     * Dispose only the NFTWorker.
+     */
+     public disposeAllNFTs() {
+        // NFTWorker.stopNFT();
+        const entities = ARnft.getEntities();
+        console.log(entities);
+        
+        this.disposeNFT('pinball')
     }
 
     /**
