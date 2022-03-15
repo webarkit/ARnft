@@ -78,6 +78,7 @@ Test the examples in the `/examples` folder:
 - `arNFT_image_example.html` Example showing an image.
 - `arNFT_initialize_raw_example.html` Example using the custom initialize function for the CameraRenderer (video).
 - `arNFT_multi_example.html` Example with multi NFT markers.
+- `arNFT_multi_one_worker_example.html` Example with multi NFT markers in one Worker.
 - `arNFT_video_example.html` Example showing a video.
 
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)

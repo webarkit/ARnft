@@ -63,9 +63,9 @@ interface IInitConfig {
 
 interface INameInitConfig extends IInitConfig {
     /** the Array of url of the markers (without the extension) */
-    markerUrls: Array<string>;
+    markerUrls: Array<Array<string>>;
     /** the names of the markers */
-    names: Array<string>;
+    names: Array<Array<string>>;
 }
 
 interface IEntityInitConfig extends IInitConfig {
@@ -132,8 +132,8 @@ export default class ARnft {
     static async init(
         width: number,
         height: number,
-        markerUrls: Array<string>,
-        names: Array<string>,
+        markerUrls: Array<Array<string>>,
+        names: Array<Array<string>>,
         configUrl: string,
         stats: boolean
     ): Promise<object> {
@@ -156,7 +156,7 @@ export default class ARnft {
     static async initWithEntities(
         width: number,
         height: number,
-        entities: IEntity[],
+        entities: Array<IEntity>,
         configUrl: string,
         stats: boolean
     ): Promise<object> {
@@ -169,24 +169,32 @@ export default class ARnft {
             _arnft.autoUpdate = params.autoUpdate;
         }
         try {
-            let markerUrls;
+            let markerUrls: string[][] = [];
             let names;
             const nameParams = params as INameInitConfig;
             const entityParams = params as IEntityInitConfig;
             if (nameParams.markerUrls != null && nameParams.names != null) {
-                markerUrls = nameParams.markerUrls;
-                names = nameParams.names;
+                if(entityParams.entities == null){
+                    markerUrls = nameParams.markerUrls;
+                    console.log(markerUrls);
+                    names = nameParams.names;
+                    this.entities = names.map(function(v, k, a){ return {name: v[0], markerUrl: markerUrls[k][0]}; });
+                    console.log(names);
+                    console.log(this.entities);             
+                }
             } else if (entityParams.entities != null) {
                 this.entities = entityParams.entities;
-                markerUrls = this.entities.map((x) => x.markerUrl);
-                names = this.entities.map((x) => x.name);
+                markerUrls = this.entities.map((x) => [x.markerUrl]);
+                names = this.entities.map((x) => [x.name]);
             } else {
                 throw "markerUrls or entities can't be undefined";
             }
             return await _arnft._initialize(markerUrls, names, params.stats);
-        } catch (error: any) {
-            console.error(error);
-            return Promise.reject(error);
+        } catch (error) {
+            if ((error as { code: string }).code) {
+                console.error(error);
+                return Promise.reject(error);
+            }
         }
     }
 
@@ -198,7 +206,7 @@ export default class ARnft {
      * @param stats choose if you want the stats.
      * @returns the ARnft object.
      */
-    private async _initialize(markerUrls: Array<string>, names: Array<string>, stats: boolean): Promise<this> {
+    private async _initialize(markerUrls: Array<Array<string>>, names: Array<Array<string>>, stats: boolean): Promise<this> {
         const initEvent = new Event("initARnft");
         this.target.dispatchEvent(initEvent);
         console.log(
@@ -235,8 +243,8 @@ export default class ARnft {
             .then(() => {
                 const renderUpdate = () => (stats ? statsMain.update() : null);
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
-                markerUrls.forEach((markerUrl: string, index: number) => {
-                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                markerUrls.forEach((markerUrl: Array<string>, index: number) => {
+                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][index]));
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });
 
@@ -279,7 +287,7 @@ export default class ARnft {
      * @returns the ARnft object.
      */
     public async initializeRaw(
-        markerUrls: Array<string>,
+        markerUrls: Array<Array<string>>,
         names: Array<string>,
         cameraView: ICameraViewRenderer,
         stats: boolean
@@ -320,7 +328,7 @@ export default class ARnft {
             .then(() => {
                 const renderUpdate = () => (stats ? statsMain.update() : null);
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
-                markerUrls.forEach((markerUrl: string, index: number) => {
+                markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });
@@ -384,14 +392,26 @@ export default class ARnft {
      */
     public dispose() {
         this.disposeVideoStream();
-        this.disposeNFT();
+        this.disposeAllNFTs();
     }
 
     /**
      * Dispose only the NFTWorker.
      */
-    public disposeNFT() {
-        NFTWorker.stopNFT();
+    public disposeNFT(name: string) {
+        let terminateWorker = 'terminateWorker-'+ name;
+        var event = new Event(terminateWorker);
+        this.target.dispatchEvent(event);  
+    }
+
+    /**
+     * Dispose the Array of NFTWorkers.
+     */
+     public disposeAllNFTs() {
+        const entities = ARnft.getEntities();
+        entities.forEach((entity) => {
+            this.disposeNFT(entity.name)
+        })
     }
 
     /**
@@ -399,5 +419,7 @@ export default class ARnft {
      */
     public disposeVideoStream() {
         this.cameraView.destroy();
+        var event = new Event("stopVideoStreaming");
+        this.target.dispatchEvent(event);
     }
 }

@@ -12,8 +12,8 @@ interface IInitConfig {
     autoUpdate?: boolean;
 }
 interface INameInitConfig extends IInitConfig {
-    markerUrls: Array<string>;
-    names: Array<string>;
+    markerUrls: Array<Array<string>>;
+    names: Array<Array<string>>;
 }
 interface IEntityInitConfig extends IInitConfig {
     entities: IEntity[];
@@ -42,17 +42,18 @@ export default class ARnft {
     private initialized;
     private _views;
     constructor(width: number, height: number, configUrl: string);
-    static init(width: number, height: number, markerUrls: Array<string>, names: Array<string>, configUrl: string, stats: boolean): Promise<object>;
-    static initWithEntities(width: number, height: number, entities: IEntity[], configUrl: string, stats: boolean): Promise<object>;
+    static init(width: number, height: number, markerUrls: Array<Array<string>>, names: Array<Array<string>>, configUrl: string, stats: boolean): Promise<object>;
+    static initWithEntities(width: number, height: number, entities: Array<IEntity>, configUrl: string, stats: boolean): Promise<object>;
     static initWithConfig(params: INameInitConfig | IEntityInitConfig): Promise<ARnft>;
     private _initialize;
-    initializeRaw(markerUrls: Array<string>, names: Array<string>, cameraView: ICameraViewRenderer, stats: boolean): Promise<this>;
+    initializeRaw(markerUrls: Array<Array<string>>, names: Array<string>, cameraView: ICameraViewRenderer, stats: boolean): Promise<this>;
     update(): void;
     static getEntities(): IEntity[];
     getEventTarget(): EventTarget;
     get views(): Readonly<IViews>;
     dispose(): void;
-    disposeNFT(): void;
+    disposeNFT(name: string): void;
+    disposeAllNFTs(): void;
     disposeVideoStream(): void;
 }
 export {};

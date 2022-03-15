@@ -8,7 +8,7 @@ export default class NFTWorker {
     private uuid;
     private name;
     protected ready: boolean;
-    constructor(markerURL: string, w: number, h: number, uuid: string, name: string);
+    constructor(markerURL: Array<string>, w: number, h: number, uuid: string, name: string);
     initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean>;
     process(imagedata: ImageData, frame: number): void;
     protected load(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean>;
@@ -19,5 +19,4 @@ export default class NFTWorker {
     getMarkerUrl(): string;
     getEventTarget(): EventTarget;
     destroy(): void;
-    static stopNFT(): void;
 }

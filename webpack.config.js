@@ -1,4 +1,5 @@
 const path = require('path')
+const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: './src/index.ts',
@@ -11,16 +12,10 @@ module.exports = {
     // @see: https://github.com/webpack/webpack/issues/3929
     libraryExport: 'default',
     // @see: https://github.com/webpack/webpack/issues/6522
-    globalObject: 'this',
-    publicPath: "/"
+    globalObject: "typeof self !== 'undefined' ? self : this",
+    publicPath: "auto"
   },
   externals: {
-    three: {
-      commonjs: 'three',
-      commonjs2: 'three',
-      amd: 'three',
-      root: 'THREE' // indicates global variable
-    },
     stats: {
       commonjs: 'stats.js',
       commonjs2: 'stats.js',
@@ -49,5 +44,14 @@ module.exports = {
       jsartoolkitnft: '@webarkit/jsartoolkit-nft'
     },
     extensions: ['.tsx', '.ts', '.js'],
+  },
+  optimization: {
+    minimize: true,
+    minimizer: [
+      new TerserPlugin({
+        parallel: true,
+        extractComments: false
+      }),
+    ],
   },
 }
