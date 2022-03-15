@@ -215,7 +215,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public destroy(): void {
         const video = this._video;
-        this.target.addEventListener("stopStreaming", function () {
+        this.target.addEventListener("stopVideoStreaming", function () {
             const stream = <MediaStream>video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {

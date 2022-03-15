@@ -405,14 +405,13 @@ export default class ARnft {
     }
 
     /**
-     * Dispose only the NFTWorker.
+     * Dispose the Array of NFTWorkers.
      */
      public disposeAllNFTs() {
-        // NFTWorker.stopNFT();
         const entities = ARnft.getEntities();
-        console.log(entities);
-        
-        this.disposeNFT('pinball')
+        entities.forEach((entity) => {
+            this.disposeNFT(entity.name)
+        })
     }
 
     /**
@@ -420,5 +419,7 @@ export default class ARnft {
      */
     public disposeVideoStream() {
         this.cameraView.destroy();
+        var event = new Event("stopVideoStreaming");
+        this.target.dispatchEvent(event);
     }
 }
