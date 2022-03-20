@@ -39,12 +39,14 @@ jobs:
         name: dist
         path: |
           dist/ARnft.js
-    - run: yarn
+    - run: |
+        yarn
     - uses: actions/upload-artifact@v2
       with:
         name: dist
         path: dist
-    - run: npm run build-ts
+    - run: |
+        yarn build-ts
     - name: Commit changes
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       uses: EndBug/add-and-commit@v7
