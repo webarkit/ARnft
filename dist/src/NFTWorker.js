@@ -14,7 +14,7 @@ export default class NFTWorker {
     async initialize(cameraURL, renderUpdate, trackUpdate) {
         this.worker = new Worker();
         const worker = this.worker;
-        this.target.addEventListener("terminateWorker ${this.name}", function () {
+        this.target.addEventListener("terminateWorker-" + this.name, function () {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
@@ -141,13 +141,5 @@ export default class NFTWorker {
         return this.target;
     }
     destroy() { }
-    static stopNFT() {
-        const target = window || global;
-        console.log("Stop NFT");
-        var event = new Event("terminateWorker");
-        target.dispatchEvent(event);
-        var event = new Event("stopStreaming");
-        target.dispatchEvent(event);
-    }
 }
 //# sourceMappingURL=NFTWorker.js.map

@@ -176,11 +176,8 @@ export default class ARnft {
             if (nameParams.markerUrls != null && nameParams.names != null) {
                 if(entityParams.entities == null){
                     markerUrls = nameParams.markerUrls;
-                    console.log(markerUrls);
                     names = nameParams.names;
-                    this.entities = names.map(function(v, k, a){ return {name: v[0], markerUrl: markerUrls[k][0]}; });
-                    console.log(names);
-                    console.log(this.entities);             
+                    this.entities = names.map(function(v, k, a){ return {name: v[0], markerUrl: markerUrls[k][0]}; });  
                 }
             } else if (entityParams.entities != null) {
                 this.entities = entityParams.entities;
@@ -244,7 +241,7 @@ export default class ARnft {
                 const renderUpdate = () => (stats ? statsMain.update() : null);
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
                 markerUrls.forEach((markerUrl: Array<string>, index: number) => {
-                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][index]));
+                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0]));
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });
 
