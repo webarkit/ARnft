@@ -28,7 +28,9 @@ jobs:
             ${{ runner.os }}-node-
 
       - name: Install
-        run: yarn
+        run: |
+          yarn
 
       - name: Tests
-        run: yarn format-check
+        run: |
+          yarn format-check
