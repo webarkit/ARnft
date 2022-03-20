@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>ARnft multi example showing some simple meshes</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
+    <link rel="stylesheet" href="css/nft-style.css">
+</head>
+
+<body>
+
+    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+        class="ui marker" target="_blank">
+        🖼 Marker Image
+    </a>
+    <div class="flex-container">
+        <div  title="click to dispose ARnft and the video stream" onclick="window.closeNFTs_Video()">
+            Dispose ARnft</div>
+        <div  title="click to dispose the pinball worker" onclick="window.closePinball()">
+            Dispose Pinball</div>
+    </div>
+    <script src="js/third_party/three.js/three.min.js"></script>
+    <script src="js/ARnftThreejs.js"></script>
+    <script src="../dist/ARnft.js"></script>
+
+    <script>
+        const entities = [
+            { name: 'pinball', markerUrl: "examples/DataNFT/pinball" },
+            { name: 'kuva', markerUrl: "examples/DataNFT/kuva" },
+            { name: 'chalk_multi', markerUrl: "examples/DataNFT/chalk_multi"}
+        ]
+        let nftOut;
+        let width = 640;
+        let height = 480;
+        ARnft.ARnft.initWithEntities(width, height, entities,  'config.json', true)
+            .then((nft) => {
+                let mat = new THREE.MeshLambertMaterial({
+                    color: 0xff0000
+                });
+
+                let maty = new THREE.MeshLambertMaterial({
+                    color: 0xffff00
+                });
+
+                let matz = new THREE.MeshLambertMaterial({
+                    color: 0x0000ff
+                });
+
+                let boxGeom = new THREE.BoxGeometry(1, 1, 1);
+                let cube = new THREE.Mesh(boxGeom, mat);
+                cube.name = 'cube';
+                cube.position.z = 90;
+                cube.scale.set(180, 180, 180);
+                
+                let coneGeom = new THREE.ConeGeometry( 0.5, 1, 32 );
+                let cone = new THREE.Mesh( coneGeom, maty);
+                cone.name = 'cone';
+                cone.rotation.x = 90;
+                cone.position.z = 90;
+                cone.scale.set(180, 180, 180);
+
+
+                let sphereGeom = new THREE.SphereGeometry(0.5, 8, 8);
+                let sphere = new THREE.Mesh(sphereGeom, matz)
+                sphere.name = 'sphere'
+                sphere.position.z = 90;
+                sphere.scale.set(180, 180, 180);
+                
+                let testEntities = ARnft.ARnft.getEntities();
+                console.log("entities from getEntities static method: ", testEntities);
+
+                document.addEventListener('containerEvent', function (ev) {
+
+                    let canvas = document.getElementById('canvas');
+                    let fov = 0.8 * 180 / Math.PI;
+                    let ratio = width / height;
+                    let config = {
+                        "renderer": {
+                            "alpha": true,
+                            "antialias": true,
+                            "context": null,
+                            "precision": "mediump",
+                            "premultipliedAlpha": true,
+                            "stencil": true,
+                            "depth": true,
+                            "logarithmicDepthBuffer": true
+                        },
+                        "camera": {
+                            "fov": fov,
+                            "ratio": ratio,
+                            "near": 0.01,
+                            "far": 1000
+                        }
+                    }
+
+                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid, true);
+                    sceneThreejs.initRenderer();
+
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
+                        console.log('this is pinball!!');
+                    })
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-kuva', function() {
+                        console.log('this is kuva!!');
+                    })
+                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-chalk_multi', function() {
+                        console.log('this is chalk_multi!!');
+                    })
+
+                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                    nftAddTJS.add(cube, 'pinball', false);
+                    nftAddTJS.add(cone, 'kuva', false);
+                    nftAddTJS.add(sphere, 'chalk_multi', false);
+                    let names = nftAddTJS.getNames();
+                    console.log(names);
+
+                    const tick = () => {
+                        sceneThreejs.draw();
+                        window.requestAnimationFrame(tick)
+                    }
+                    tick()
+
+                })
+                nftOut = nft;
+            }).catch((error) => {
+                console.log(error);
+            });
+            window.closeNFTs_Video = function () {
+                if (nftOut) {
+                    nftOut.dispose();
+                } else {
+                    console.error("Trying to close before opened");
+                }
+            }
+            window.closePinball = function () {
+                if (nftOut) {
+                    nftOut.disposeNFT('pinball');
+                } else {
+                    console.error("Trying to close before opened");
+                }
+            }        
+    </script>
+
+</body>
+
+</html>

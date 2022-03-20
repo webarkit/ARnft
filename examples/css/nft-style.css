@@ -74,6 +74,29 @@ html {
   text-decoration: none;
 }
 
+.flex-container {
+  left: 12rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-container > div {
+  color: red;
+  background-color: rgba( 255,255,255,0.6 );
+  border-radius: 6px;
+  z-index: 200;
+  width: 100px;
+  margin: 10px;
+  margin-left: auto;
+  text-align: center;
+  line-height: 75px;
+  font-size: .8em;
+  
+  text-decoration: none;
+
+  cursor: pointer;
+}
+
 #dispose {
   right: 25rem;
   bottom: 0;
@@ -83,7 +106,7 @@ html {
 
   font-size: 0.75rem;
   color: red;
-  background-color: rgba(210, 30,0,0)
+  background-color: rgba(210, 30,0,0);
   text-decoration: none;
 
   cursor: pointer;

@@ -29,13 +29,19 @@ export default class ARnft {
             _arnft.autoUpdate = params.autoUpdate;
         }
         try {
-            let markerUrls;
+            let markerUrls = [];
             let names;
             const nameParams = params;
             const entityParams = params;
             if (nameParams.markerUrls != null && nameParams.names != null) {
-                markerUrls = nameParams.markerUrls;
-                names = nameParams.names;
+                if (entityParams.entities == null) {
+                    markerUrls = nameParams.markerUrls;
+                    console.log(markerUrls);
+                    names = nameParams.names;
+                    this.entities = names.map(function (v, k, a) { return { name: v[0], markerUrl: markerUrls[k][0] }; });
+                    console.log(names);
+                    console.log(this.entities);
+                }
             }
             else if (entityParams.entities != null) {
                 this.entities = entityParams.entities;
@@ -179,13 +185,25 @@ export default class ARnft {
     }
     dispose() {
         this.disposeVideoStream();
-        this.disposeNFT();
+        this.disposeAllNFTs();
     }
-    disposeNFT() {
-        NFTWorker.stopNFT();
+    disposeNFT(name) {
+        let terminateWorker = 'terminateWorker-' + name;
+        var event = new Event(terminateWorker);
+        this.target.dispatchEvent(event);
+    }
+    disposeAllNFTs() {
+        const entities = ARnft.getEntities();
+        console.log(entities);
+        entities.forEach((entity) => {
+            console.log(entity);
+            this.disposeNFT(entity.name);
+        });
     }
     disposeVideoStream() {
         this.cameraView.destroy();
+        var event = new Event("stopVideoStreaming");
+        this.target.dispatchEvent(event);
     }
 }
 //# sourceMappingURL=ARnft.js.map

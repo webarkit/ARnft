@@ -82,7 +82,8 @@ export default class NFTWorker {
     public async initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
         this.worker = new Worker();
         const worker = this.worker;
-        this.target.addEventListener("terminateWorker", function () {
+
+        this.target.addEventListener("terminateWorker-" + this.name , function () {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
@@ -242,18 +243,6 @@ export default class NFTWorker {
     }
 
     public destroy(): void {}
-
-    /**
-     * Stop the NFT tracking and the video streaming.
-     */
-    static stopNFT() {
-        const target = window || global;
-        console.log("Stop NFT");
-        var event = new Event("terminateWorker");
-        target.dispatchEvent(event);
-        var event = new Event("stopStreaming");
-        target.dispatchEvent(event);
-    }
 }
 
 //export default null as any;

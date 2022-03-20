@@ -19,5 +19,4 @@ export default class NFTWorker {
     getMarkerUrl(): string;
     getEventTarget(): EventTarget;
     destroy(): void;
-    static stopNFT(): void;
 }

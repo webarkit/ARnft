@@ -169,13 +169,16 @@ export default class ARnft {
             _arnft.autoUpdate = params.autoUpdate;
         }
         try {
-            let markerUrls;
+            let markerUrls: string[][] = [];
             let names;
             const nameParams = params as INameInitConfig;
             const entityParams = params as IEntityInitConfig;
             if (nameParams.markerUrls != null && nameParams.names != null) {
-                markerUrls = nameParams.markerUrls;
-                names = nameParams.names;
+                if(entityParams.entities == null){
+                    markerUrls = nameParams.markerUrls;
+                    names = nameParams.names;
+                    this.entities = names.map(function(v, k, a){ return {name: v[0], markerUrl: markerUrls[k][0]}; });  
+                }
             } else if (entityParams.entities != null) {
                 this.entities = entityParams.entities;
                 markerUrls = this.entities.map((x) => [x.markerUrl]);
@@ -238,7 +241,7 @@ export default class ARnft {
                 const renderUpdate = () => (stats ? statsMain.update() : null);
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
                 markerUrls.forEach((markerUrl: Array<string>, index: number) => {
-                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][index]));
+                    this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0]));
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });
 
@@ -386,14 +389,26 @@ export default class ARnft {
      */
     public dispose() {
         this.disposeVideoStream();
-        this.disposeNFT();
+        this.disposeAllNFTs();
     }
 
     /**
      * Dispose only the NFTWorker.
      */
-    public disposeNFT() {
-        NFTWorker.stopNFT();
+    public disposeNFT(name: string) {
+        let terminateWorker = 'terminateWorker-'+ name;
+        var event = new Event(terminateWorker);
+        this.target.dispatchEvent(event);  
+    }
+
+    /**
+     * Dispose the Array of NFTWorkers.
+     */
+     public disposeAllNFTs() {
+        const entities = ARnft.getEntities();
+        entities.forEach((entity) => {
+            this.disposeNFT(entity.name)
+        })
     }
 
     /**
@@ -401,5 +416,7 @@ export default class ARnft {
      */
     public disposeVideoStream() {
         this.cameraView.destroy();
+        var event = new Event("stopVideoStreaming");
+        this.target.dispatchEvent(event);
     }
 }

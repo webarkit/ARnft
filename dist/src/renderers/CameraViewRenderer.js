@@ -124,7 +124,7 @@ export class CameraViewRenderer {
     }
     destroy() {
         const video = this._video;
-        this.target.addEventListener("stopStreaming", function () {
+        this.target.addEventListener("stopVideoStreaming", function () {
             const stream = video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {
