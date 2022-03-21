@@ -81,8 +81,8 @@ const load = (msg: any) => {
         const regexM =
             /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
         const reM = regexM.test(msg.marker);
-        
-        for(var i=0; i<markerLength; i++){
+
+        for (var i = 0; i < markerLength; i++) {
             let nftMarkerUrl: string;
             if (reM == true) {
                 if (msg.addPath) {
@@ -94,24 +94,23 @@ const load = (msg: any) => {
                 if (msg.addPath) {
                     nftMarkerUrl = basePath + "/" + msg.addPath + "/" + msg.marker[i];
                 } else {
-                    nftMarkerUrl = basePath + "/" + msg.marker[i];                 
+                    nftMarkerUrl = basePath + "/" + msg.marker[i];
                 }
             }
             nftMarkerUrls.push(nftMarkerUrl);
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrls);
-        
-        ar.loadNFTMarkers(nftMarkerUrls , (id: number) => {
+
+        ar.loadNFTMarkers(nftMarkerUrls, (id: number) => {
             let marker = ar.getNFTData(ar.id, 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
-                ar.trackNFTMarkerId(id);
-                console.log("loadNFTMarker -> ", id);
-                console.log(id);
-                ctx.postMessage({ type: "endLoading", end: true });
-        })
-            .catch((err: any) => {
-                console.error("Error in loading marker on Worker", err);
-            });
+            ar.trackNFTMarkerId(id);
+            console.log("loadNFTMarker -> ", id);
+            console.log(id);
+            ctx.postMessage({ type: "endLoading", end: true });
+        }).catch((err: any) => {
+            console.error("Error in loading marker on Worker", err);
+        });
 
         ctx.postMessage({ type: "loaded", proj: JSON.stringify(cameraMatrix) });
     };
