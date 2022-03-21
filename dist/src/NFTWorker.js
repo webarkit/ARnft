@@ -1,16 +1,8 @@
 import Worker from "worker-loader?inline=no-fallback!./Worker";
 import { getWindowSize } from "./utils/ARnftUtils";
 export default class NFTWorker {
-    worker;
-    markerURL;
-    _processing = false;
-    vw;
-    vh;
-    target;
-    uuid;
-    name;
-    ready;
     constructor(markerURL, w, h, uuid, name) {
+        this._processing = false;
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
@@ -22,7 +14,7 @@ export default class NFTWorker {
     async initialize(cameraURL, renderUpdate, trackUpdate) {
         this.worker = new Worker();
         const worker = this.worker;
-        this.target.addEventListener("terminateWorker", function () {
+        this.target.addEventListener("terminateWorker-" + this.name, function () {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
@@ -86,10 +78,10 @@ export default class NFTWorker {
                     this.target.dispatchEvent(new CustomEvent("nftLoaded-" + this.uuid));
                     break;
                 }
-                case "nftData": {
-                    const nft = JSON.parse(msg.nft);
+                case "markerInfos": {
+                    const marker = msg.marker;
                     const nftEvent = new CustomEvent("getNFTData-" + this.uuid + "-" + this.name, {
-                        detail: { dpi: nft.dpi, width: nft.width, height: nft.height },
+                        detail: { dpi: marker.dpi, width: marker.width, height: marker.height },
                     });
                     this.target.dispatchEvent(nftEvent);
                     break;
@@ -149,13 +141,5 @@ export default class NFTWorker {
         return this.target;
     }
     destroy() { }
-    static stopNFT() {
-        const target = window || global;
-        console.log("Stop NFT");
-        var event = new Event("terminateWorker");
-        target.dispatchEvent(event);
-        var event = new Event("stopStreaming");
-        target.dispatchEvent(event);
-    }
 }
 //# sourceMappingURL=NFTWorker.js.map

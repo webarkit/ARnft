@@ -3,6 +3,9 @@
 ![github forks](https://flat.badgen.net/github/forks/webarkit/ARnft)
 ![npm package version](https://flat.badgen.net/npm/v/@webarkit/ar-nft)
 ![Dependabot Badge](https://flat.badgen.net/dependabot/thepracticaldev/dev.to?icon=dependabot)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![CI](https://github.com/webarkit/ARnft/actions/workflows/CI.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/CI.yml)
+[![Build ARnft CI](https://github.com/webarkit/ARnft/actions/workflows/main.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/main.yml)
 ![twitter](https://flat.badgen.net/twitter/follow/WebarkitO)
 
 # ARnft - WebAR with NFT
@@ -78,6 +81,8 @@ Test the examples in the `/examples` folder:
 - `arNFT_image_example.html` Example showing an image.
 - `arNFT_initialize_raw_example.html` Example using the custom initialize function for the CameraRenderer (video).
 - `arNFT_multi_example.html` Example with multi NFT markers.
+- `arNFT_multi_dispose_example.html` Example with multi NFT markers and disposing worker.
+- `arNFT_multi_one_worker_example.html` Example with multi NFT markers in one Worker.
 - `arNFT_video_example.html` Example showing a video.
 
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)

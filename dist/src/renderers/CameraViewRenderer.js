@@ -1,22 +1,7 @@
 export class CameraViewRenderer {
-    canvas_process;
-    context_process;
-    _video;
-    _facing;
-    vw;
-    vh;
-    w;
-    h;
-    pw;
-    ph;
-    ox;
-    oy;
-    target;
-    targetFrameRate = 60;
-    imageDataCache;
-    _frame;
-    lastCache = 0;
     constructor(video) {
+        this.targetFrameRate = 60;
+        this.lastCache = 0;
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d", { alpha: false });
         this._video = video;
@@ -139,7 +124,7 @@ export class CameraViewRenderer {
     }
     destroy() {
         const video = this._video;
-        this.target.addEventListener("stopStreaming", function () {
+        this.target.addEventListener("stopVideoStreaming", function () {
             const stream = video.srcObject;
             console.log("stop streaming");
             if (stream !== null && stream !== undefined) {

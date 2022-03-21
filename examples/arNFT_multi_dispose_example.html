@@ -14,7 +14,12 @@
         class="ui marker" target="_blank">
         🖼 Marker Image
     </a>
-
+    <div class="flex-container">
+        <div  title="click to dispose ARnft and the video stream" onclick="window.closeNFTs_Video()">
+            Dispose ARnft</div>
+        <div  title="click to dispose the pinball worker" onclick="window.closePinball()">
+            Dispose Pinball</div>
+    </div>
     <script src="js/third_party/three.js/three.min.js"></script>
     <script src="js/ARnftThreejs.js"></script>
     <script src="../dist/ARnft.js"></script>
@@ -25,6 +30,7 @@
             { name: 'kuva', markerUrl: "examples/DataNFT/kuva" },
             { name: 'chalk_multi', markerUrl: "examples/DataNFT/chalk_multi"}
         ]
+        let nftOut;
         let width = 640;
         let height = 480;
         ARnft.ARnft.initWithEntities(width, height, entities,  'config.json', true)
@@ -115,9 +121,24 @@
                     tick()
 
                 })
+                nftOut = nft;
             }).catch((error) => {
                 console.log(error);
-            });            
+            });
+            window.closeNFTs_Video = function () {
+                if (nftOut) {
+                    nftOut.dispose();
+                } else {
+                    console.error("Trying to close before opened");
+                }
+            }
+            window.closePinball = function () {
+                if (nftOut) {
+                    nftOut.disposeNFT('pinball');
+                } else {
+                    console.error("Trying to close before opened");
+                }
+            }        
     </script>
 
 </body>

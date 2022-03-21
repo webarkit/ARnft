@@ -22,7 +22,9 @@
     <script>
         // This example not create the Html elements for loading, stats and container app.
         // But instead you define in your html code. See 'config-container.json' for the set-up.
-        ARnft.ARnft.init(640, 480, ["examples/DataNFT/pinball"], ['pinball'], 'config-container.json', true)
+        let width = 640;
+        let height = 480;
+        ARnft.ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config-container.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -36,7 +38,7 @@
 
                     let canvas = document.getElementById('canvas');
                     let fov = 0.8 * 180 / Math.PI;
-                    let ratio = window.clientWidth / window.clientHeight;
+                    let ratio = width / height;
                     let config = {
                         "renderer": {
                             "alpha": true,

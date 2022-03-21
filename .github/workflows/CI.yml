@@ -1,0 +1,35 @@
+name: CI
+on:
+    - push
+    - pull_request
+
+jobs:
+    tests:
+        strategy:
+            matrix:
+                node:
+                    - 14.x
+
+        runs-on: ubuntu-latest
+        name: Node.js ${{ matrix.node }}
+        steps:
+            - uses: actions/checkout@v2
+
+            - name: Use Node.js ${{ matrix.node }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node }}
+            - uses: actions/cache@v2
+              with:
+                  path: ~/.npm
+                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-node-
+
+            - name: Install
+              run: |
+                  yarn
+
+            - name: Tests
+              run: |
+                  yarn format-check

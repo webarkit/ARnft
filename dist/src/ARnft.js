@@ -7,22 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
 const { version } = packageJson;
 export default class ARnft {
-    cameraView;
-    appData;
-    width;
-    height;
-    configUrl;
-    markerUrl;
-    camData;
-    autoUpdate = true;
-    controllers;
-    static entities;
-    target;
-    uuid;
-    version;
-    initialized;
-    _views;
     constructor(width, height, configUrl) {
+        this.autoUpdate = true;
         this.width = width;
         this.height = height;
         this.configUrl = configUrl;
@@ -43,18 +29,23 @@ export default class ARnft {
             _arnft.autoUpdate = params.autoUpdate;
         }
         try {
-            let markerUrls;
+            let markerUrls = [];
             let names;
             const nameParams = params;
             const entityParams = params;
             if (nameParams.markerUrls != null && nameParams.names != null) {
-                markerUrls = nameParams.markerUrls;
-                names = nameParams.names;
+                if (entityParams.entities == null) {
+                    markerUrls = nameParams.markerUrls;
+                    names = nameParams.names;
+                    this.entities = names.map(function (v, k, a) {
+                        return { name: v[0], markerUrl: markerUrls[k][0] };
+                    });
+                }
             }
             else if (entityParams.entities != null) {
                 this.entities = entityParams.entities;
-                markerUrls = this.entities.map((x) => x.markerUrl);
-                names = this.entities.map((x) => x.name);
+                markerUrls = this.entities.map((x) => [x.markerUrl]);
+                names = this.entities.map((x) => [x.name]);
             }
             else {
                 throw "markerUrls or entities can't be undefined";
@@ -62,8 +53,10 @@ export default class ARnft {
             return await _arnft._initialize(markerUrls, names, params.stats);
         }
         catch (error) {
-            console.error(error);
-            return Promise.reject(error);
+            if (error.code) {
+                console.error(error);
+                return Promise.reject(error);
+            }
         }
     }
     async _initialize(markerUrls, names, stats) {
@@ -95,7 +88,7 @@ export default class ARnft {
             const renderUpdate = () => (stats ? statsMain.update() : null);
             const trackUpdate = () => (stats ? statsWorker.update() : null);
             markerUrls.forEach((markerUrl, index) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index]));
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0]));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
             });
             this.initialized = true;
@@ -191,13 +184,23 @@ export default class ARnft {
     }
     dispose() {
         this.disposeVideoStream();
-        this.disposeNFT();
+        this.disposeAllNFTs();
     }
-    disposeNFT() {
-        NFTWorker.stopNFT();
+    disposeNFT(name) {
+        let terminateWorker = "terminateWorker-" + name;
+        var event = new Event(terminateWorker);
+        this.target.dispatchEvent(event);
+    }
+    disposeAllNFTs() {
+        const entities = ARnft.getEntities();
+        entities.forEach((entity) => {
+            this.disposeNFT(entity.name);
+        });
     }
     disposeVideoStream() {
         this.cameraView.destroy();
+        var event = new Event("stopVideoStreaming");
+        this.target.dispatchEvent(event);
     }
 }
 //# sourceMappingURL=ARnft.js.map
