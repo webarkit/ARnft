@@ -36,11 +36,10 @@ export default class ARnft {
             if (nameParams.markerUrls != null && nameParams.names != null) {
                 if (entityParams.entities == null) {
                     markerUrls = nameParams.markerUrls;
-                    console.log(markerUrls);
                     names = nameParams.names;
-                    this.entities = names.map(function (v, k, a) { return { name: v[0], markerUrl: markerUrls[k][0] }; });
-                    console.log(names);
-                    console.log(this.entities);
+                    this.entities = names.map(function (v, k, a) {
+                        return { name: v[0], markerUrl: markerUrls[k][0] };
+                    });
                 }
             }
             else if (entityParams.entities != null) {
@@ -89,7 +88,7 @@ export default class ARnft {
             const renderUpdate = () => (stats ? statsMain.update() : null);
             const trackUpdate = () => (stats ? statsWorker.update() : null);
             markerUrls.forEach((markerUrl, index) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][index]));
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0]));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
             });
             this.initialized = true;
@@ -188,15 +187,13 @@ export default class ARnft {
         this.disposeAllNFTs();
     }
     disposeNFT(name) {
-        let terminateWorker = 'terminateWorker-' + name;
+        let terminateWorker = "terminateWorker-" + name;
         var event = new Event(terminateWorker);
         this.target.dispatchEvent(event);
     }
     disposeAllNFTs() {
         const entities = ARnft.getEntities();
-        console.log(entities);
         entities.forEach((entity) => {
-            console.log(entity);
             this.disposeNFT(entity.name);
         });
     }

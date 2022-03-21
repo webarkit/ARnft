@@ -4,6 +4,8 @@
 ![npm package version](https://flat.badgen.net/npm/v/@webarkit/ar-nft)
 ![Dependabot Badge](https://flat.badgen.net/dependabot/thepracticaldev/dev.to?icon=dependabot)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![CI](https://github.com/webarkit/ARnft/actions/workflows/CI.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/CI.yml)
+[![Build ARnft CI](https://github.com/webarkit/ARnft/actions/workflows/main.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/main.yml)
 ![twitter](https://flat.badgen.net/twitter/follow/WebarkitO)
 
 # ARnft - WebAR with NFT

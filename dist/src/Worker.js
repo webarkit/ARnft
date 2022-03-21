@@ -67,8 +67,7 @@ const load = (msg) => {
             console.log("loadNFTMarker -> ", id);
             console.log(id);
             ctx.postMessage({ type: "endLoading", end: true });
-        })
-            .catch((err) => {
+        }).catch((err) => {
             console.error("Error in loading marker on Worker", err);
         });
         ctx.postMessage({ type: "loaded", proj: JSON.stringify(cameraMatrix) });
