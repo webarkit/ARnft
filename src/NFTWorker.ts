@@ -61,7 +61,7 @@ export default class NFTWorker {
      * @param uuid the uuid of the marker assigned by the ARnft constructor.
      */
     constructor(markerURL: Array<string>, w: number, h: number, uuid: string, name: string) {
-        this.markerURL = markerURL;  
+        this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
         this.target = window || global;
@@ -83,7 +83,7 @@ export default class NFTWorker {
         this.worker = new Worker();
         const worker = this.worker;
 
-        this.target.addEventListener("terminateWorker-" + this.name , function () {
+        this.target.addEventListener("terminateWorker-" + this.name, function () {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
