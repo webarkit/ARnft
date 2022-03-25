@@ -51,6 +51,37 @@ class cameraViewRenderer {
         }
     }
 
+    fixRotation(renderer) {
+        this.inputWidth = this._video.videoWidth;
+        this.inputHeight = this._video.videoHeight;
+        const pScale = 320 / Math.max(this.inputWidth, (this.inputHeight / 3) * 4);
+        const sScale = this.isMobile() ? window.outerWidth / this.inputWidth : 1;
+        console.log(window.outerWidth);
+        alert('dim: ', window.outerWidth);
+        const sw = this.inputWidth * sScale;
+        const sh = this.inputHeight * sScale;
+        this.w = this.inputWidth * pScale;
+        this.h = this.inputHeight * pScale;
+        this.pw = Math.floor(Math.max(this.w, (this.h / 3) * 4));
+        this.ph = Math.floor(Math.max(this.h, (this.w / 4) * 3));
+        //this.ox = (this.pw - this.w) / 2;
+        //this.oy = (this.ph - this.h) / 2;
+        this.canvas_process.style.clientWidth = this.pw + 'px';
+        this.canvas_process.style.clientHeight = this.ph + 'px';
+        this.canvas_process.width = this.pw;
+        this.canvas_process.height = this.ph;
+        renderer.setSize(sw, sh, false);
+        console.log('resized!');
+    }
+
+    isMobile() {
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // true for mobile device
+            return true;
+        }
+        return false;
+    }
+
     getFrame() {
         return this._frame;
     }

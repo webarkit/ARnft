@@ -75,6 +75,22 @@
                         let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
                             true);
                         sceneThreejs.initRenderer();
+                        function onResize() {
+                            try {
+                                let userAgentString = navigator.userAgent;
+                                let safariAgent = userAgentString.indexOf('Safari') > -1;
+                                let chromeAgent = userAgentString.indexOf('Chrome') > -1;
+                                if (chromeAgent && safariAgent) safariAgent = false;
+                                window.addEventListener(
+                                    'orientationchange',
+                                    // 'resize',
+                                    safariAgent ? () => setTimeout(camV.fixRotation(sceneThreejs.renderer), 200) : camV.fixRotation(sceneThreejs.renderer)
+                                );
+                            } catch (e) {
+                                alert(e);
+                            }
+                        }
+                        onResize()
 
                         let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
                         nftAddTJS.add(cube, 'pinball', false);
@@ -90,6 +106,11 @@
                 }).catch((error) => {
                     console.log(error);
                 });
+            window.addEventListener(
+                'orientationchange',
+                // 'resize',
+                () => { console.log('orientationchange');}
+            );
 
         }
         // init the app...
