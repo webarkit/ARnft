@@ -50,7 +50,7 @@ export default class NFTWorker {
 
     private uuid: string;
     private name: string;
-    private addPath: string
+    private addPath: string;
 
     protected ready: boolean;
 
