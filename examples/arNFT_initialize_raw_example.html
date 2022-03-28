@@ -36,7 +36,7 @@
             console.log("start here")
 
             const arnft = new ARnft.ARnft(width, height, 'config.json');
-            const camV = new cameraViewRenderer(video)
+            const camV = new cameraViewRenderer(video);
             await arnft.initializeRaw([["examples/DataNFT/pinball"]], [['pinball']], camV, true)
                 .then((nft) => {
                     console.log("loaded ARnft");
@@ -76,19 +76,15 @@
                             true);
                         sceneThreejs.initRenderer();
                         function onResize() {
-                            try {
-                                let userAgentString = navigator.userAgent;
-                                let safariAgent = userAgentString.indexOf('Safari') > -1;
-                                let chromeAgent = userAgentString.indexOf('Chrome') > -1;
-                                if (chromeAgent && safariAgent) safariAgent = false;
-                                window.addEventListener(
-                                    'orientationchange',
-                                    // 'resize',
-                                    safariAgent ? () => setTimeout(camV.fixRotation(sceneThreejs.renderer), 200) : camV.fixRotation(sceneThreejs.renderer)
-                                );
-                            } catch (e) {
-                                alert(e);
-                            }
+                            let userAgentString = navigator.userAgent;
+                            let safariAgent = userAgentString.indexOf('Safari') > -1;
+                            let chromeAgent = userAgentString.indexOf('Chrome') > -1;
+                            if (chromeAgent && safariAgent) safariAgent = false;
+                            window.addEventListener(
+                                'orientationchange',
+                                // 'resize',
+                                safariAgent ? () => setTimeout(camV.fixRotation(sceneThreejs.renderer), 200) : camV.fixRotation(sceneThreejs.renderer)
+                            );
                         }
                         onResize()
 
@@ -106,11 +102,14 @@
                 }).catch((error) => {
                     console.log(error);
                 });
-            window.addEventListener(
+
+
+
+            /*window.addEventListener(
                 'orientationchange',
                 // 'resize',
-                () => { console.log('orientationchange');}
-            );
+                () => { console.log('orientationchange'); }
+            );*/
 
         }
         // init the app...

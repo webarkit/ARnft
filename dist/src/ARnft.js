@@ -173,6 +173,10 @@ export default class ARnft {
             this.controllers.forEach((controller) => controller.process(this.cameraView.image, this.cameraView.frame));
         }
     }
+    setWidth(width) {
+        this.width = width;
+        return this;
+    }
     static getEntities() {
         return this.entities;
     }
