@@ -53,7 +53,7 @@ jobs:
               with:
                   default_author: github_actions
                   message: new dist files from action
-                  add: 'dist/ARnft.js'
+                  add: "dist/ARnft.js"
             - name: Release
               uses: softprops/action-gh-release@v1
               if: startsWith(github.ref, 'refs/tags/')
