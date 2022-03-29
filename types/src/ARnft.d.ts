@@ -28,6 +28,7 @@ interface IViews {
 export default class ARnft {
     cameraView: CameraViewRenderer;
     appData: ConfigData;
+    addPath: string;
     width: number;
     height: number;
     configUrl: string;

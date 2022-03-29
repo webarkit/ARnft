@@ -67,6 +67,7 @@ export default class ARnft {
         getConfig(this.configUrl)
             .then((data) => {
             this.appData = data;
+            this.addPath = data.addPath;
             this._views = Container.createContainer(this.appData);
             this._views.loading = Container.createLoading(this.appData);
             this._views.stats = Container.createStats(this.appData.stats.createHtml, this.appData);
@@ -88,7 +89,7 @@ export default class ARnft {
             const renderUpdate = () => (stats ? statsMain.update() : null);
             const trackUpdate = () => (stats ? statsWorker.update() : null);
             markerUrls.forEach((markerUrl, index) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0], this.appData.addPath));
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0], this.addPath));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
             });
             this.initialized = true;
@@ -121,6 +122,7 @@ export default class ARnft {
         getConfig(this.configUrl)
             .then((data) => {
             this.appData = data;
+            this.addPath = data.addPath;
             this._views = Container.createContainer(this.appData);
             this._views.loading = Container.createLoading(this.appData);
             this._views.stats = Container.createStats(this.appData.stats.createHtml, this.appData);
@@ -141,7 +143,7 @@ export default class ARnft {
             const renderUpdate = () => (stats ? statsMain.update() : null);
             const trackUpdate = () => (stats ? statsWorker.update() : null);
             markerUrls.forEach((markerUrl, index) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index], this.appData.addPath));
+                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index], this.addPath));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
             });
             this.initialized = true;

@@ -83,6 +83,7 @@ interface IViews {
 export default class ARnft {
     public cameraView: CameraViewRenderer;
     public appData: ConfigData;
+    public addPath: string;
     public width: number;
     public height: number;
     public configUrl: string;
@@ -221,6 +222,7 @@ export default class ARnft {
         getConfig(this.configUrl)
             .then((data) => {
                 this.appData = data;
+                this.addPath = data.addPath;
 
                 // views
                 this._views = Container.createContainer(this.appData);
@@ -248,14 +250,7 @@ export default class ARnft {
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
                 markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(
-                        new NFTWorker(
-                            markerUrl,
-                            this.width,
-                            this.height,
-                            this.uuid,
-                            names[index][0],
-                            this.appData.addPath
-                        )
+                        new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0], this.addPath)
                     );
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });
@@ -315,6 +310,7 @@ export default class ARnft {
         getConfig(this.configUrl)
             .then((data) => {
                 this.appData = data;
+                this.addPath = data.addPath;
 
                 // views
                 this._views = Container.createContainer(this.appData);
@@ -342,7 +338,7 @@ export default class ARnft {
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
                 markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(
-                        new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index], this.appData.addPath)
+                        new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index], this.addPath)
                     );
                     this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate);
                 });
