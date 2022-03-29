@@ -34,11 +34,6 @@ jobs:
               run: |
                   echo $RELEASE_VERSION
                   echo ${{ steps.vars.outputs.tag }}
-            - uses: actions/upload-artifact@v2
-              with:
-                  name: dist
-                  path: |
-                      dist/ARnft.js
             - run: |
                   yarn
             - uses: actions/upload-artifact@v2
