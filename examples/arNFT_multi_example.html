@@ -91,13 +91,13 @@
                     let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid, true);
                     sceneThreejs.initRenderer();
 
-                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
+                    window.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
                         console.log('this is pinball!!');
                     })
-                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-kuva', function() {
+                    window.addEventListener('getMatrixGL_RH-' + nft.uuid + '-kuva', function() {
                         console.log('this is kuva!!');
                     })
-                    document.addEventListener('getMatrixGL_RH-' + nft.uuid + '-chalk_multi', function() {
+                    window.addEventListener('getMatrixGL_RH-' + nft.uuid + '-chalk_multi', function() {
                         console.log('this is chalk_multi!!');
                     })
 
