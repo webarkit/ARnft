@@ -130,7 +130,7 @@ export default class NFTWorker {
             pw: pw,
             ph: ph,
             camera_para: cameraURL,
-            interpolationFactor: 24,
+            interpolationFactor: this.interpolationFactor,
             marker: this.markerURL,
             oef: this.oef,
             addPath: this.addPath,

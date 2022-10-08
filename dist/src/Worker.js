@@ -22,6 +22,7 @@ let next = null;
 let lastFrame = 0;
 let ar = null;
 let markerResult = null;
+let currentMarkerResult = null;
 const currentMatrix = {
     delta: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     interpolated: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -46,11 +47,7 @@ const load = (msg) => {
                 };
             }
             else {
-                let mGL_RH = interpolate(ev.data.matrixGL_RH);
-                markerResult = {
-                    type: "found",
-                    matrixGL_RH: JSON.stringify(mGL_RH),
-                };
+                currentMarkerResult = ev.data;
             }
         });
         const regexM = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
@@ -115,7 +112,8 @@ const load = (msg) => {
 const interpolate = (matrix) => {
     for (let i = 0; i < matrix.length; i++) {
         currentMatrix.delta[i] = matrix[i] - currentMatrix.interpolated[i];
-        currentMatrix.interpolated[i] = currentMatrix.interpolated[i] + currentMatrix.delta[i] / interpolationFactor;
+        currentMatrix.interpolated[i] =
+            currentMatrix.interpolated[i] + currentMatrix.delta[i] / interpolationFactor;
     }
     return currentMatrix.interpolated;
 };
@@ -127,11 +125,23 @@ const process = (next, frame) => {
         }
         lastFrame = frame;
     }
-    if (markerResult != null) {
-        ctx.postMessage(markerResult);
+    if (currentMarkerResult) {
+        const matrix = currentMarkerResult.matrixGL_RH;
+        for (let i = 0; i < matrix.length; i++) {
+            currentMatrix.delta[i] = matrix[i] - currentMatrix.interpolated[i];
+            currentMatrix.interpolated[i] =
+                currentMatrix.interpolated[i] +
+                    currentMatrix.delta[i] / interpolationFactor;
+        }
+        ctx.postMessage({
+            type: "found",
+            matrixGL_RH: JSON.stringify(currentMatrix.interpolated),
+        });
     }
     else {
-        ctx.postMessage({ type: "not found" });
+        ctx.postMessage({
+            type: "not found",
+        });
     }
     next = null;
 };

@@ -60,6 +60,7 @@ let next: any = null;
 let lastFrame: number = 0;
 let ar: any = null;
 let markerResult: any = null;
+let currentMarkerResult: { matrixGL_RH: any; } = null
 
 const currentMatrix = {
     delta: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -80,17 +81,18 @@ const load = (msg: any) => {
         const cameraMatrix = ar.getCameraMatrix();
 
         ar.addEventListener("getNFTMarker", (ev: any) => {
-            if (msg.oef == true) {
+            if (msg.oef === true) {
                 markerResult = {
                     type: "found",
                     matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH),
                 };
             } else {
-                let mGL_RH = interpolate(ev.data.matrixGL_RH);
-                markerResult = {
+                //let mGL_RH = interpolate(ev.data.matrixGL_RH);
+                currentMarkerResult = ev.data;
+                /*ifmarkerResult = {
                     type: "found",
                     matrixGL_RH: JSON.stringify(mGL_RH),
-                };
+                };*/
             }
         });
         // after the ARControllerNFT is set up, we load the NFT Marker
@@ -157,7 +159,8 @@ const load = (msg: any) => {
 const interpolate = (matrix: any) => {
     for (let i = 0; i < matrix.length; i++) {
         currentMatrix.delta[i] = matrix[i] - currentMatrix.interpolated[i];
-        currentMatrix.interpolated[i] = currentMatrix.interpolated[i] + currentMatrix.delta[i] / interpolationFactor;
+        currentMatrix.interpolated[i] = 
+        currentMatrix.interpolated[i] + currentMatrix.delta[i] / interpolationFactor;
     }
     return currentMatrix.interpolated;
 };
@@ -171,10 +174,30 @@ const process = (next: any, frame: number) => {
         lastFrame = frame;
     }
 
-    if (markerResult != null) {
+    if (currentMarkerResult) {
+        const matrix = currentMarkerResult.matrixGL_RH
+    
+        for (let i = 0; i < matrix.length; i++) {
+          currentMatrix.delta[i] = matrix[i] - currentMatrix.interpolated[i]
+          currentMatrix.interpolated[i] =
+            currentMatrix.interpolated[i] +
+            currentMatrix.delta[i] / interpolationFactor
+        }
+        ctx.postMessage({
+            type: "found",
+            matrixGL_RH: JSON.stringify(currentMatrix.interpolated),
+          })
+        } else {
+          ctx.postMessage({
+            //type: "lost",
+            type: "not found",
+          })
+    }
+
+    /*if (markerResult != null) {
         ctx.postMessage(markerResult);
     } else {
         ctx.postMessage({ type: "not found" });
-    }
+    }*/
     next = null;
 };
