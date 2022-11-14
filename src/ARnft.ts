@@ -74,7 +74,7 @@ interface IInitConfig {
     autoUpdate?: boolean;
 }
 
-/** 
+/**
  * INameInitConfig extends IInitConfig and it is used by the initWithConfig method.
  * @param markerUrls an Array of Array of marker urls.
  * @param names an Array of Array of entity names.
