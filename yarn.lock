@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.17.2":
-  version "7.17.8"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.8.tgz#3e56e4aff81befa55ac3ac6a0967349fd1c5bca2"
-  integrity sha512-dQpEpK0O9o6lj6oPu0gRDbbnk+4LeHlNcBpspf6Olzt3GIX4P1lWF1gS+pHLDFlaJvbR6q7jCfQ08zA4QJBnmA==
+"@babel/runtime@^7.17.8":
+  version "7.17.9"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.17.9.tgz#d19fbf802d01a8cb6cf053a64e472d42c434ba72"
+  integrity sha512-lSiBBvodq29uShpWGNbgFdKYNiFDo5/HIYsaCEY9ff4sb10x9jizo2+pRrSyF4jKZCXqgzuqBOQKbUm90gQwJg==
   dependencies:
     regenerator-runtime "^0.13.4"
 
@@ -60,12 +60,11 @@
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-8.3.4.tgz#bd86a43617df0594787d38b735f55c805becf1bc"
   integrity sha512-c/I8ZRb51j+pYGAu5CrFMRxqZ2ke4y2grEBO5AUjgSkSk+qT2Ea+OdWElz/OiMf5MNpn2b17kuVBwZLQJXzihw==
 
-"@webarkit/jsartoolkit-nft@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/@webarkit/jsartoolkit-nft/-/jsartoolkit-nft-1.1.0.tgz#ea993c950ea81797fb1a48b060f9fd126af0d648"
-  integrity sha512-TwecNhQG3Ry1IsW1l1vA4aCpXOJ1SeRw7sKZaJkWV40RGOeOt/iSDw+vw9sgEta3bVGz26o7rdHQZjN88sIHaw==
+"@webarkit/jsartoolkit-nft@https://github.com/webarkit/jsartoolkitNFT.git#2e79da16579c068c425b6d9e3059c2ce35b39646":
+  version "1.1.2"
+  resolved "https://github.com/webarkit/jsartoolkitNFT.git#2e79da16579c068c425b6d9e3059c2ce35b39646"
   dependencies:
-    "@babel/runtime" "^7.17.2"
+    "@babel/runtime" "^7.17.8"
     axios "^0.26.1"
 
 "@webassemblyjs/ast@1.11.1":
