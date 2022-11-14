@@ -43,11 +43,24 @@ import { v4 as uuidv4 } from "uuid";
 import packageJson from "../package.json";
 const { version } = packageJson;
 
+/**
+ * Basic interface for an Entity.
+ * @param name the name of  hte Entity
+ * @param markerUrl the marker url asscociated
+ */
 interface IEntity {
     name: string;
     markerUrl: string;
 }
 
+/**
+ * IInitConfig interface for the base configuration.
+ * @param width the width in pixels of the video camera.
+ * @param height the height in pixels of the video camera.
+ * @param configUrl the url of the config.json file.
+ * @param stats true if you want the stats.
+ * @param autoUpdate false if you want to maintain it yourself
+ */
 interface IInitConfig {
     /** the width in pixels of the video camera. */
     width: number;
@@ -61,6 +74,11 @@ interface IInitConfig {
     autoUpdate?: boolean;
 }
 
+/** 
+ * INameInitConfig extends IInitConfig and it is used by the initWithConfig method.
+ * @param markerUrls an Array of Array of marker urls.
+ * @param names an Array of Array of entity names.
+ */
 interface INameInitConfig extends IInitConfig {
     /** the Array of url of the markers (without the extension) */
     markerUrls: Array<Array<string>>;
@@ -68,10 +86,18 @@ interface INameInitConfig extends IInitConfig {
     names: Array<Array<string>>;
 }
 
+/**
+ * IEntityInitConfig used by the initWithEntities method
+ * @param entities an Array of Entity
+ */
 interface IEntityInitConfig extends IInitConfig {
     /** the Array of Entity. */
     entities: IEntity[];
 }
+
+/**
+ * IViews is used internally by ARnft
+ */
 interface IViews {
     container: HTMLDivElement;
     canvas: HTMLCanvasElement;
