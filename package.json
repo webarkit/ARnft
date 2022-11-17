@@ -59,7 +59,7 @@
   "license": "LGPL-3.0",
   "resolutions": {},
   "dependencies": {
-    "@webarkit/jsartoolkit-nft": "^1.1.6",
+    "@webarkit/jsartoolkit-nft": "https://github.com/webarkit/jsartoolkitNFT.git#451a07428f26655852f2c20ea3212852e92c50ad",
     "terser-webpack-plugin": "^5.3.6",
     "uuid": "^9.0.0"
   }
