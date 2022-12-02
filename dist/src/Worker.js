@@ -68,8 +68,8 @@ const load = async (msg) => {
             console.log(id[m]);
             ctx.postMessage({ type: "endLoading", end: true });
             m++;
-        }, () => {
-            console.log("error in loadNFTMarkers!");
+        }, (err) => {
+            console.error("error: ", err, " in loadNFTMarkers!");
         }).catch((err) => {
             console.error("Error in loading marker on Worker", err);
         });
