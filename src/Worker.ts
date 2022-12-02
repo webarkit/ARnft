@@ -35,7 +35,8 @@
  *
  */
 import jsartoolkitnft from "jsartoolkitnft";
-const { ARControllerNFT } = jsartoolkitnft;
+//const { ARControllerNFT } = jsartoolkitnft;
+import type ARControllerNFT from '@webarkit/jsartoolkit-nft/types/src/ARControllerNFT';
 const ctx: Worker = self as any;
 
 ctx.onmessage = (e) => {
@@ -58,16 +59,16 @@ ctx.onmessage = (e) => {
 
 let next: any = null;
 let lastFrame: number = 0;
-let ar: any = null;
+let ar: ARControllerNFT | null = null;
 let markerResult: any = null;
 
-const load = (msg: any) => {
+const load = async (msg: any) => {
     const basePath = self.origin;
     let cameraParamUrl: string;
     let nftMarkerUrls: Array<string> = [];
     let markerLength: number = msg.marker.length;
     console.debug("Base path:", basePath);
-    const onLoad = (arController: any) => {
+    const onLoad = async (arController: any) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
 
@@ -101,14 +102,17 @@ const load = (msg: any) => {
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrls);
 
-        ar.loadNFTMarkers(nftMarkerUrls, (id: number) => {
-            let marker = ar.getNFTData(ar.id, 0);
+        await ar.loadNFTMarkers(nftMarkerUrls, (id: number[]) => {
+            var m = 0;
+            let marker = ar.getNFTData(id[m], 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
-            ar.trackNFTMarkerId(id);
-            console.log("loadNFTMarker -> ", id);
-            console.log(id);
+            ar.trackNFTMarkerId(id[m]);
+            console.log("loadNFTMarker -> ", id[m]);
+            console.log(id[m]);
             ctx.postMessage({ type: "endLoading", end: true });
-        }).catch((err: any) => {
+            m++;
+        }, () =>{ console.log("error in loadNFTMarkers!");
+        }).catch((err: string) => {
             console.error("Error in loading marker on Worker", err);
         });
 
@@ -135,7 +139,7 @@ const load = (msg: any) => {
     }
     console.debug("Loading camera at:", cameraParamUrl);
 
-    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
+    jsartoolkitnft.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 
 const process = (next: any, frame: number) => {
