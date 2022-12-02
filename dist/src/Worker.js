@@ -1,5 +1,4 @@
 import jsartoolkitnft from "jsartoolkitnft";
-const { ARControllerNFT } = jsartoolkitnft;
 const ctx = self;
 ctx.onmessage = (e) => {
     const msg = e.data;
@@ -22,13 +21,13 @@ let next = null;
 let lastFrame = 0;
 let ar = null;
 let markerResult = null;
-const load = (msg) => {
+const load = async (msg) => {
     const basePath = self.origin;
     let cameraParamUrl;
     let nftMarkerUrls = [];
     let markerLength = msg.marker.length;
     console.debug("Base path:", basePath);
-    const onLoad = (arController) => {
+    const onLoad = async (arController) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
         ar.addEventListener("getNFTMarker", (ev) => {
@@ -60,13 +59,17 @@ const load = (msg) => {
             nftMarkerUrls.push(nftMarkerUrl);
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrls);
-        ar.loadNFTMarkers(nftMarkerUrls, (id) => {
-            let marker = ar.getNFTData(ar.id, 0);
+        await ar.loadNFTMarkers(nftMarkerUrls, (id) => {
+            var m = 0;
+            let marker = ar.getNFTData(id[m], 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
-            ar.trackNFTMarkerId(id);
-            console.log("loadNFTMarker -> ", id);
-            console.log(id);
+            ar.trackNFTMarkerId(id[m]);
+            console.log("loadNFTMarker -> ", id[m]);
+            console.log(id[m]);
             ctx.postMessage({ type: "endLoading", end: true });
+            m++;
+        }, () => {
+            console.log("error in loadNFTMarkers!");
         }).catch((err) => {
             console.error("Error in loading marker on Worker", err);
         });
@@ -94,7 +97,7 @@ const load = (msg) => {
         }
     }
     console.debug("Loading camera at:", cameraParamUrl);
-    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
+    jsartoolkitnft.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 const process = (next, frame) => {
     if (frame !== lastFrame) {
