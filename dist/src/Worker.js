@@ -1,4 +1,5 @@
 import jsartoolkitnft from "jsartoolkitnft";
+const { ARControllerNFT } = jsartoolkitnft;
 const ctx = self;
 ctx.onmessage = (e) => {
     const msg = e.data;
@@ -69,7 +70,7 @@ const load = async (msg) => {
             ctx.postMessage({ type: "endLoading", end: true });
             m++;
         }, (err) => {
-            console.error("error: ", err, " in loadNFTMarkers!");
+            console.error("Error: ", err, " loading marker in loadNFTMarkers!");
         }).catch((err) => {
             console.error("Error in loading marker on Worker", err);
         });
@@ -97,7 +98,7 @@ const load = async (msg) => {
         }
     }
     console.debug("Loading camera at:", cameraParamUrl);
-    jsartoolkitnft.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
+    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 const process = (next, frame) => {
     if (frame !== lastFrame) {
