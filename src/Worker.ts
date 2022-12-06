@@ -35,8 +35,9 @@
  *
  */
 import jsartoolkitnft from "jsartoolkitnft";
-//const { ARControllerNFT } = jsartoolkitnft;
-import type ARControllerNFT from '@webarkit/jsartoolkit-nft/types/src/ARControllerNFT';
+const { ARControllerNFT } = jsartoolkitnft;
+import { AbstractARControllerNFT } from '@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT';
+import { ImageObj } from '@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces';
 const ctx: Worker = self as any;
 
 ctx.onmessage = (e) => {
@@ -57,9 +58,9 @@ ctx.onmessage = (e) => {
     }
 };
 
-let next: any = null;
+let next: ImageObj = null;
 let lastFrame: number = 0;
-let ar: ARControllerNFT | null = null;
+let ar: AbstractARControllerNFT | null = null;
 let markerResult: any = null;
 
 const load = async (msg: any) => {
@@ -68,11 +69,11 @@ const load = async (msg: any) => {
     let nftMarkerUrls: Array<string> = [];
     let markerLength: number = msg.marker.length;
     console.debug("Base path:", basePath);
-    const onLoad = async (arController: any) => {
+    const onLoad = async (arController: AbstractARControllerNFT) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
 
-        ar.addEventListener("getNFTMarker", (ev: any) => {
+        ar.addEventListener("getNFTMarker", (ev: MessageEvent) => {
             markerResult = {
                 type: "found",
                 matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH),
@@ -139,10 +140,10 @@ const load = async (msg: any) => {
     }
     console.debug("Loading camera at:", cameraParamUrl);
 
-    jsartoolkitnft.ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
+    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 
-const process = (next: any, frame: number) => {
+const process = (next: ImageObj, frame: number) => {
     if (frame !== lastFrame) {
         markerResult = null;
         if (ar && ar.process) {
