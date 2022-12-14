@@ -37,7 +37,7 @@
 import jsartoolkitnft from "jsartoolkitnft";
 const { ARControllerNFT } = jsartoolkitnft;
 import { AbstractARControllerNFT } from '@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT';
-import { ImageObj } from '@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces';
+import { IImageObj } from '@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces';
 const ctx: Worker = self as any;
 
 ctx.onmessage = (e) => {
@@ -58,7 +58,7 @@ ctx.onmessage = (e) => {
     }
 };
 
-let next: ImageObj = null;
+let next: IImageObj = null;
 let lastFrame: number = 0;
 let ar: AbstractARControllerNFT | null = null;
 let markerResult: any = null;
@@ -143,7 +143,7 @@ const load = async (msg: any) => {
     ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
 };
 
-const process = (next: ImageObj, frame: number) => {
+const process = (next: IImageObj, frame: number) => {
     if (frame !== lastFrame) {
         markerResult = null;
         if (ar && ar.process) {
