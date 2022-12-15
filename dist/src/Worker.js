@@ -60,7 +60,8 @@ const load = async (msg) => {
             nftMarkerUrls.push(nftMarkerUrl);
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrls);
-        await ar.loadNFTMarkers(nftMarkerUrls, (id) => {
+        await ar
+            .loadNFTMarkers(nftMarkerUrls, (id) => {
             var m = 0;
             let marker = ar.getNFTData(id[m], 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
@@ -71,7 +72,8 @@ const load = async (msg) => {
             m++;
         }, (err) => {
             console.error("Error: ", err, " loading marker in loadNFTMarkers!");
-        }).catch((err) => {
+        })
+            .catch((err) => {
             console.error("Error in loading marker on Worker", err);
         });
         ctx.postMessage({ type: "loaded", proj: JSON.stringify(cameraMatrix) });

@@ -36,11 +36,11 @@
  */
 import jsartoolkitnft from "jsartoolkitnft";
 const { ARControllerNFT } = jsartoolkitnft;
-import { AbstractARControllerNFT } from '@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT';
-import { IImageObj } from '@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces';
+import { AbstractARControllerNFT } from "@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT";
+import { IImageObj } from "@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces";
 const ctx: Worker = self as any;
 
-ctx.onmessage = (e:  MessageEvent<any>) => {
+ctx.onmessage = (e: MessageEvent<any>) => {
     const msg = e.data;
     switch (msg.type) {
         case "load": {
@@ -72,7 +72,7 @@ type GetNftMarkerData = {
 };
 
 type GetNftMarkerEventArgs = {
-    name: 'getNFTMarker';
+    name: "getNFTMarker";
     data: GetNftMarkerData;
     target: any;
 };
@@ -122,19 +122,26 @@ const load = async (msg: any) => {
         }
         console.debug("Loading NFT marker at: ", nftMarkerUrls);
 
-        await ar.loadNFTMarkers(nftMarkerUrls, (id: number[]) => {
-            var m = 0;
-            let marker = ar.getNFTData(id[m], 0);
-            ctx.postMessage({ type: "markerInfos", marker: marker });
-            ar.trackNFTMarkerId(id[m]);
-            console.log("loadNFTMarker -> ", id[m]);
-            console.log(id[m]);
-            ctx.postMessage({ type: "endLoading", end: true });
-            m++;
-        }, (err: number) =>{ console.error("Error: ", err, " loading marker in loadNFTMarkers!");
-        }).catch((err: string) => {
-            console.error("Error in loading marker on Worker", err);
-        });
+        await ar
+            .loadNFTMarkers(
+                nftMarkerUrls,
+                (id: number[]) => {
+                    var m = 0;
+                    let marker = ar.getNFTData(id[m], 0);
+                    ctx.postMessage({ type: "markerInfos", marker: marker });
+                    ar.trackNFTMarkerId(id[m]);
+                    console.log("loadNFTMarker -> ", id[m]);
+                    console.log(id[m]);
+                    ctx.postMessage({ type: "endLoading", end: true });
+                    m++;
+                },
+                (err: number) => {
+                    console.error("Error: ", err, " loading marker in loadNFTMarkers!");
+                }
+            )
+            .catch((err: string) => {
+                console.error("Error in loading marker on Worker", err);
+            });
 
         ctx.postMessage({ type: "loaded", proj: JSON.stringify(cameraMatrix) });
     };
