@@ -17,7 +17,7 @@ export default class NFTWorker {
     isReady(): boolean;
     getUuid(): string;
     getName(): string;
-    getMarkerUrl(): string;
+    getMarkerUrl(): Array<string>;
     getEventTarget(): EventTarget;
     destroy(): void;
 }

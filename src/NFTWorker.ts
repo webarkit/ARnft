@@ -39,7 +39,7 @@ import { getWindowSize } from "./utils/ARnftUtils";
 export default class NFTWorker {
     private worker: Worker;
 
-    private markerURL: any;
+    private markerURL: Array<string>;
 
     private _processing: boolean = false;
 
@@ -207,7 +207,7 @@ export default class NFTWorker {
      * @param msg message from the worker.
      */
     public found(msg: any) {
-        let world: any;
+        let world: Float64Array;
         if (!msg) {
             // commenting out this routine see https://github.com/webarkit/ARnft/pull/184#issuecomment-853400903
             //if (world) {
@@ -237,7 +237,7 @@ export default class NFTWorker {
         return this.name;
     }
 
-    public getMarkerUrl(): string {
+    public getMarkerUrl(): Array<string> {
         return this.markerURL;
     }
 
