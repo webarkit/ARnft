@@ -40,7 +40,7 @@ import { AbstractARControllerNFT } from '@webarkit/jsartoolkit-nft/types/src/abs
 import { IImageObj } from '@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces';
 const ctx: Worker = self as any;
 
-ctx.onmessage = (e) => {
+ctx.onmessage = (e:  MessageEvent<any>) => {
     const msg = e.data;
     switch (msg.type) {
         case "load": {
@@ -58,6 +58,25 @@ ctx.onmessage = (e) => {
     }
 };
 
+type GetNftMarkerData = {
+    index: number;
+    type: number;
+    marker: {
+        id: number;
+        error: number;
+        found: boolean;
+        pose: number[];
+    };
+    matrix: Float64Array;
+    matrixGL_RH: Float64Array;
+};
+
+type GetNftMarkerEventArgs = {
+    name: 'getNFTMarker';
+    data: GetNftMarkerData;
+    target: any;
+};
+
 let next: IImageObj = null;
 let lastFrame: number = 0;
 let ar: AbstractARControllerNFT | null = null;
@@ -73,7 +92,7 @@ const load = async (msg: any) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
 
-        ar.addEventListener("getNFTMarker", (ev: MessageEvent) => {
+        ar.addEventListener("getNFTMarker", (ev: GetNftMarkerEventArgs) => {
             markerResult = {
                 type: "found",
                 matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH),
