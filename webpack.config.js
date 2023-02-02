@@ -1,5 +1,6 @@
 const path = require('path')
 const TerserPlugin = require("terser-webpack-plugin");
+const { Options } = require('typedoc');
 
 module.exports = {
   entry: './src/index.ts',
@@ -26,27 +27,29 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.worker\.(c|m)?ts$/i,
-        use: {
-          loader: 'worker-loader',
-          options: { inline: 'no-fallback' }
-        }
-      },
-    {
-      test: /\.tsx?$/,
-      exclude: /node_modules/,
-      loader: 'ts-loader'
-    }
+        
+          test: /\.worker\.(c|m)?ts$/i,
+          use: {
+            loader: 'workerize-loader',
+            options: { inline: true }
+          }
+        },
+      {
+        test: /\.tsx?$/,
+        use: "ts-loader",
+        exclude: /node_modules/
+      }
+    
     ]
-  },
+},
   resolve: {
-    alias: {
-      jsartoolkitnft: '@webarkit/jsartoolkit-nft'
-    },
-    extensions: ['.tsx', '.ts', '.js'],
+  alias: {
+    jsartoolkitnft: '@webarkit/jsartoolkit-nft'
   },
-  optimization: {
-    minimize: true,
+  extensions: ['.tsx', '.ts', '.js'],
+  },
+optimization: {
+  minimize: true,
     minimizer: [
       new TerserPlugin({
         parallel: true,

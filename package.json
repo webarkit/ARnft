@@ -60,6 +60,7 @@
   "dependencies": {
     "@webarkit/jsartoolkit-nft": "^1.3.0",
     "terser-webpack-plugin": "^5.3.6",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "workerize-loader": "^2.0.2"
   }
 }
