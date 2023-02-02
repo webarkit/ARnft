@@ -81,7 +81,7 @@ export default class NFTWorker {
      * @returns true if succesfull.
      */
     public async initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
-        this.worker = new Worker(new URL('./Worker.ts', import.meta.url));;
+        this.worker = new Worker(new URL("./Worker.ts", import.meta.url));
         const worker = this.worker;
 
         this.target.addEventListener("terminateWorker-" + this.name, function () {
