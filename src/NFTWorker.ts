@@ -33,7 +33,6 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
-import Worker from "worker-loader?inline=no-fallback!./Worker";
 import { getWindowSize } from "./utils/ARnftUtils";
 
 export default class NFTWorker {
@@ -82,7 +81,7 @@ export default class NFTWorker {
      * @returns true if succesfull.
      */
     public async initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
-        this.worker = new Worker();
+        this.worker = new Worker(new URL('./Worker.ts', import.meta.url));;
         const worker = this.worker;
 
         this.target.addEventListener("terminateWorker-" + this.name, function () {

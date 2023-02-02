@@ -1,4 +1,3 @@
-import Worker from "worker-loader?inline=no-fallback!./Worker";
 import { getWindowSize } from "./utils/ARnftUtils";
 export default class NFTWorker {
     worker;
@@ -22,7 +21,8 @@ export default class NFTWorker {
         this.addPath = addPath;
     }
     async initialize(cameraURL, renderUpdate, trackUpdate) {
-        this.worker = new Worker();
+        this.worker = new Worker(new URL('./Worker.ts', import.meta.url));
+        ;
         const worker = this.worker;
         this.target.addEventListener("terminateWorker-" + this.name, function () {
             worker.postMessage({ type: "stop" });
