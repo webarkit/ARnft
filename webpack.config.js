@@ -26,8 +26,7 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        
+      {    
           test: /\.worker\.(c|m)?ts$/i,
           use: {
             loader: 'workerize-loader',
@@ -39,7 +38,6 @@ module.exports = {
         use: "ts-loader",
         exclude: /node_modules/
       }
-    
     ]
 },
   resolve: {
