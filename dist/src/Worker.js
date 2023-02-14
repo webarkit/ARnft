@@ -22,7 +22,7 @@ let next = null;
 let lastFrame = 0;
 let ar = null;
 let markerResult = null;
-const load = async (msg) => {
+export async function load(msg) {
     const basePath = self.origin;
     let cameraParamUrl;
     let nftMarkerUrls = [];
@@ -101,8 +101,9 @@ const load = async (msg) => {
     }
     console.debug("Loading camera at:", cameraParamUrl);
     ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
-};
-const process = (next, frame) => {
+}
+;
+export async function process(next, frame) {
     if (frame !== lastFrame) {
         markerResult = null;
         if (ar && ar.process) {
@@ -112,10 +113,12 @@ const process = (next, frame) => {
     }
     if (markerResult != null) {
         ctx.postMessage(markerResult);
+        console.log('marker found!');
     }
     else {
         ctx.postMessage({ type: "not found" });
     }
     next = null;
-};
+}
+;
 //# sourceMappingURL=Worker.js.map

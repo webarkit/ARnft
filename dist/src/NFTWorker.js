@@ -1,5 +1,6 @@
-import Worker from "worker-loader?inline=no-fallback!./Worker";
+import * as WorkerLoad from './Worker';
 import { getWindowSize } from "./utils/ARnftUtils";
+const { load, process } = WorkerLoad();
 export default class NFTWorker {
     worker;
     markerURL;
@@ -22,7 +23,7 @@ export default class NFTWorker {
         this.addPath = addPath;
     }
     async initialize(cameraURL, renderUpdate, trackUpdate) {
-        this.worker = new Worker();
+        this.worker;
         const worker = this.worker;
         this.target.addEventListener("terminateWorker-" + this.name, function () {
             worker.postMessage({ type: "stop" });
@@ -30,18 +31,18 @@ export default class NFTWorker {
         });
         return await this.load(cameraURL, renderUpdate, trackUpdate);
     }
-    process(imagedata, frame) {
+    async process(imagedata, frame) {
         if (this._processing) {
             return;
         }
         this._processing = true;
-        this.worker.postMessage({ type: "process", imagedata, frame }, [imagedata.data.buffer]);
+        process(imagedata.data, frame).then();
     }
     load(cameraURL, renderUpdate, trackUpdate) {
         let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
         const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
         this.target.dispatchEvent(setWindowSizeEvent);
-        this.worker.postMessage({
+        load({
             type: "load",
             pw: pw,
             ph: ph,

@@ -33,9 +33,10 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
-import Worker from "worker-loader?inline=no-fallback!./Worker";
+import * as WorkerLoad from './Worker'
 import { getWindowSize } from "./utils/ARnftUtils";
 
+const { load, process } = (WorkerLoad as any)() as typeof WorkerLoad
 export default class NFTWorker {
     private worker: Worker;
 
@@ -82,7 +83,8 @@ export default class NFTWorker {
      * @returns true if succesfull.
      */
     public async initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean> {
-        this.worker = new Worker();
+        //this.worker = new Worker(new URL("./Worker.ts", import.meta.url));
+        this.worker;
         const worker = this.worker;
 
         this.target.addEventListener("terminateWorker-" + this.name, function () {
@@ -97,13 +99,13 @@ export default class NFTWorker {
      * @param imageData the image data from the video stream.
      * @returns void
      */
-    public process(imagedata: ImageData, frame: number) {
+    public async process(imagedata: ImageData, frame: number) {
         if (this._processing) {
             return;
         }
         this._processing = true;
-
-        this.worker.postMessage({ type: "process", imagedata, frame }, [imagedata.data.buffer]);
+        //this.worker.postMessage({ type: "process", imagedata, frame }, [imagedata.data.buffer]);
+        process(imagedata.data, frame).then()
     }
 
     /**
@@ -120,14 +122,23 @@ export default class NFTWorker {
         const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
         this.target.dispatchEvent(setWindowSizeEvent);
 
-        this.worker.postMessage({
+        load({
             type: "load",
             pw: pw,
             ph: ph,
             camera_para: cameraURL,
             marker: this.markerURL,
             addPath: this.addPath,
-        });
+        })
+
+        /*this.worker.postMessage({
+            type: "load",
+            pw: pw,
+            ph: ph,
+            camera_para: cameraURL,
+            marker: this.markerURL,
+            addPath: this.addPath,
+        });*/
 
         this.worker.onmessage = (ev: any) => {
             var msg = ev.data;
@@ -245,7 +256,7 @@ export default class NFTWorker {
         return this.target;
     }
 
-    public destroy(): void {}
+    public destroy(): void { }
 }
 
 //export default null as any;
