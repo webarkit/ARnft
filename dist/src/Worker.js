@@ -67,7 +67,6 @@ const load = async (msg) => {
             ctx.postMessage({ type: "markerInfos", marker: marker });
             ar.trackNFTMarkerId(id[m]);
             console.log("loadNFTMarker -> ", id[m]);
-            console.log(id[m]);
             ctx.postMessage({ type: "endLoading", end: true });
             m++;
         }, (err) => {
