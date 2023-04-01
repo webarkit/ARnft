@@ -60,6 +60,7 @@
   "resolutions": {},
   "dependencies": {
     "@webarkit/jsartoolkit-nft": "^1.4.0",
+    "@webarkit/oneeurofilter-ts": "^0.1.0",
     "terser-webpack-plugin": "^5.3.6",
     "uuid": "^9.0.0"
   }
