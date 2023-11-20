@@ -50,7 +50,7 @@ const load = async (msg) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
         ar.addEventListener("getNFTMarker", (ev) => {
-            var mat;
+            let mat;
             if (oef == true) {
                 mat = oefFilter(ev.data.matrixGL_RH);
             }
