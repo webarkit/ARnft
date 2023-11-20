@@ -91,16 +91,16 @@ let filterMinCF = 0.0001;
 let filterBeta = 0.01;
 const filter = new OneEuroFilter(filterMinCF, filterBeta);
 
-const  oefFilter = (matrixGL_RH: any): number[] => {
+const oefFilter = (matrixGL_RH: any): number[] => {
     tickCount += 1;
     var mat;
     if (tickCount > WARM_UP_TOLERANCE) {
-      mat = filter.filter(Date.now(), matrixGL_RH);
+        mat = filter.filter(Date.now(), matrixGL_RH);
     } else {
-      mat = matrixGL_RH;
+        mat = matrixGL_RH;
     }
     return mat;
-  }
+};
 
 const load = async (msg: any) => {
     const basePath = self.origin;
@@ -115,13 +115,13 @@ const load = async (msg: any) => {
         ar.addEventListener("getNFTMarker", (ev: GetNftMarkerEventArgs) => {
             let mat: number[] | Float64Array;
             if (oef == true) {
-              mat = oefFilter(ev.data.matrixGL_RH);
+                mat = oefFilter(ev.data.matrixGL_RH);
             } else {
-              mat = ev.data.matrixGL_RH;
+                mat = ev.data.matrixGL_RH;
             }
             markerResult = {
-              type: "found",
-              matrixGL_RH: JSON.stringify(mat),
+                type: "found",
+                matrixGL_RH: JSON.stringify(mat),
             };
         });
         // after the ARControllerNFT is set up, we load the NFT Marker
