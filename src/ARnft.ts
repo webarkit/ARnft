@@ -278,7 +278,12 @@ export default class ARnft {
                     this.controllers.push(
                         new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0], this.addPath)
                     );
-                    this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate, this.appData.oef);
+                    this.controllers[index].initialize(
+                        this.appData.cameraPara,
+                        renderUpdate,
+                        trackUpdate,
+                        this.appData.oef
+                    );
                 });
 
                 this.initialized = true;
@@ -366,7 +371,12 @@ export default class ARnft {
                     this.controllers.push(
                         new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index], this.addPath)
                     );
-                    this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate, this.appData.oef);
+                    this.controllers[index].initialize(
+                        this.appData.cameraPara,
+                        renderUpdate,
+                        trackUpdate,
+                        this.appData.oef
+                    );
                 });
 
                 this.initialized = true;

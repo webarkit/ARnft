@@ -81,7 +81,12 @@ export default class NFTWorker {
      * @param trackUpdate
      * @returns true if succesfull.
      */
-    public async initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void, oef: boolean): Promise<boolean> {
+    public async initialize(
+        cameraURL: string,
+        renderUpdate: () => void,
+        trackUpdate: () => void,
+        oef: boolean
+    ): Promise<boolean> {
         this.worker = new Worker();
         const worker = this.worker;
 
@@ -114,7 +119,12 @@ export default class NFTWorker {
      * @param trackUpdate trackUpdate for the stats.
      * @returns true if succesfull.
      */
-    protected load(cameraURL: string,  renderUpdate: () => void, trackUpdate: () => void, oef: boolean,): Promise<boolean> {
+    protected load(
+        cameraURL: string,
+        renderUpdate: () => void,
+        trackUpdate: () => void,
+        oef: boolean
+    ): Promise<boolean> {
         let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
 
         const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
@@ -127,7 +137,7 @@ export default class NFTWorker {
             camera_para: cameraURL,
             marker: this.markerURL,
             addPath: this.addPath,
-            oef: oef
+            oef: oef,
         });
 
         this.worker.onmessage = (ev: any) => {

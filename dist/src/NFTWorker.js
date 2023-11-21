@@ -48,7 +48,7 @@ export default class NFTWorker {
             camera_para: cameraURL,
             marker: this.markerURL,
             addPath: this.addPath,
-            oef: oef
+            oef: oef,
         });
         this.worker.onmessage = (ev) => {
             var msg = ev.data;
