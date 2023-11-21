@@ -34,8 +34,7 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
-import jsartoolkitnft from "jsartoolkitnft";
-const { ARControllerNFT } = jsartoolkitnft;
+import { ARControllerNFT } from "jsartoolkitnft";
 import { OneEuroFilter } from "@webarkit/oneeurofilter-ts";
 import { AbstractARControllerNFT } from "@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT";
 import { IImageObj } from "@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces";
