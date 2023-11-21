@@ -24,7 +24,7 @@ let ar = null;
 let markerResult = null;
 const WARM_UP_TOLERANCE = 5;
 let tickCount = 0;
-var oef = true;
+let oef;
 let filterMinCF = 0.0001;
 let filterBeta = 0.01;
 const filter = new OneEuroFilter(filterMinCF, filterBeta);
@@ -44,6 +44,7 @@ const load = async (msg) => {
     let cameraParamUrl;
     let nftMarkerUrls = [];
     let markerLength = msg.marker.length;
+    oef = msg.oef;
     console.debug("Base path:", basePath);
     const onLoad = async (arController) => {
         ar = arController;
