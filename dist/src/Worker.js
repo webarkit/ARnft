@@ -1,5 +1,4 @@
-import jsartoolkitnft from "jsartoolkitnft";
-const { ARControllerNFT } = jsartoolkitnft;
+import { ARControllerNFT } from "jsartoolkitnft";
 import { OneEuroFilter } from "@webarkit/oneeurofilter-ts";
 const ctx = self;
 ctx.onmessage = (e) => {
