@@ -10,9 +10,9 @@ export default class NFTWorker {
     private addPath;
     protected ready: boolean;
     constructor(markerURL: Array<string>, w: number, h: number, uuid: string, name: string, addPath: string);
-    initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean>;
+    initialize(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void, oef: boolean): Promise<boolean>;
     process(imagedata: ImageData, frame: number): void;
-    protected load(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void): Promise<boolean>;
+    protected load(cameraURL: string, renderUpdate: () => void, trackUpdate: () => void, oef: boolean): Promise<boolean>;
     found(msg: any): void;
     isReady(): boolean;
     getUuid(): string;

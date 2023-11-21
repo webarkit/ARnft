@@ -7,6 +7,7 @@ export interface ConfigData {
     loading: LoadingData;
     videoSettings: VideoSettingData;
     stats: StatsData;
+    oef: boolean;
 }
 export interface ContainerData {
     create: boolean;
