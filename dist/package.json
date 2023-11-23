@@ -59,7 +59,7 @@
     "license": "LGPL-3.0",
     "resolutions": {},
     "dependencies": {
-        "@webarkit/jsartoolkit-nft": "^1.6.0",
+        "@webarkit/jsartoolkit-nft": "^1.6.1",
         "@webarkit/oneeurofilter-ts": "^0.1.0",
         "terser-webpack-plugin": "^5.3.9",
         "uuid": "^9.0.1"
