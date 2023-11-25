@@ -112,7 +112,9 @@ or with yarn:
 yarn add @webarkit/ar-nft
 ```
 
-- Configuration data in an External .json file.
+- Configuration data in an external .json file.
+
+- Filtering of the matrix with the **O**ne**E**uro**F**ilter.
 
 ## Format the code with Prettier
 We are using [Prettier](https://prettier.io/) as code formatter. You only need to run `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted run instead: `yarn format-check`
