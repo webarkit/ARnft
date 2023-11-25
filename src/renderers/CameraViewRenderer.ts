@@ -77,7 +77,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement("canvas");
-        this.context_process = this.canvas_process.getContext("2d", { alpha: false });
+        this.context_process = this.canvas_process.getContext("2d", { alpha: false, willReadFrequently: true });
         this._video = video;
         this.target = window || global;
         this._frame = 0;

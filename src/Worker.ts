@@ -34,8 +34,8 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
-import jsartoolkitnft from "jsartoolkitnft";
-const { ARControllerNFT } = jsartoolkitnft;
+import { ARControllerNFT } from "jsartoolkitnft";
+import { OneEuroFilter } from "@webarkit/oneeurofilter-ts";
 import { AbstractARControllerNFT } from "@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT";
 import { IImageObj } from "@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces";
 const ctx: Worker = self as any;
@@ -82,20 +82,46 @@ let lastFrame: number = 0;
 let ar: AbstractARControllerNFT | null = null;
 let markerResult: any = null;
 
+// initialize the OneEuroFilter
+const WARM_UP_TOLERANCE = 5;
+let tickCount = 0;
+let oef: boolean;
+let filterMinCF = 0.0001;
+let filterBeta = 0.01;
+const filter = new OneEuroFilter(filterMinCF, filterBeta);
+
+const oefFilter = (matrixGL_RH: any): number[] => {
+    tickCount += 1;
+    var mat;
+    if (tickCount > WARM_UP_TOLERANCE) {
+        mat = filter.filter(Date.now(), matrixGL_RH);
+    } else {
+        mat = matrixGL_RH;
+    }
+    return mat;
+};
+
 const load = async (msg: any) => {
     const basePath = self.origin;
     let cameraParamUrl: string;
     let nftMarkerUrls: Array<string> = [];
     let markerLength: number = msg.marker.length;
+    oef = msg.oef;
     console.debug("Base path:", basePath);
     const onLoad = async (arController: AbstractARControllerNFT) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
 
         ar.addEventListener("getNFTMarker", (ev: GetNftMarkerEventArgs) => {
+            let mat: number[] | Float64Array;
+            if (oef == true) {
+                mat = oefFilter(ev.data.matrixGL_RH);
+            } else {
+                mat = ev.data.matrixGL_RH;
+            }
             markerResult = {
                 type: "found",
-                matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH),
+                matrixGL_RH: JSON.stringify(mat),
             };
         });
         // after the ARControllerNFT is set up, we load the NFT Marker

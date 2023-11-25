@@ -1,5 +1,5 @@
-import jsartoolkitnft from "jsartoolkitnft";
-const { ARControllerNFT } = jsartoolkitnft;
+import { ARControllerNFT } from "jsartoolkitnft";
+import { OneEuroFilter } from "@webarkit/oneeurofilter-ts";
 const ctx = self;
 ctx.onmessage = (e) => {
     const msg = e.data;
@@ -22,19 +22,44 @@ let next = null;
 let lastFrame = 0;
 let ar = null;
 let markerResult = null;
+const WARM_UP_TOLERANCE = 5;
+let tickCount = 0;
+let oef;
+let filterMinCF = 0.0001;
+let filterBeta = 0.01;
+const filter = new OneEuroFilter(filterMinCF, filterBeta);
+const oefFilter = (matrixGL_RH) => {
+    tickCount += 1;
+    var mat;
+    if (tickCount > WARM_UP_TOLERANCE) {
+        mat = filter.filter(Date.now(), matrixGL_RH);
+    }
+    else {
+        mat = matrixGL_RH;
+    }
+    return mat;
+};
 const load = async (msg) => {
     const basePath = self.origin;
     let cameraParamUrl;
     let nftMarkerUrls = [];
     let markerLength = msg.marker.length;
+    oef = msg.oef;
     console.debug("Base path:", basePath);
     const onLoad = async (arController) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
         ar.addEventListener("getNFTMarker", (ev) => {
+            let mat;
+            if (oef == true) {
+                mat = oefFilter(ev.data.matrixGL_RH);
+            }
+            else {
+                mat = ev.data.matrixGL_RH;
+            }
             markerResult = {
                 type: "found",
-                matrixGL_RH: JSON.stringify(ev.data.matrixGL_RH),
+                matrixGL_RH: JSON.stringify(mat),
             };
         });
         const regexM = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;

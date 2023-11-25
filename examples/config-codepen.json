@@ -26,5 +26,6 @@
   },
   "stats": {
     "createHtml": true
-  }
+  },
+  "oef": true
 }

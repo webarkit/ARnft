@@ -21,14 +21,14 @@ export default class NFTWorker {
         this.ready = false;
         this.addPath = addPath;
     }
-    async initialize(cameraURL, renderUpdate, trackUpdate) {
+    async initialize(cameraURL, renderUpdate, trackUpdate, oef) {
         this.worker = new Worker();
         const worker = this.worker;
         this.target.addEventListener("terminateWorker-" + this.name, function () {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
-        return await this.load(cameraURL, renderUpdate, trackUpdate);
+        return await this.load(cameraURL, renderUpdate, trackUpdate, oef);
     }
     process(imagedata, frame) {
         if (this._processing) {
@@ -37,7 +37,7 @@ export default class NFTWorker {
         this._processing = true;
         this.worker.postMessage({ type: "process", imagedata, frame }, [imagedata.data.buffer]);
     }
-    load(cameraURL, renderUpdate, trackUpdate) {
+    load(cameraURL, renderUpdate, trackUpdate, oef) {
         let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
         const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
         this.target.dispatchEvent(setWindowSizeEvent);
@@ -48,6 +48,7 @@ export default class NFTWorker {
             camera_para: cameraURL,
             marker: this.markerURL,
             addPath: this.addPath,
+            oef: oef,
         });
         this.worker.onmessage = (ev) => {
             var msg = ev.data;
