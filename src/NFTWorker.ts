@@ -79,6 +79,7 @@ export default class NFTWorker {
      * @param imageData
      * @param renderUpdate
      * @param trackUpdate
+     * @param oef
      * @returns true if succesfull.
      */
     public async initialize(
@@ -116,7 +117,8 @@ export default class NFTWorker {
      * @param cameraURL camera_para.dat url
      * @param imageData image data from the video stream.
      * @param renderUpdate renderUpdate function for the stats.
-     * @param trackUpdate trackUpdate for the stats.
+     * @param trackUpdate trackUpdate function for the stats.
+     * @param oef oef boolean for filtering the matrix.
      * @returns true if succesfull.
      */
     protected load(
