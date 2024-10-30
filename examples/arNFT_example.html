@@ -20,20 +20,22 @@
           "imports": {
             "three": "https://cdn.jsdelivr.net/npm/three@v0.169.0/build/three.module.js",
             "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.169.0/examples/jsm/",
-            "arnft-threejs": "./js/ARnftThreejs.module.js"
+            "arnft-threejs": "./js/ARnftThreejs.module.js",
+            "arnft": "./../dist/ARnft.module.js"
           }
         }
     </script>
-    <script src="../dist/ARnft.js"></script>
 
     <script type="module">
         import * as THREE from 'three'
+        import arnft  from 'arnft'
+        const { ARnft } = arnft
         import ARnftThreejs  from 'arnft-threejs'
         const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
 
         let width = 640;
         let height = 480;
-        ARnft.ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
+        ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
