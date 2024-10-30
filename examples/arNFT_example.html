@@ -15,11 +15,22 @@
         🖼 Marker Image
     </a>
 
-    <script src="js/third_party/three.js/three.min.js"></script>
-    <script src="js/ARnftThreejs.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@v0.169.0/build/three.module.js",
+            "three/addons/": "https://cdn.jsdelivr.net/npm/three@v0.169.0/examples/jsm/",
+            "arnft-threejs": "./js/ARnftThreejs.module.js"
+          }
+        }
+    </script>
     <script src="../dist/ARnft.js"></script>
 
-    <script>
+    <script type="module">
+        import * as THREE from 'three'
+        import ARnftThreejs  from 'arnft-threejs'
+        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+
         let width = 640;
         let height = 480;
         ARnft.ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
@@ -56,11 +67,11 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
+                    let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid,
                         true);
                     sceneThreejs.initRenderer();
 
-                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                    let nftAddTJS = new NFTaddTJS(nft.uuid);
                     nftAddTJS.add(cube, 'pinball', false);
 
                     const tick = () => {
