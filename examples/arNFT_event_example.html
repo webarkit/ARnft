@@ -16,18 +16,30 @@
     </a>
     <div class="ui" id="dispose" title="click to dispose ARnft and the video stream" onclick="window.closeVideo()">Dispose ARnft</div>
 
-    <script src="js/third_party/three.js/three.min.js"></script>
-    <script src="js/ARnftThreejs.js"></script>
-    <script src="../dist/ARnft.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@v0.169.0/build/three.module.js",
+            "arnft-threejs": "./js/ARnftThreejs.module.js",
+            "arnft": "./../dist/ARnft.module.js"
+          }
+        }
+    </script>
 
-    <script>
+    <script type="module">
+        import * as THREE from 'three'
+        import arnft  from 'arnft'
+        const { ARnft } = arnft
+        import ARnftThreejs  from 'arnft-threejs'
+        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+
         window.addEventListener('initARnft', function (e) {
             console.log("ARnft is starting!");
         })
         let nftOut;
         let width = 640;
         let height = 480;
-        ARnft.ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config-event.json', true)
+        ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config-event.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -61,10 +73,10 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid, true);
+                    let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid, true);
                     sceneThreejs.initRenderer();
 
-                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                    let nftAddTJS = new NFTaddTJS(nft.uuid);
                     nftAddTJS.add(cube, 'pinball', true);
 
                     const tick = () => {
