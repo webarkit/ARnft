@@ -15,14 +15,26 @@
         🖼 Marker Image
     </a>
 
-    <script src="js/third_party/three.js/three.min.js"></script>
-    <script src="js/ARnftThreejs.js"></script>
-    <script src="../dist/ARnft.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@v0.169.0/build/three.module.js",
+            "arnft-threejs": "./js/ARnftThreejs.module.js",
+            "arnft": "./../dist/ARnft.module.js"
+          }
+        }
+    </script>
 
-    <script>
+    <script type="module">
+        import * as THREE from 'three'
+        import arnft  from 'arnft'
+        const { ARnft } = arnft
+        import ARnftThreejs  from 'arnft-threejs'
+        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+
         let width = 640;
         let height = 480;
-        ARnft.ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
+        ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
             .then((nft) => {
                 document.addEventListener('containerEvent', function (ev) {
 
@@ -48,7 +60,7 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
+                    let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid,
                         true);
                     sceneThreejs.initRenderer();
 
@@ -60,7 +72,7 @@
                     directionalLight.position.set(0.5, 0, 0.866);
                     scene.add(directionalLight)
 
-                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                    let nftAddTJS = new NFTaddTJS(nft.uuid);
                     nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb', 'pinball', 80, false);
                     const tick = () => {
                         sceneThreejs.draw();
