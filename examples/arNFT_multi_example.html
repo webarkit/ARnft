@@ -15,11 +15,23 @@
         🖼 Marker Image
     </a>
 
-    <script src="js/third_party/three.js/three.min.js"></script>
-    <script src="js/ARnftThreejs.js"></script>
-    <script src="../dist/ARnft.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "./js/third_party/three.js/three.module.min.js",
+            "arnft-threejs": "./js/ARnftThreejs.module.js",
+            "arnft": "./../dist/ARnft.module.js"
+          }
+        }
+    </script>
 
-    <script>
+    <script type="module">
+        import * as THREE from 'three'
+        import arnft  from 'arnft'
+        const { ARnft } = arnft
+        import ARnftThreejs  from 'arnft-threejs'
+        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+
         const entities = [
             { name: 'pinball', markerUrl: "examples/DataNFT/pinball" },
             { name: 'kuva', markerUrl: "examples/DataNFT/kuva" },
@@ -27,7 +39,7 @@
         ]
         let width = 640;
         let height = 480;
-        ARnft.ARnft.initWithEntities(width, height, entities,  'config.json', true)
+        ARnft.initWithEntities(width, height, entities,  'config.json', true)
             .then((nft) => {
                 let mat = new THREE.MeshLambertMaterial({
                     color: 0xff0000
@@ -61,7 +73,7 @@
                 sphere.position.z = 90;
                 sphere.scale.set(180, 180, 180);
                 
-                let testEntities = ARnft.ARnft.getEntities();
+                let testEntities = ARnft.getEntities();
                 console.log("entities from getEntities static method: ", testEntities);
 
                 document.addEventListener('containerEvent', function (ev) {
@@ -88,7 +100,7 @@
                         }
                     }
 
-                    let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid, true);
+                    let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid, true);
                     sceneThreejs.initRenderer();
 
                     window.addEventListener('getMatrixGL_RH-' + nft.uuid + '-pinball', function() {
@@ -101,7 +113,7 @@
                         console.log('this is chalk_multi!!');
                     })
 
-                    let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                    let nftAddTJS = new NFTaddTJS(nft.uuid);
                     nftAddTJS.add(cube, 'pinball', false);
                     nftAddTJS.add(cone, 'kuva', false);
                     nftAddTJS.add(sphere, 'chalk_multi', false);
