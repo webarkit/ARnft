@@ -1,89 +1,88 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ARnft example with a gltf model</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1" />
+        <link rel="stylesheet" href="css/nft-style.css" />
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>ARnft example with a gltf model</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-    <link rel="stylesheet" href="css/nft-style.css">
-</head>
+    <body>
+        <a
+            href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+            class="ui marker"
+            target="_blank"
+        >
+            🖼 Marker Image
+        </a>
 
-<body>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/third_party/three.js/three.module.min.js",
+                    "arnft-threejs": "./js/ARnftThreejs.module.js",
+                    "arnft": "./../dist/ARnft.module.js"
+                }
+            }
+        </script>
 
-    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-        class="ui marker" target="_blank">
-        🖼 Marker Image
-    </a>
+        <script type="module">
+            import * as THREE from "three";
+            import arnft from "arnft";
+            const { ARnft } = arnft;
+            import ARnftThreejs from "arnft-threejs";
+            const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
 
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "./js/third_party/three.js/three.module.min.js",
-            "arnft-threejs": "./js/ARnftThreejs.module.js",
-            "arnft": "./../dist/ARnft.module.js"
-          }
-        }
-    </script>
+            let width = 640;
+            let height = 480;
+            ARnft.init(width, height, [["examples/DataNFT/pinball"]], [["pinball"]], "config.json", true)
+                .then((nft) => {
+                    document.addEventListener("containerEvent", function (ev) {
+                        let canvas = document.getElementById("canvas");
+                        let fov = (0.8 * 180) / Math.PI;
+                        let ratio = window.clientWidth / window.clientHeight;
+                        let config = {
+                            renderer: {
+                                alpha: true,
+                                antialias: true,
+                                context: null,
+                                precision: "mediump",
+                                premultipliedAlpha: true,
+                                stencil: true,
+                                depth: true,
+                                logarithmicDepthBuffer: true,
+                            },
+                            camera: {
+                                fov: fov,
+                                ratio: ratio,
+                                near: 0.01,
+                                far: 1000,
+                            },
+                        };
 
-    <script type="module">
-        import * as THREE from 'three'
-        import arnft  from 'arnft'
-        const { ARnft } = arnft
-        import ARnftThreejs  from 'arnft-threejs'
-        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+                        let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid, true);
+                        sceneThreejs.initRenderer();
 
-        let width = 640;
-        let height = 480;
-        ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
-            .then((nft) => {
-                document.addEventListener('containerEvent', function (ev) {
+                        const renderer = sceneThreejs.getRenderer();
+                        const scene = sceneThreejs.getScene();
+                        renderer.outputEncoding = THREE.sRGBEncoding;
+                        renderer.physicallyCorrectLights = true;
+                        let directionalLight = new THREE.DirectionalLight("#fff", 0.4);
+                        directionalLight.position.set(0.5, 0, 0.866);
+                        scene.add(directionalLight);
 
-                    let canvas = document.getElementById('canvas');
-                    let fov = 0.8 * 180 / Math.PI;
-                    let ratio = window.clientWidth / window.clientHeight;
-                    let config = {
-                        "renderer": {
-                            "alpha": true,
-                            "antialias": true,
-                            "context": null,
-                            "precision": "mediump",
-                            "premultipliedAlpha": true,
-                            "stencil": true,
-                            "depth": true,
-                            "logarithmicDepthBuffer": true
-                        },
-                        "camera": {
-                            "fov": fov,
-                            "ratio": ratio,
-                            "near": 0.01,
-                            "far": 1000
-                        }
-                    }
-
-                    let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid,
-                        true);
-                    sceneThreejs.initRenderer();
-
-                    const renderer = sceneThreejs.getRenderer();
-                    const scene = sceneThreejs.getScene();
-                    renderer.outputEncoding = THREE.sRGBEncoding;
-                    renderer.physicallyCorrectLights = true;
-                    let directionalLight = new THREE.DirectionalLight('#fff', 0.4);
-                    directionalLight.position.set(0.5, 0, 0.866);
-                    scene.add(directionalLight)
-
-                    let nftAddTJS = new NFTaddTJS(nft.uuid);
-                    nftAddTJS.addModel('./Data/models/Duck/glTF/Duck.glb', 'pinball', 80, false);
-                    const tick = () => {
-                        sceneThreejs.draw();
-                        window.requestAnimationFrame(tick)
-                    }
-                    tick()
+                        let nftAddTJS = new NFTaddTJS(nft.uuid);
+                        nftAddTJS.addModel("./Data/models/Duck/glTF/Duck.glb", "pinball", 80, false);
+                        const tick = () => {
+                            sceneThreejs.draw();
+                            window.requestAnimationFrame(tick);
+                        };
+                        tick();
+                    });
                 })
-            }).catch((error) => {
-                console.log(error);
-            });
-    </script>
-</body>
-
+                .catch((error) => {
+                    console.log(error);
+                });
+        </script>
+    </body>
 </html>

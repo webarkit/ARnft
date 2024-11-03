@@ -1,115 +1,107 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ARnft example showing a simple red cube</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1" />
+        <link rel="stylesheet" href="css/nft-style.css" />
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>ARnft example showing a simple red cube</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-    <link rel="stylesheet" href="css/nft-style.css">
+    <body>
+        <div id="app">
+            <video loop autoplay muted playsinline id="video"></video>
 
+            <canvas id="canvas"></canvas>
+        </div>
+        <a
+            href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+            class="ui marker"
+            target="_blank"
+        >
+            🖼 Marker Image
+        </a>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/third_party/three.js/three.module.min.js",
+                    "arnft-threejs": "./js/ARnftThreejs.module.js",
+                    "arnft": "./../dist/ARnft.module.js",
+                    "camera-renderer": "./js/cameraViewRenderer.js"
+                }
+            }
+        </script>
 
-</head>
+        <script type="module">
+            import * as THREE from "three";
+            import arnft from "arnft";
+            const { ARnft } = arnft;
+            import ARnftThreejs from "arnft-threejs";
+            const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+            import { cameraViewRenderer } from "camera-renderer";
 
-<body>
-    <div id="app">
-        <video loop autoplay muted playsinline id="video">
-        </video>
+            let width = 640;
+            let height = 480;
+            var video = document.getElementById("video");
 
-        <canvas id="canvas"></canvas>
-    </div>
-    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-        class="ui marker" target="_blank">
-        🖼 Marker Image
-    </a>
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "./js/third_party/three.js/three.module.min.js",
-            "arnft-threejs": "./js/ARnftThreejs.module.js",
-            "arnft": "./../dist/ARnft.module.js",
-            "camera-renderer": "./js/cameraViewRenderer.js"
-          }
-        }
-    </script>
+            async function init(video) {
+                console.log("start here");
 
-    <script type="module">
-        import * as THREE from 'three'
-        import arnft  from 'arnft'
-        const { ARnft } = arnft
-        import ARnftThreejs  from 'arnft-threejs'
-        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
-        import { cameraViewRenderer } from "camera-renderer";
+                const arnft = new ARnft(width, height, "config.json");
+                const camV = new cameraViewRenderer(video);
+                await arnft
+                    .initializeRaw([["examples/DataNFT/pinball"]], [["pinball"]], camV, true)
+                    .then((nft) => {
+                        console.log("loaded ARnft");
+                        let mat = new THREE.MeshLambertMaterial({
+                            color: 0xff0000,
+                        });
+                        let boxGeom = new THREE.BoxGeometry(1, 1, 1);
+                        let cube = new THREE.Mesh(boxGeom, mat);
+                        cube.position.z = 90;
+                        cube.scale.set(180, 180, 180);
 
-        let width = 640;
-        let height = 480;
-        var video = document.getElementById('video');
+                        document.addEventListener("containerEvent", function (ev) {
+                            let canvas = document.getElementById("canvas");
+                            let fov = (0.8 * 180) / Math.PI;
+                            let ratio = width / height;
+                            let config = {
+                                renderer: {
+                                    alpha: true,
+                                    antialias: true,
+                                    context: null,
+                                    precision: "mediump",
+                                    premultipliedAlpha: true,
+                                    stencil: true,
+                                    depth: true,
+                                    logarithmicDepthBuffer: true,
+                                },
+                                camera: {
+                                    fov: fov,
+                                    ratio: ratio,
+                                    near: 0.01,
+                                    far: 1000,
+                                },
+                            };
 
-        async function init(video) {
+                            let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid, true);
+                            sceneThreejs.initRenderer();
 
-            console.log("start here")
+                            let nftAddTJS = new NFTaddTJS(nft.uuid);
+                            nftAddTJS.add(cube, "pinball", false);
 
-            const arnft = new ARnft(width, height, 'config.json');
-            const camV = new cameraViewRenderer(video)
-            await arnft.initializeRaw([["examples/DataNFT/pinball"]], [['pinball']], camV, true)
-                .then((nft) => {
-                    console.log("loaded ARnft");
-                    let mat = new THREE.MeshLambertMaterial({
-                        color: 0xff0000
-                    });
-                    let boxGeom = new THREE.BoxGeometry(1, 1, 1);
-                    let cube = new THREE.Mesh(boxGeom, mat);
-                    cube.position.z = 90;
-                    cube.scale.set(180, 180, 180);
-
-                    document.addEventListener('containerEvent', function (ev) {
-
-                        let canvas = document.getElementById('canvas');
-                        let fov = 0.8 * 180 / Math.PI;
-                        let ratio = width / height;
-                        let config = {
-                            "renderer": {
-                                "alpha": true,
-                                "antialias": true,
-                                "context": null,
-                                "precision": "mediump",
-                                "premultipliedAlpha": true,
-                                "stencil": true,
-                                "depth": true,
-                                "logarithmicDepthBuffer": true
-                            },
-                            "camera": {
-                                "fov": fov,
-                                "ratio": ratio,
-                                "near": 0.01,
-                                "far": 1000
-                            }
-                        }
-
-                        let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid,
-                            true);
-                        sceneThreejs.initRenderer();
-
-                        let nftAddTJS = new NFTaddTJS(nft.uuid);
-                        nftAddTJS.add(cube, 'pinball', false);
-
-                        const tick = () => {
-                            sceneThreejs.draw();
-                            window.requestAnimationFrame(tick)
-                        }
-                        tick()
-
+                            const tick = () => {
+                                sceneThreejs.draw();
+                                window.requestAnimationFrame(tick);
+                            };
+                            tick();
+                        });
                     })
-
-                }).catch((error) => {
-                    console.log(error);
-                });
-
-        }
-        // init the app...
-        init(video)
-    </script>
-
-
-</body>
-
+                    .catch((error) => {
+                        console.log(error);
+                    });
+            }
+            // init the app...
+            init(video);
+        </script>
+    </body>
 </html>

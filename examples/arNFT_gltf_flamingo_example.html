@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
     <head>
         <meta charset="utf-8" />
@@ -18,19 +18,19 @@
 
         <script type="importmap">
             {
-              "imports": {
-                "three": "./js/third_party/three.js/three.module.min.js",
-                "arnft-threejs": "./js/ARnftThreejs.module.js",
-                 "arnft": "./../dist/ARnft.module.js"
-              }
+                "imports": {
+                    "three": "./js/third_party/three.js/three.module.min.js",
+                    "arnft-threejs": "./js/ARnftThreejs.module.js",
+                    "arnft": "./../dist/ARnft.module.js"
+                }
             }
         </script>
 
         <script type="module">
-            import * as THREE from 'three'
-            import arnft  from 'arnft'
-            const { ARnft } = arnft
-            import ARnftThreejs  from 'arnft-threejs'
+            import * as THREE from "three";
+            import arnft from "arnft";
+            const { ARnft } = arnft;
+            import ARnftThreejs from "arnft-threejs";
             const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
 
             let width = 640;
@@ -90,7 +90,12 @@
                                 }
                             }
                         }
-                        nftAddTJS.addModelWithCallback("./Data/models/flamingo/Flamingo.glb", "pinball", modelAnimation, false);
+                        nftAddTJS.addModelWithCallback(
+                            "./Data/models/flamingo/Flamingo.glb",
+                            "pinball",
+                            modelAnimation,
+                            false
+                        );
 
                         const tick = () => {
                             sceneThreejs.draw();
