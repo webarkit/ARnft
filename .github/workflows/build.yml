@@ -27,7 +27,7 @@ jobs:
                       ${{ runner.os }}-node-
             - name: Set output
               id: vars
-              run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+              run: echo name=tag::${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
             - name: Check output
               env:
                   RELEASE_VERSION: ${{ steps.vars.outputs.tag }}
