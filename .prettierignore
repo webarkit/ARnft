@@ -2,9 +2,7 @@
 dist
 docs
 node_modules
-examples
 types
-*.html
 *.json
 *.js
 *.lock

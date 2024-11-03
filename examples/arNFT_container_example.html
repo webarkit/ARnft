@@ -1,112 +1,110 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ARnft example showing a simple red cube</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1" />
+        <link rel="stylesheet" href="css/nft-style.css" />
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>ARnft example showing a simple red cube</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-    <link rel="stylesheet" href="css/nft-style.css">
-</head>
+    <body>
+        <a
+            href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+            class="ui marker"
+            target="_blank"
+        >
+            🖼 Marker Image
+        </a>
 
-<body>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/third_party/three.js/three.module.min.js",
+                    "arnft-threejs": "./js/ARnftThreejs.module.js",
+                    "arnft": "./../dist/ARnft.module.js"
+                }
+            }
+        </script>
 
-    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-        class="ui marker" target="_blank">
-        🖼 Marker Image
-    </a>
+        <script type="module">
+            import * as THREE from "three";
+            import arnft from "arnft";
+            const { ARnft } = arnft;
+            import ARnftThreejs from "arnft-threejs";
+            const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
 
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "./js/third_party/three.js/three.module.min.js",
-            "arnft-threejs": "./js/ARnftThreejs.module.js",
-            "arnft": "./../dist/ARnft.module.js"
-          }
-        }
-    </script>
+            // This example not create the Html elements for loading, stats and container app.
+            // But instead you define in your html code. See 'config-container.json' for the set-up.
+            let width = 640;
+            let height = 480;
+            ARnft.init(width, height, [["examples/DataNFT/pinball"]], [["pinball"]], "config-container.json", true)
+                .then((nft) => {
+                    let mat = new THREE.MeshLambertMaterial({
+                        color: 0xff0000,
+                    });
+                    let boxGeom = new THREE.BoxGeometry(1, 1, 1);
+                    let cube = new THREE.Mesh(boxGeom, mat);
+                    cube.position.z = 90;
+                    cube.scale.set(180, 180, 180);
 
-    <script type="module">
-        import * as THREE from 'three'
-        import arnft  from 'arnft'
-        const { ARnft } = arnft
-        import ARnftThreejs  from 'arnft-threejs'
-        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+                    document.addEventListener("containerEvent", function (ev) {
+                        let canvas = document.getElementById("canvas");
+                        let fov = (0.8 * 180) / Math.PI;
+                        let ratio = width / height;
+                        let config = {
+                            renderer: {
+                                alpha: true,
+                                antialias: true,
+                                context: null,
+                                precision: "mediump",
+                                premultipliedAlpha: true,
+                                stencil: true,
+                                depth: true,
+                                logarithmicDepthBuffer: true,
+                            },
+                            camera: {
+                                fov: fov,
+                                ratio: ratio,
+                                near: 0.01,
+                                far: 1000,
+                            },
+                        };
 
-        // This example not create the Html elements for loading, stats and container app.
-        // But instead you define in your html code. See 'config-container.json' for the set-up.
-        let width = 640;
-        let height = 480;
-        ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config-container.json', true)
-            .then((nft) => {
-                let mat = new THREE.MeshLambertMaterial({
-                    color: 0xff0000
-                });
-                let boxGeom = new THREE.BoxGeometry(1, 1, 1);
-                let cube = new THREE.Mesh(boxGeom, mat);
-                cube.position.z = 90;
-                cube.scale.set(180, 180, 180);
+                        let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid, true);
+                        sceneThreejs.initRenderer();
 
-                document.addEventListener('containerEvent', function (ev) {
+                        let nftAddTJS = new NFTaddTJS(nft.uuid);
+                        nftAddTJS.add(cube, "pinball", false);
 
-                    let canvas = document.getElementById('canvas');
-                    let fov = 0.8 * 180 / Math.PI;
-                    let ratio = width / height;
-                    let config = {
-                        "renderer": {
-                            "alpha": true,
-                            "antialias": true,
-                            "context": null,
-                            "precision": "mediump",
-                            "premultipliedAlpha": true,
-                            "stencil": true,
-                            "depth": true,
-                            "logarithmicDepthBuffer": true
-                        },
-                        "camera": {
-                            "fov": fov,
-                            "ratio": ratio,
-                            "near": 0.01,
-                            "far": 1000
-                        }
-                    }
-
-                    let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid,
-                        true);
-                    sceneThreejs.initRenderer();
-
-                    let nftAddTJS = new NFTaddTJS(nft.uuid);
-                    nftAddTJS.add(cube, 'pinball', false);
-
-                    const tick = () => {
-                        sceneThreejs.draw();
-                        window.requestAnimationFrame(tick)
-                    }
-                    tick()
+                        const tick = () => {
+                            sceneThreejs.draw();
+                            window.requestAnimationFrame(tick);
+                        };
+                        tick();
+                    });
                 })
+                .catch((error) => {
+                    console.log(error);
+                });
+        </script>
 
-            }).catch((error) => {
-                console.log(error);
-            });
-    </script>
-
-    <div id="stats" class="ui stats">
-        <div id="stats1" class="stats-item">
-            <p class="stats-item-title">Main</p>
+        <div id="stats" class="ui stats">
+            <div id="stats1" class="stats-item">
+                <p class="stats-item-title">Main</p>
+            </div>
+            <div id="stats2" class="stats-item">
+                <p class="stats-item-title">Worker</p>
+            </div>
         </div>
-        <div id="stats2" class="stats-item">
-            <p class="stats-item-title">Worker</p>
+
+        <div id="loading">
+            <img src="Data/arNFT-logo.gif" alt="arNFT.js logo" />
+            <span class="loading-text">Loading, please wait...</span>
         </div>
-    </div>
 
-    <div id="loading">
-        <img src="Data/arNFT-logo.gif" alt="arNFT.js logo">
-        <span class="loading-text">Loading, please wait...</span>
-    </div>
-
-    <div id="app">
-        <canvas id="canvas" width="640" height="480"></canvas>
-        <video id="video" muted playsinline autoplay></video>
-    </div>
-</body>
-
+        <div id="app">
+            <canvas id="canvas" width="640" height="480"></canvas>
+            <video id="video" muted playsinline autoplay></video>
+        </div>
+    </body>
 </html>

@@ -1,150 +1,148 @@
 html,
 body {
-  margin: 0;
-  overflow: hidden;
+    margin: 0;
+    overflow: hidden;
 }
 
 html {
-  font-family: sans-serif;
+    font-family: sans-serif;
 }
 
 #loading {
-  width: 100%;
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.45);
-  z-index: 9999999;
+    width: 100%;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.45);
+    z-index: 9999999;
 }
 
 #loading img {
     height: 5em;
 }
 
-#loading span{
-  color: black;
-  font-weight: bold;
+#loading span {
+    color: black;
+    font-weight: bold;
 }
 
 .ui {
-  position: fixed;
+    position: fixed;
 
-  margin: 0.5rem;
+    margin: 0.5rem;
 
-  background-color: rgba( 255,255,255,0.6 );
-  border-radius: 6px;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
 }
 
 .stats {
-  top: 0;
-  left: 0;
-  z-index: 200;
-  margin: 0.5rem;
-  padding: 0.5rem 0.5rem 0;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    margin: 0.5rem;
+    padding: 0.5rem 0.5rem 0;
 }
 
 .stats-item {
-  margin: 0 0 0.5rem;
-
+    margin: 0 0 0.5rem;
 }
 
 .stats-item-title {
-  margin: 0 0 0.25rem;
+    margin: 0 0 0.25rem;
 
-  font-size: 0.75rem;
+    font-size: 0.75rem;
 }
 
 #stats div {
-  position: relative !important;
+    position: relative !important;
 }
 
 .marker {
-  right: 0;
-  bottom: 0;
-  z-index: 200;
-  margin: 0.5rem;
-  padding: 0.25rem 0.5rem;
+    right: 0;
+    bottom: 0;
+    z-index: 200;
+    margin: 0.5rem;
+    padding: 0.25rem 0.5rem;
 
-  font-size: 0.75rem;
-  color: inherit;
-  text-decoration: none;
+    font-size: 0.75rem;
+    color: inherit;
+    text-decoration: none;
 }
 
 .flex-container {
-  left: 12rem;
-  display: flex;
-  flex-direction: column;
+    left: 12rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .flex-container > div {
-  color: red;
-  background-color: rgba( 255,255,255,0.6 );
-  border-radius: 6px;
-  z-index: 200;
-  width: 100px;
-  margin: 10px;
-  margin-left: auto;
-  text-align: center;
-  line-height: 75px;
-  font-size: .8em;
-  
-  text-decoration: none;
+    color: red;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    z-index: 200;
+    width: 100px;
+    margin: 10px;
+    margin-left: auto;
+    text-align: center;
+    line-height: 75px;
+    font-size: 0.8em;
 
-  cursor: pointer;
+    text-decoration: none;
+
+    cursor: pointer;
 }
 
 #dispose {
-  right: 25rem;
-  bottom: 0;
-  z-index: 200;
-  margin: 0.5rem;
-  padding: 0.25rem 0.5rem;
+    right: 25rem;
+    bottom: 0;
+    z-index: 200;
+    margin: 0.5rem;
+    padding: 0.25rem 0.5rem;
 
-  font-size: 0.75rem;
-  color: red;
-  background-color: rgba(210, 30,0,0);
-  text-decoration: none;
+    font-size: 0.75rem;
+    color: red;
+    background-color: rgba(210, 30, 0, 0);
+    text-decoration: none;
 
-  cursor: pointer;
+    cursor: pointer;
 }
 
 #app {
-  position: fixed;
-  top: 0;
-  left: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
 
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 #video {
-  position: absolute;
-  top: 0;
-  left: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
 
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover;
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
 }
 
 #canvas {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 100;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 100;
 
-  display: block;
-  width: 100% !important;
-  height: 100% !important;
-  object-fit: cover;
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
 }
 
-
 #arvideo {
-  display: none;
+    display: none;
 }

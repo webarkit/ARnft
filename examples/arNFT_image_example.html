@@ -1,84 +1,83 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ARnft example showing an image</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1" />
+        <link rel="stylesheet" href="css/nft-style.css" />
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>ARnft example showing an image</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1">
-    <link rel="stylesheet" href="css/nft-style.css">
-</head>
+    <body>
+        <a
+            href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+            class="ui marker"
+            target="_blank"
+        >
+            🖼 Marker Image
+        </a>
 
-<body>
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/third_party/three.js/three.module.min.js",
+                    "arnft-threejs": "./js/ARnftThreejs.module.js",
+                    "arnft": "./../dist/ARnft.module.js"
+                }
+            }
+        </script>
 
-    <a href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
-        class="ui marker" target="_blank">
-        🖼 Marker Image
-    </a>
+        <script type="module">
+            import * as THREE from "three";
+            import arnft from "arnft";
+            const { ARnft } = arnft;
+            import ARnftThreejs from "arnft-threejs";
+            const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
 
-    <script type="importmap">
-        {
-          "imports": {
-            "three": "./js/third_party/three.js/three.module.min.js",
-            "arnft-threejs": "./js/ARnftThreejs.module.js",
-             "arnft": "./../dist/ARnft.module.js"
-          }
-        }
-    </script>
+            let width = 640;
+            let height = 480;
+            ARnft.init(width, height, [["examples/DataNFT/pinball"]], [["pinball"]], "config.json", true)
+                .then((nft) => {
+                    document.addEventListener("containerEvent", function (ev) {
+                        let canvas = document.getElementById("canvas");
+                        let fov = (0.8 * 180) / Math.PI;
+                        let ratio = width / height;
+                        let config = {
+                            renderer: {
+                                alpha: true,
+                                antialias: true,
+                                context: null,
+                                precision: "mediump",
+                                premultipliedAlpha: true,
+                                stencil: true,
+                                depth: true,
+                                logarithmicDepthBuffer: true,
+                            },
+                            camera: {
+                                fov: fov,
+                                ratio: ratio,
+                                near: 0.01,
+                                far: 1000,
+                            },
+                        };
 
-    <script type="module">
-        import * as THREE from 'three'
-        import arnft  from 'arnft'
-        const { ARnft } = arnft
-        import ARnftThreejs  from 'arnft-threejs'
-        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+                        let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid, true);
+                        sceneThreejs.initRenderer();
 
-        let width = 640;
-        let height = 480;
-        ARnft.init(width, height, [["examples/DataNFT/pinball"]], [['pinball']], 'config.json', true)
-            .then((nft) => {
-                document.addEventListener('containerEvent', function (ev) {
+                        let nftAddTJS = new NFTaddTJS(nft.uuid);
+                        // Set width, height and width and height number of segments of the PlaneGeometry.
+                        let imgConfig = { w: 1, h: 1, ws: 1, hs: 1 };
+                        nftAddTJS.addImage("./Data/aframe-k.png", "pinball", 0xbbbbff, 180, imgConfig, false);
 
-                    let canvas = document.getElementById('canvas');
-                    let fov = 0.8 * 180 / Math.PI;
-                    let ratio = width / height;
-                    let config = {
-                        "renderer": {
-                            "alpha": true,
-                            "antialias": true,
-                            "context": null,
-                            "precision": "mediump",
-                            "premultipliedAlpha": true,
-                            "stencil": true,
-                            "depth": true,
-                            "logarithmicDepthBuffer": true
-                        },
-                        "camera": {
-                            "fov": fov,
-                            "ratio": ratio,
-                            "near": 0.01,
-                            "far": 1000
-                        }
-                    }
-
-                    let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid,
-                        true);
-                    sceneThreejs.initRenderer();
-
-                    let nftAddTJS = new NFTaddTJS(nft.uuid);
-                    // Set width, height and width and height number of segments of the PlaneGeometry.
-                    let imgConfig = {w: 1, h: 1, ws: 1, hs: 1};
-                    nftAddTJS.addImage('./Data/aframe-k.png', 'pinball', 0xbbbbff, 180, imgConfig, false);
-
-                    const tick = () => {
-                        sceneThreejs.draw();
-                        window.requestAnimationFrame(tick)
-                    }
-                    tick()
+                        const tick = () => {
+                            sceneThreejs.draw();
+                            window.requestAnimationFrame(tick);
+                        };
+                        tick();
+                    });
                 })
-            }).catch((error) => {
-                console.log(error);
-            });
-    </script>
-</body>
-
+                .catch((error) => {
+                    console.log(error);
+                });
+        </script>
+    </body>
 </html>
