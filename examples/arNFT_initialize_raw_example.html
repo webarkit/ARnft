@@ -21,12 +21,25 @@
         class="ui marker" target="_blank">
         🖼 Marker Image
     </a>
-    <script src="js/third_party/three.js/three.min.js"></script>
-    <script src="js/ARnftThreejs.js"></script>
-    <script src="js/cameraViewRenderer.js"></script>
-    <script src="../dist/ARnft.js"></script>
+    <script type="importmap">
+        {
+          "imports": {
+            "three": "./js/third_party/three.js/three.module.min.js",
+            "arnft-threejs": "./js/ARnftThreejs.module.js",
+            "arnft": "./../dist/ARnft.module.js",
+            "camera-renderer": "./js/cameraViewRenderer.js"
+          }
+        }
+    </script>
 
-    <script>
+    <script type="module">
+        import * as THREE from 'three'
+        import arnft  from 'arnft'
+        const { ARnft } = arnft
+        import ARnftThreejs  from 'arnft-threejs'
+        const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+        import { cameraViewRenderer } from "camera-renderer";
+
         let width = 640;
         let height = 480;
         var video = document.getElementById('video');
@@ -35,7 +48,7 @@
 
             console.log("start here")
 
-            const arnft = new ARnft.ARnft(width, height, 'config.json');
+            const arnft = new ARnft(width, height, 'config.json');
             const camV = new cameraViewRenderer(video)
             await arnft.initializeRaw([["examples/DataNFT/pinball"]], [['pinball']], camV, true)
                 .then((nft) => {
@@ -72,11 +85,11 @@
                             }
                         }
 
-                        let sceneThreejs = new ARnftThreejs.SceneRendererTJS(config, canvas, nft.uuid,
+                        let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid,
                             true);
                         sceneThreejs.initRenderer();
 
-                        let nftAddTJS = new ARnftThreejs.NFTaddTJS(nft.uuid);
+                        let nftAddTJS = new NFTaddTJS(nft.uuid);
                         nftAddTJS.add(cube, 'pinball', false);
 
                         const tick = () => {

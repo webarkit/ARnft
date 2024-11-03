@@ -1,4 +1,4 @@
-class cameraViewRenderer {
+export class cameraViewRenderer {
     constructor(video) {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d", { alpha: false });
