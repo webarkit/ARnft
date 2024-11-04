@@ -10,9 +10,9 @@
 
 # ARnft - WebAR with NFT
 
-<img src="examples/Data/arNFT-logo.gif" width="250px"/>
+<img alt="ARnft official logo" src="examples/Data/arNFT-logo.gif" width="250px"/>
 
-A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/webarkit/jsartoolkitNFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It use [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
+A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/webarkit/jsartoolkitNFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It uses [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
 
 ## Start using it !
 
@@ -30,7 +30,7 @@ or with npm:
 
 :three: &nbsp; Run the node server:
 
-`http-server . -p 8000`
+`npx http-server`
 
 :four: &nbsp; Go to the examples:
 
@@ -38,34 +38,71 @@ http://localhost:8000/examples/arNFT_example.html
 
 :five: &nbsp; Point your device 📱 to the pinball image 👇 a red cube will appear !
 
-<img src= https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg width="250"/>
+<img alt="pinball image" src= https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg width="250"/>
 
 ## Usage
 
 Download the zipped dist lib package from the releases page: [webarkit/ARnft/releases](https://github.com/webarkit/ARnft/releases)
-and use it in a script tag:
+and import it as a module:
 
 ```html
-<script src="path/to/dist/ARnft.js"></script>
+<script type="importmap">
+    {
+        "imports": {
+            "three": "./js/third_party/three.js/three.module.min.js",
+            "arnft-threejs": "./js/ARnftThreejs.module.js",
+            "arnft": "./../dist/ARnft.module.js"
+        }
+    }
+</script>
+
+<script type="module">
+    import * as THREE from "three";
+    import arnft from "arnft";
+    const { ARnft } = arnft;
+    import ARnftThreejs from "arnft-threejs";
+    const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+            
+    // Follow code for rendering ect. see the examples.
 ```
 
 or you can use raw.githack services (for development):
 
 ```html
-<script src="https://raw.githack.com/webarkit/ARnft/master/dist/ARnft.js"></script>
+<script type="importmap">
+    {
+        "imports": {
+            "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.min.js",
+            "arnft-threejs": "https://raw.githack.com/webarkit/ARnft-threejs/master/dist/ARnftThreejs.module.js",
+            "arnft": "https://raw.githack.com/webarkit/ARnft/master/dist/ARnft.module.js"
+        }
+    }
+</script>
+
+<script type="module">
+// as the above code snippet
 ```
 
 or raw.cdn (for production, you need to add the hash):
 
-```html
-<script src="https://rawcdn.githack.com/webarkit/ARnft/<hash>/dist/ARnft.js"></script>
+```
+// As the examples above import three.js, Arnft-threejs and Arnft in an importmap
+"arnft": "https://rawcdn.githack.com/webarkit/ARnft/<hash>/dist/ARnft.js"
 ```
 
 or if you want to import as a module with npm:
 
+```
+// In your package.json:
+"devDependencies": {
+    "@webarkit/ar-nft": "^0.14.8"
+},
+```
 ```javascript
+// Then in your .ts or .js file
 import { ARnft } from "@webarkit/ar-nft";
 ```
+
 
 ## Examples
 
@@ -95,7 +132,7 @@ Donate to **ARnft** ![opencollective](https://flat.badgen.net/badge/icon/opencol
 
 You can build the docs with this command:
 `yarn docs`
-Then run a live server and go to the docs folder.
+Then run a live server and go to the docs' folder.
 
 ## Features
 
@@ -120,11 +157,11 @@ yarn add @webarkit/ar-nft
 We are using [Prettier](https://prettier.io/) as code formatter. You only need to run `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted run instead: `yarn format-check`
 
 ## Build
-If you make changes to the code, run these commands to build the distribution libray, install all the dependencies with:
+If you make changes to the code, run these commands to build the distribution library, install all the dependencies with:
 ```
 yarn --include=dev i
 ```
-For a development build, that is the code will be rebuilt for every changes, run:
+For a development build, that is the code will be rebuilt for every change, run:
 ```
 yarn dev-ts
 ```
