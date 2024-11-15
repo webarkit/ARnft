@@ -62,6 +62,6 @@
         "@webarkit/jsartoolkit-nft": "^1.7.1",
         "@webarkit/oneeurofilter-ts": "^0.1.0",
         "terser-webpack-plugin": "^5.3.10",
-        "uuid": "11.0.2"
+        "uuid": "11.0.3"
     }
 }

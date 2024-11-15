@@ -66,6 +66,33 @@ module.exports = (env, argv) => {
     optimization,
   },
     {
+      name: "ARnft.simd",
+      entry: './src/index.simd.ts',
+      devtool,
+      output: {
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'ARnft.simd.js',
+        library: 'ARnft',
+        libraryTarget: 'umd',
+        // @see: https://github.com/webpack/webpack/issues/3929
+        libraryExport: 'default',
+        // @see: https://github.com/webpack/webpack/issues/6522
+        globalObject: "typeof self !== 'undefined' ? self : this",
+        publicPath: "auto"
+      },
+      externals: {
+        stats: {
+          commonjs: 'stats.js',
+          commonjs2: 'stats.js',
+          amd: 'stats.js',
+          root: 'Stats' // indicates global variable
+        }
+      },
+      module,
+      resolve,
+      optimization,
+    },
+    {
       name: "ARnft.module",
       entry: './src/index.ts',
       devtool,
@@ -78,6 +105,28 @@ module.exports = (env, argv) => {
         },
         path: path.resolve(__dirname, 'dist'),
         filename: 'ARnft.module.js',
+      },
+      externalsType: 'module',
+      externals: {
+        three: 'three',
+      },
+      module,
+      resolve,
+      optimization,
+    },
+    {
+      name: "ARnft.simd.module",
+      entry: './src/index.simd.ts',
+      devtool,
+      experiments: {
+        outputModule: true,
+      },
+      output: {
+        library: {
+          type: 'module',
+        },
+        path: path.resolve(__dirname, 'dist'),
+        filename: 'ARnft.simd.module.js',
       },
       externalsType: 'module',
       externals: {
