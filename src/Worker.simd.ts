@@ -35,7 +35,7 @@
  *
  */
 
-import { ARControllerNFT } from '@webarkit/jsartoolkit-nft/src/ARControllerNFT_simd';
+import { ARControllerNFT } from "@webarkit/jsartoolkit-nft/dist/ARToolkitNFT_simd";
 import { OneEuroFilter } from "@webarkit/oneeurofilter-ts";
 import { AbstractARControllerNFT } from "@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT";
 import { IImageObj } from "@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces";

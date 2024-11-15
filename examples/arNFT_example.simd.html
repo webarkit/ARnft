@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <title>ARnft simd example showing a simple red cube</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1" />
+        <link rel="stylesheet" href="css/nft-style.css" />
+    </head>
+
+    <body>
+        <a
+            href="https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg"
+            class="ui marker"
+            target="_blank"
+        >
+            🖼 Marker Image
+        </a>
+
+        <script type="importmap">
+            {
+                "imports": {
+                    "three": "./js/third_party/three.js/three.module.min.js",
+                    "arnft-threejs": "./js/ARnftThreejs.module.js",
+                    "arnft": "./../dist/ARnft.simd.module.js"
+                }
+            }
+        </script>
+
+        <script type="module">
+            import * as THREE from "three";
+            import arnft from "arnft";
+            const { ARnft } = arnft;
+            import ARnftThreejs from "arnft-threejs";
+            const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
+
+            let width = 640;
+            let height = 480;
+            ARnft.init(width, height, [["examples/DataNFT/pinball"]], [["pinball"]], "config.json", true)
+                .then((nft) => {
+                    let mat = new THREE.MeshLambertMaterial({
+                        color: 0xff0000,
+                    });
+                    let boxGeom = new THREE.BoxGeometry(1, 1, 1);
+                    let cube = new THREE.Mesh(boxGeom, mat);
+                    cube.position.z = 90;
+                    cube.scale.set(180, 180, 180);
+
+                    document.addEventListener("containerEvent", function (ev) {
+                        let canvas = document.getElementById("canvas");
+                        let fov = (0.8 * 180) / Math.PI;
+                        let ratio = width / height;
+                        let config = {
+                            renderer: {
+                                alpha: true,
+                                antialias: true,
+                                context: null,
+                                precision: "mediump",
+                                premultipliedAlpha: true,
+                                stencil: true,
+                                depth: true,
+                                logarithmicDepthBuffer: true,
+                            },
+                            camera: {
+                                fov: fov,
+                                ratio: ratio,
+                                near: 0.01,
+                                far: 1000,
+                            },
+                        };
+
+                        let sceneThreejs = new SceneRendererTJS(config, canvas, nft.uuid, true);
+                        sceneThreejs.initRenderer();
+
+                        let nftAddTJS = new NFTaddTJS(nft.uuid);
+                        nftAddTJS.add(cube, "pinball", false);
+
+                        const tick = () => {
+                            sceneThreejs.draw();
+                            window.requestAnimationFrame(tick);
+                        };
+                        tick();
+                    });
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+        </script>
+    </body>
+</html>
