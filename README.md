@@ -103,7 +103,7 @@ or if you want to import as a module with npm:
 ```
 // In your package.json:
 "devDependencies": {
-    "@webarkit/ar-nft": "^0.14.8"
+    "@webarkit/ar-nft": "^0.14.9"
 },
 ```
 ```javascript
