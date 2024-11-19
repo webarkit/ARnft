@@ -8,13 +8,13 @@
 [![Build ARnft CI](https://github.com/webarkit/ARnft/actions/workflows/build.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/main.yml)
 ![twitter](https://flat.badgen.net/badge/twitter/WebarkitO/follow)
 
-# ARnft - WebAR with NFT
+# 🖼️ ARnft - WebAR with NFT
 
 <img alt="ARnft official logo" src="examples/Data/arNFT-logo.gif" width="250px"/>
 
 A small javascript library to develop WebAR apps. It is based on [jsartoolkitNFT](https://github.com/webarkit/jsartoolkitNFT) a lighter version of jsartoolkit5 only with **NFT** markerless technology. It uses [ARnft-threejs](https://github.com/webarkit/ARnft-threejs) for the rendering part.
 
-## Start using it !
+## 🚀 Start using it !
 
 :one: &nbsp; Clone the repository:
 
@@ -40,7 +40,15 @@ http://localhost:8000/examples/arNFT_example.html
 
 <img alt="pinball image" src= https://raw.githubusercontent.com/artoolkitx/artoolkit5/master/doc/Marker%20images/pinball.jpg width="250"/>
 
-## Usage
+## 🏎️ SIMD Feature
+
+The ARnft library now includes support for SIMD (Single Instruction, Multiple Data) to enhance performance by parallelizing data processing tasks. This feature is particularly useful for applications requiring high computational power, such as augmented reality.
+
+To see the SIMD feature in action, you can try the `arNFT_simd_example.html` example:
+
+http://localhost:8000/examples/arNFT_example.simd.html
+
+## 📦 Usage
 
 Download the zipped dist lib package from the releases page: [webarkit/ARnft/releases](https://github.com/webarkit/ARnft/releases)
 and import it as a module:
@@ -62,7 +70,7 @@ and import it as a module:
     const { ARnft } = arnft;
     import ARnftThreejs from "arnft-threejs";
     const { SceneRendererTJS, NFTaddTJS } = ARnftThreejs;
-            
+
     // Follow code for rendering ect. see the examples.
 ```
 
@@ -103,8 +111,7 @@ or if you want to import as a module with npm:
 import { ARnft } from "@webarkit/ar-nft";
 ```
 
-
-## Examples
+## 🧪 Examples
 
 Test the examples in the `/examples` folder:
 
@@ -112,6 +119,7 @@ Test the examples in the `/examples` folder:
 - `arNFT_container_example.html` Example with an alternative container.
 - `arNFT_event_example.html` Example with objVisibility and eventListener.
 - `arNFT_example.html` The simplest example displaying a red cube.
+- `arNFT_simd_example.html` Example with SIMD feature.
 - `arNFT_gltf_brave_robot_example.html` More advanced example with a gltf model and threejs events.
 - `arNFT_gltf_example.html` Example showing a gltf model (Duck).
 - `arNFT_gltf_flamingo_example.html` Example showing an animated gltf model (Flamingo).
@@ -124,19 +132,19 @@ Test the examples in the `/examples` folder:
 
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
 
-## Donate
+## 💰 Donate
 Donate to **ARnft** ![opencollective](https://flat.badgen.net/badge/icon/opencollective?icon=opencollective&label) ![backers](https://flat.badgen.net/opencollective/backers/arnft)
 
-
-## Documentation
+## 📚 Documentation
 
 You can build the docs with this command:
 `yarn docs`
 Then run a live server and go to the docs' folder.
 
-## Features
+## 🌟 Features
 
 - **NFT** (**N**atural **F**eature **T**racking) Markers, read my article: [NFT natural feature tracking with jsartoolkit5](https://www.kalwaltart.com/blog/2020/01/21/nft-natural-feature-tracking-with-jsartoolkit5/)
+- **SIMD** (Single Instruction, Multiple Data) support for enhanced performance.
 - **ES6** standard. You can install it as a npm package and use it as a module (experimental). Install it with npm:
 
 ```
@@ -153,10 +161,10 @@ yarn add @webarkit/ar-nft
 
 - Filtering of the matrix with the **O**ne**E**uro**F**ilter.
 
-## Format the code with Prettier
+## 🛠️ Format the code with Prettier
 We are using [Prettier](https://prettier.io/) as code formatter. You only need to run `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted run instead: `yarn format-check`
 
-## Build
+## 🔧 Build
 If you make changes to the code, run these commands to build the distribution library, install all the dependencies with:
 ```
 yarn --include=dev i
