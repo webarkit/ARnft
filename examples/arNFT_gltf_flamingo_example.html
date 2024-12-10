@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <title>ARnft example with an animated gltf model</title>
@@ -38,6 +38,7 @@
             ARnft.init(width, height, [["examples/DataNFT/pinball"]], [["pinball"]], "config.json", true)
                 .then((nft) => {
                     document.addEventListener("containerEvent", function (ev) {
+                        console.log("containerEvent: ", ev);
                         let canvas = document.getElementById("canvas");
                         let fov = (0.8 * 180) / Math.PI;
                         let ratio = width / height;
@@ -75,17 +76,17 @@
                         let mixers = [];
                         let clock = new THREE.Clock();
                         function modelAnimation(gltf) {
-                            var model = gltf.scene.children[0];
+                            const model = gltf.scene.children[0];
                             model.rotation.x = Math.PI / 2;
-                            var animation = gltf.animations[0];
-                            var mixer = new THREE.AnimationMixer(model);
+                            const animation = gltf.animations[0];
+                            const mixer = new THREE.AnimationMixer(model);
                             mixers.push(mixer);
-                            var action = mixer.clipAction(animation);
+                            const action = mixer.clipAction(animation);
                             action.play();
                         }
                         function updateAnimations() {
                             if (mixers.length > 0) {
-                                for (var i = 0; i < mixers.length; i++) {
+                                for (let i = 0; i < mixers.length; i++) {
                                     mixers[i].update(clock.getDelta());
                                 }
                             }

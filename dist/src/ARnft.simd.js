@@ -63,7 +63,7 @@ export default class ARnft {
                 names = this.entities.map((x) => [x.name]);
             }
             else {
-                throw "markerUrls or entities can't be undefined";
+                throw new Error("markerUrls or entities can't be undefined");
             }
             return await _arnft._initialize(markerUrls, names, params.stats);
         }
@@ -94,7 +94,7 @@ export default class ARnft {
                 statsWorker.showPanel(0);
                 document.getElementById("stats2").appendChild(statsWorker.dom);
             }
-            var containerEvent = new Event("containerEvent");
+            const containerEvent = new Event("containerEvent");
             document.dispatchEvent(containerEvent);
             this.controllers = [];
             this.cameraView = new CameraViewRenderer(this._views.video);
@@ -149,7 +149,7 @@ export default class ARnft {
                 statsWorker.showPanel(0);
                 document.getElementById("stats2").appendChild(statsWorker.dom);
             }
-            var containerEvent = new Event("containerEvent");
+            const containerEvent = new Event("containerEvent");
             document.dispatchEvent(containerEvent);
             this.controllers = [];
             return cameraView.initialize(this.appData.videoSettings);
@@ -205,7 +205,7 @@ export default class ARnft {
     }
     disposeNFT(name) {
         let terminateWorker = "terminateWorker-" + name;
-        var event = new Event(terminateWorker);
+        const event = new Event(terminateWorker);
         this.target.dispatchEvent(event);
     }
     disposeAllNFTs() {
@@ -216,7 +216,7 @@ export default class ARnft {
     }
     disposeVideoStream() {
         this.cameraView.destroy();
-        var event = new Event("stopVideoStreaming");
+        const event = new Event("stopVideoStreaming");
         this.target.dispatchEvent(event);
     }
 }

@@ -3,20 +3,14 @@ export function degreesToRadians(degrees) {
     return degrees * (Math.PI / 180);
 }
 export function isMobile() {
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        return true;
-    }
-    return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 export function isIOS() {
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        return true;
-    }
-    return false;
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 export function getWindowSize(vw, vh) {
-    var pscale = 320 / Math.max(vw, (vh / 3) * 4);
-    var sscale = isMobile() ? window.outerWidth / vw : 1;
+    const pscale = 320 / Math.max(vw, (vh / 3) * 4);
+    const sscale = isMobile() ? window.outerWidth / vw : 1;
     let sw = vw * sscale;
     let sh = vh * sscale;
     let w = vw * pscale;
@@ -31,7 +25,7 @@ export async function getConfig(configData) {
         if (!response.ok) {
             throw new Error("HTTP error, status = " + response.status);
         }
-        return response.json();
+        return await response.json();
     }
     catch (error) {
         return Promise.reject(error);

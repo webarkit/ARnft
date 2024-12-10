@@ -1,5 +1,5 @@
 <!doctype html>
-<html>
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <title>ARnft example showing a simple red cube</title>
@@ -41,7 +41,7 @@
 
             let width = 640;
             let height = 480;
-            var video = document.getElementById("video");
+            const video = document.getElementById("video");
 
             async function init(video) {
                 console.log("start here");
@@ -61,6 +61,7 @@
                         cube.scale.set(180, 180, 180);
 
                         document.addEventListener("containerEvent", function (ev) {
+                            console.log("containerEvent: ", ev);
                             let canvas = document.getElementById("canvas");
                             let fov = (0.8 * 180) / Math.PI;
                             let ratio = width / height;

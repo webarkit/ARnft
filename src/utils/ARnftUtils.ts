@@ -28,7 +28,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021 WebARKit.
+ *  Copyright 2021-2024 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
@@ -48,12 +48,7 @@ export function degreesToRadians(degrees: number): number {
  * @returns true or false.
  */
 export function isMobile(): boolean {
-    //return /Android|mobile|iPad|iPhone/i.test(navigator.userAgent)
-    if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        // true for mobile device
-        return true;
-    }
-    return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 }
 
 /**
@@ -61,22 +56,18 @@ export function isMobile(): boolean {
  * @returns true or false.
  */
 export function isIOS(): boolean {
-    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-        // true for mobile device
-        return true;
-    }
-    return false;
+    return /iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
 /**
  * Get the Window sizevideo dimensions, used internally in the NFTWorker.
  * @param vw the video width
- * @param hv the video height
+ * @param vh the video height
  * @returns an array of values.
  */
 export function getWindowSize(vw: number, vh: number): Array<number> {
-    var pscale = 320 / Math.max(vw, (vh / 3) * 4);
-    var sscale = isMobile() ? window.outerWidth / vw : 1;
+    const pscale = 320 / Math.max(vw, (vh / 3) * 4);
+    const sscale = isMobile() ? window.outerWidth / vw : 1;
 
     let sw = vw * sscale;
     let sh = vh * sscale;
@@ -100,7 +91,7 @@ export async function getConfig(configData: string): Promise<any> {
         if (!response.ok) {
             throw new Error("HTTP error, status = " + response.status);
         }
-        return response.json();
+        return await response.json();
     } catch (error) {
         return Promise.reject(error);
     }

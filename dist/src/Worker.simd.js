@@ -30,7 +30,7 @@ let filterBeta = 0.01;
 const filter = new OneEuroFilter(filterMinCF, filterBeta);
 const oefFilter = (matrixGL_RH) => {
     tickCount += 1;
-    var mat;
+    let mat;
     if (tickCount > WARM_UP_TOLERANCE) {
         mat = filter.filter(Date.now(), matrixGL_RH);
     }
@@ -64,7 +64,7 @@ const load = async (msg) => {
         });
         const regexM = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
         const reM = regexM.test(msg.marker);
-        for (var i = 0; i < markerLength; i++) {
+        for (let i = 0; i < markerLength; i++) {
             let nftMarkerUrl;
             if (reM == true) {
                 if (msg.addPath) {
@@ -87,7 +87,7 @@ const load = async (msg) => {
         console.debug("Loading NFT marker at: ", nftMarkerUrls);
         await ar
             .loadNFTMarkers(nftMarkerUrls, (id) => {
-            var m = 0;
+            let m = 0;
             let marker = ar.getNFTData(id[m], 0);
             ctx.postMessage({ type: "markerInfos", marker: marker });
             ar.trackNFTMarkerId(id[m]);

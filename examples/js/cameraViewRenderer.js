@@ -27,7 +27,7 @@ export class cameraViewRenderer {
                     const videoDevices = [];
                     let videoDeviceIndex = 0;
                     devices.forEach(function (device) {
-                        if (device.kind == "videoinput") {
+                        if (device.kind === "videoinput") {
                             videoDevices[videoDeviceIndex++] = device.deviceId;
                         }
                     });
@@ -35,9 +35,7 @@ export class cameraViewRenderer {
                         hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
                     }
                 }
-                const stream = await navigator.mediaDevices.getUserMedia(hint);
-
-                this._video.srcObject = stream;
+                this._video.srcObject = await navigator.mediaDevices.getUserMedia(hint);
                 this._video = await new Promise((resolve, reject) => {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
@@ -75,7 +73,7 @@ export class cameraViewRenderer {
         this.vw = this._video.videoWidth;
         this.vh = this._video.videoHeight;
 
-        var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
+        const pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
 
         // Void float point
         this.w = Math.floor(this.vw * pscale);

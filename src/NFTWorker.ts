@@ -28,7 +28,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021 WebARKit.
+ *  Copyright 2021-2024 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
@@ -56,10 +56,12 @@ export default class NFTWorker {
 
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
-     * @param markerURL the marker url of the NFT marker.
+     * @param markerURL An array of strings representing the URLs of the NFT markers.
      * @param w the width of the camera.
      * @param h the height of the camera.
-     * @param uuid the uuid of the marker assigned by the ARnft constructor.
+     * @param uuid the UUID of the marker assigned by the ARnft constructor.
+     * @param name the name of the marker.
+     * @param addPath the additional path for the marker.
      */
     constructor(markerURL: Array<string>, w: number, h: number, uuid: string, name: string, addPath: string) {
         this.markerURL = markerURL;
@@ -73,14 +75,13 @@ export default class NFTWorker {
     }
 
     /**
-     * Initialize the NFTWorker instance, you need to provide the camera_para.dat Url,
-     * the ImageData from the video stream and the renderUpdate and trackUpdate functions for the stats.
-     * @param cameraURL
-     * @param imageData
-     * @param renderUpdate
-     * @param trackUpdate
-     * @param oef
-     * @returns true if succesfull.
+     * Initialize the NFTWorker instance. You need to provide the camera\_para.dat URL,
+     * the renderUpdate and trackUpdate functions for the stats, and a boolean for filtering the matrix.
+     * @param cameraURL The URL of the camera\_para.dat file.
+     * @param renderUpdate The function to call for rendering updates.
+     * @param trackUpdate The function to call for tracking updates.
+     * @param oef A boolean for filtering the matrix.
+     * @returns A promise that resolves to true if successful.
      */
     public async initialize(
         cameraURL: string,
@@ -99,8 +100,9 @@ export default class NFTWorker {
     }
 
     /**
-     * This is the function that will pass the video stream to the worker.
-     * @param imageData the image data from the video stream.
+     * Passes the video stream to the worker for processing.
+     * @param imagedata The image data from the video stream.
+     * @param frame The current frame number.
      * @returns void
      */
     public process(imagedata: ImageData, frame: number) {
@@ -114,12 +116,11 @@ export default class NFTWorker {
 
     /**
      * Load the resources from the ARnft instance into the worker.
-     * @param cameraURL camera_para.dat url
-     * @param imageData image data from the video stream.
-     * @param renderUpdate renderUpdate function for the stats.
-     * @param trackUpdate trackUpdate function for the stats.
-     * @param oef oef boolean for filtering the matrix.
-     * @returns true if succesfull.
+     * @param cameraURL The URL of the camera\_para.dat file.
+     * @param renderUpdate The function to call for rendering updates.
+     * @param trackUpdate The function to call for tracking updates.
+     * @param oef A boolean for filtering the matrix.
+     * @returns A promise that resolves to true if successful.
      */
     protected load(
         cameraURL: string,
@@ -143,10 +144,10 @@ export default class NFTWorker {
         });
 
         this.worker.onmessage = (ev: any) => {
-            var msg = ev.data;
+            const msg = ev.data;
             switch (msg.type) {
                 case "loaded": {
-                    var proj = JSON.parse(msg.proj);
+                    const proj = JSON.parse(msg.proj);
                     const ratioW = pw / w;
                     const ratioH = ph / h;
                     proj[0] *= ratioW;
@@ -215,7 +216,7 @@ export default class NFTWorker {
     }
 
     /**
-     * dispatch an event listener if the marker is lost or the matrix of the marker
+     * Dispatch an event listener if the marker is lost or the matrix of the marker
      * if found.
      * @param msg message from the worker.
      */
@@ -242,6 +243,7 @@ export default class NFTWorker {
     public isReady() {
         return this.ready;
     }
+
     public getUuid(): string {
         return this.uuid;
     }

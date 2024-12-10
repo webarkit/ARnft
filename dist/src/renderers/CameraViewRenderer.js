@@ -82,7 +82,7 @@ export class CameraViewRenderer {
     prepareImage() {
         this.vw = this._video.videoWidth;
         this.vh = this._video.videoHeight;
-        var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
+        const pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
         this.w = Math.floor(this.vw * pscale);
         this.h = Math.floor(this.vh * pscale);
         this.pw = Math.floor(Math.max(this.w, (this.h / 3) * 4));
@@ -121,8 +121,7 @@ export class CameraViewRenderer {
                         hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
                     }
                 }
-                const stream = await navigator.mediaDevices.getUserMedia(hint);
-                this._video.srcObject = stream;
+                this._video.srcObject = await navigator.mediaDevices.getUserMedia(hint);
                 this._video = await new Promise((resolve) => {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
