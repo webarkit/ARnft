@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8" />
-        <title>ARnft simd example showing a simple red cube</title>
+        <title>ARnft example showing a simple red cube loading a .zft file</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=0.5, maximum-scale=1" />
         <link rel="stylesheet" href="css/nft-style.css" />
     </head>
@@ -21,7 +21,7 @@
                 "imports": {
                     "three": "./js/third_party/three.js/three.module.min.js",
                     "arnft-threejs": "./js/ARnftThreejs.module.js",
-                    "arnft": "./../dist/ARnft.simd.module.js"
+                    "arnft": "./../dist/ARnft.module.js"
                 }
             }
         </script>
@@ -35,7 +35,7 @@
 
             let width = 640;
             let height = 480;
-            ARnft.init(width, height, [["examples/DataNFT/pinball"]], [["pinball"]], "config.json", true)
+            ARnft.init(width, height, [["examples/DataNFT/zft/pinball"]], [["pinball"]], "config.json", true)
                 .then((nft) => {
                     let mat = new THREE.MeshLambertMaterial({
                         color: 0xff0000,

@@ -36,16 +36,16 @@
         "url": "https://github.com/webarkit/ARnft/issues"
     },
     "devDependencies": {
-        "@types/node": "22.7.5",
+        "@types/node": "22.10.1",
         "@types/stats.js": "^0.17.3",
         "@types/uuid": "10.0.0",
-        "prettier": "^3.3.3",
+        "prettier": "^3.4.2",
         "rimraf": "6.0.1",
         "stats.js": "^0.17.0",
         "ts-loader": "^9.5.1",
-        "typedoc": "0.26.11",
-        "typescript": "^5.5.4",
-        "webpack": "5.96.1",
+        "typedoc": "0.27.4",
+        "typescript": "^5.7.2",
+        "webpack": "5.97.1",
         "webpack-cli": "^5.1.4",
         "worker-loader": "^3.0.8"
     },
@@ -59,7 +59,7 @@
     "license": "LGPL-3.0",
     "resolutions": {},
     "dependencies": {
-        "@webarkit/jsartoolkit-nft": "^1.7.1",
+        "@webarkit/jsartoolkit-nft": "^1.7.2",
         "@webarkit/oneeurofilter-ts": "^0.1.0",
         "terser-webpack-plugin": "^5.3.10",
         "uuid": "11.0.3"
