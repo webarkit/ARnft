@@ -213,7 +213,7 @@ export default class ARnft {
                 markerUrls = this.entities.map((x) => [x.markerUrl]);
                 names = this.entities.map((x) => [x.name]);
             } else {
-                throw "markerUrls or entities can't be undefined";
+                throw new Error("markerUrls or entities can't be undefined");
             }
             return await _arnft._initialize(markerUrls, names, params.stats);
         } catch (error) {
