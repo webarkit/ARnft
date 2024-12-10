@@ -51,10 +51,10 @@ export default class NFTWorker {
             oef: oef,
         });
         this.worker.onmessage = (ev) => {
-            var msg = ev.data;
+            const msg = ev.data;
             switch (msg.type) {
                 case "loaded": {
-                    var proj = JSON.parse(msg.proj);
+                    const proj = JSON.parse(msg.proj);
                     const ratioW = pw / w;
                     const ratioH = ph / h;
                     proj[0] *= ratioW;

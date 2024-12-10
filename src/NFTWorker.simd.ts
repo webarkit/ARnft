@@ -28,7 +28,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021 WebARKit.
+ *  Copyright 2021-2024 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
@@ -56,7 +56,7 @@ export default class NFTWorker {
 
     /**
      * The NFTWorker constructor, to create a new instance of the NFTWorker class.
-     * @param markerURL the marker URL of the NFT marker.
+     * @param markerURL An array of strings representing the URLs of the NFT markers.
      * @param w the width of the camera.
      * @param h the height of the camera.
      * @param uuid the UUID of the marker assigned by the ARnft constructor.
@@ -144,10 +144,10 @@ export default class NFTWorker {
         });
 
         this.worker.onmessage = (ev: any) => {
-            var msg = ev.data;
+            const msg = ev.data;
             switch (msg.type) {
                 case "loaded": {
-                    var proj = JSON.parse(msg.proj);
+                    const proj = JSON.parse(msg.proj);
                     const ratioW = pw / w;
                     const ratioH = ph / h;
                     proj[0] *= ratioW;
@@ -216,7 +216,7 @@ export default class NFTWorker {
     }
 
     /**
-     * dispatch an event listener if the marker is lost or the matrix of the marker
+     * Dispatch an event listener if the marker is lost or the matrix of the marker
      * if found.
      * @param msg message from the worker.
      */
@@ -243,6 +243,7 @@ export default class NFTWorker {
     public isReady() {
         return this.ready;
     }
+
     public getUuid(): string {
         return this.uuid;
     }

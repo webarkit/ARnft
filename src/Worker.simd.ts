@@ -29,7 +29,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021 WebARKit.
+ *  Copyright 2021-2024 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
@@ -93,7 +93,7 @@ const filter = new OneEuroFilter(filterMinCF, filterBeta);
 
 const oefFilter = (matrixGL_RH: any): number[] => {
     tickCount += 1;
-    var mat;
+    let mat;
     if (tickCount > WARM_UP_TOLERANCE) {
         mat = filter.filter(Date.now(), matrixGL_RH);
     } else {
@@ -130,7 +130,7 @@ const load = async (msg: any) => {
             /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
         const reM = regexM.test(msg.marker);
 
-        for (var i = 0; i < markerLength; i++) {
+        for (let i = 0; i < markerLength; i++) {
             let nftMarkerUrl: string;
             if (reM == true) {
                 if (msg.addPath) {
@@ -153,7 +153,7 @@ const load = async (msg: any) => {
             .loadNFTMarkers(
                 nftMarkerUrls,
                 (id: number[]) => {
-                    var m = 0;
+                    let m = 0;
                     let marker = ar.getNFTData(id[m], 0);
                     ctx.postMessage({ type: "markerInfos", marker: marker });
                     ar.trackNFTMarkerId(id[m]);

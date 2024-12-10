@@ -28,7 +28,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021 WebARKit.
+ *  Copyright 2021-2024 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
@@ -152,7 +152,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         this.vw = this._video.videoWidth;
         this.vh = this._video.videoHeight;
 
-        var pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
+        const pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
 
         // Void float point
         this.w = Math.floor(this.vw * pscale);
@@ -197,9 +197,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                         hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
                     }
                 }
-                const stream = await navigator.mediaDevices.getUserMedia(hint);
-
-                this._video.srcObject = stream;
+                this._video.srcObject = await navigator.mediaDevices.getUserMedia(hint);
                 this._video = await new Promise<HTMLVideoElement>((resolve) => {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });

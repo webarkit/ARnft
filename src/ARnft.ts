@@ -28,7 +28,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021 WebARKit.
+ *  Copyright 2021-2024 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
@@ -46,7 +46,7 @@ const { version } = packageJson;
 /**
  * Basic interface for an Entity.
  * @param name the name of  hte Entity
- * @param markerUrl the marker url asscociated
+ * @param markerUrl the marker url associated
  */
 interface IEntity {
     name: string;
@@ -190,6 +190,26 @@ export default class ARnft {
         return ARnft.initWithConfig({ width, height, entities, configUrl, stats });
     }
 
+    /**
+     * Initializes the ARnft instance with the provided configuration.
+     * This method can accept either marker URLs and names or an array of entities.
+     * It sets up the necessary resources, including the HTML container, stats,
+     * camera renderer, and NFT workers. Used internally by the initWithEntities method.
+     *
+     * @param params - The configuration parameters for initialization.
+     * @param params.width - The width in pixels of the video camera.
+     * @param params.height - The height in pixels of the video camera.
+     * @param params.configUrl - The URL of the config.json file.
+     * @param params.stats - Optional. True if you want the stats.
+     * @param params.autoUpdate - Optional. False if you want to maintain it yourself.
+     * @param params.markerUrls - Optional. An array of arrays of marker URLs.
+     * @param params.names - Optional. An array of arrays of entity names.
+     * @param params.entities - Optional. An array of entities.
+     *
+     * @returns A promise that resolves to the ARnft object.
+     *
+     * @throws Will throw an error if neither markerUrls nor entities are provided.
+     */
     static async initWithConfig(params: INameInitConfig | IEntityInitConfig) {
         const _arnft = new ARnft(params.width, params.height, params.configUrl);
         if (params.autoUpdate != null) {
@@ -225,12 +245,12 @@ export default class ARnft {
     }
 
     /**
-     * Used internally by the init static function. It create the html Container,
+     * Used internally by the init static function. It creates the html Container,
      * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker.
      * @param markerUrls the url Array of the markers.
      * @param names the names of the markers
      * @param stats choose if you want the stats.
-     * @returns the ARnft object.
+     * @returns {Promise<this>} A promise that resolves to the ARnft object
      */
     private async _initialize(
         markerUrls: Array<Array<string>>,
@@ -264,7 +284,7 @@ export default class ARnft {
                     document.getElementById("stats2").appendChild(statsWorker.dom);
                 }
 
-                var containerEvent = new Event("containerEvent");
+                const containerEvent = new Event("containerEvent");
                 document.dispatchEvent(containerEvent);
 
                 this.controllers = [];
@@ -315,14 +335,14 @@ export default class ARnft {
     }
 
     /**
-     * Used for a custom initialization of the camera and mediaStream. It create the html Container,
+     * Used for a custom initialization of the camera and mediaStream. It creates the html Container,
      * stats, initialize the CameraRenderer for the video stream,  and the NFTWorker. You must provide
      * your own cameraView based on the ICameraViewRenderer interface.
      * @param markerUrls the url Array of the markers.
      * @param names the names of the markers.
      * @param cameraView the own CameraViewRenderer class instance.
      * @param stats choose if you want the stats.
-     * @returns the ARnft object.
+     * @returns {Promise<this>} A promise that resolves to the ARnft object
      */
     public async initializeRaw(
         markerUrls: Array<Array<string>>,
@@ -357,7 +377,7 @@ export default class ARnft {
                     document.getElementById("stats2").appendChild(statsWorker.dom);
                 }
 
-                var containerEvent = new Event("containerEvent");
+                const containerEvent = new Event("containerEvent");
                 document.dispatchEvent(containerEvent);
 
                 this.controllers = [];
@@ -446,7 +466,7 @@ export default class ARnft {
      */
     public disposeNFT(name: string) {
         let terminateWorker = "terminateWorker-" + name;
-        var event = new Event(terminateWorker);
+        const event = new Event(terminateWorker);
         this.target.dispatchEvent(event);
     }
 
@@ -465,7 +485,7 @@ export default class ARnft {
      */
     public disposeVideoStream() {
         this.cameraView.destroy();
-        var event = new Event("stopVideoStreaming");
+        const event = new Event("stopVideoStreaming");
         this.target.dispatchEvent(event);
     }
 }
