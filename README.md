@@ -115,7 +115,7 @@ import { ARnft } from "@webarkit/ar-nft";
 
 Test the examples in the `/examples` folder:
 
-- `arNFT_autoupdate_example.html` Example with the autopdate routine.
+- `arNFT_autoupdate_example.html` Example with the autoupdate routine.
 - `arNFT_container_example.html` Example with an alternative container.
 - `arNFT_event_example.html` Example with objVisibility and eventListener.
 - `arNFT_example.html` The simplest example displaying a red cube.
@@ -129,6 +129,7 @@ Test the examples in the `/examples` folder:
 - `arNFT_multi_dispose_example.html` Example with multi NFT markers and disposing worker.
 - `arNFT_multi_one_worker_example.html` Example with multi NFT markers in one Worker.
 - `arNFT_video_example.html` Example showing a video.
+- `arNFT_zft_example.html` Example showing a simple cube, loading a .zft file.
 
 You can try also a live example with React at this link: [kalwalt.github.io/ARnft-ES6-react/](https://kalwalt.github.io/ARnft-ES6-react/)
 
@@ -144,6 +145,7 @@ Then run a live server and go to the docs' folder.
 ## 🌟 Features
 
 - **NFT** (**N**atural **F**eature **T**racking) Markers, read my article: [NFT natural feature tracking with jsartoolkit5](https://www.kalwaltart.com/blog/2020/01/21/nft-natural-feature-tracking-with-jsartoolkit5/)
+- **ZFT** compressed **NFT** markers with .zft extension, with faster loading time.
 - **SIMD** (Single Instruction, Multiple Data) support for enhanced performance.
 - **ES6** standard. You can install it as a npm package and use it as a module (experimental). Install it with npm:
 
