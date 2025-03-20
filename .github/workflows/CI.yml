@@ -8,7 +8,7 @@ jobs:
         strategy:
             matrix:
                 node:
-                    - 20.x
+                    - 22.13.0
 
         runs-on: ubuntu-latest
         name: Node.js ${{ matrix.node }}
@@ -33,3 +33,7 @@ jobs:
             - name: Tests
               run: |
                   yarn format-check
+
+            - name: Test Build docs
+              run: |
+                  yarn docs
