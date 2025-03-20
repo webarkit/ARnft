@@ -29,7 +29,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021-2024 WebARKit.
+ *  Copyright 2021-2025 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
@@ -191,7 +191,7 @@ const load = async (msg: any) => {
     }
     console.debug("Loading camera at:", cameraParamUrl);
 
-    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
+    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl, true).then(onLoad).catch(onError);
 };
 
 const process = (next: IImageObj, frame: number) => {

@@ -45,10 +45,10 @@ const { version } = packageJson;
 
 /**
  * Basic interface for an Entity.
- * @param name the name of  hte Entity
+ * @param name the name of the Entity
  * @param markerUrl the marker url associated
  */
-interface IEntity {
+export interface IEntity {
     name: string;
     markerUrl: string;
 }
@@ -61,7 +61,7 @@ interface IEntity {
  * @param stats true if you want the stats.
  * @param autoUpdate false if you want to maintain it yourself
  */
-interface IInitConfig {
+export interface IInitConfig {
     /** the width in pixels of the video camera. */
     width: number;
     /** the height in pixels of the video camera. */
@@ -79,7 +79,7 @@ interface IInitConfig {
  * @param markerUrls an Array of Array of marker urls.
  * @param names an Array of Array of entity names.
  */
-interface INameInitConfig extends IInitConfig {
+export interface INameInitConfig extends IInitConfig {
     /** the Array of url of the markers (without the extension) */
     markerUrls: Array<Array<string>>;
     /** the names of the markers */
@@ -90,7 +90,7 @@ interface INameInitConfig extends IInitConfig {
  * IEntityInitConfig used by the initWithEntities method
  * @param entities an Array of Entity
  */
-interface IEntityInitConfig extends IInitConfig {
+export interface IEntityInitConfig extends IInitConfig {
     /** the Array of Entity. */
     entities: IEntity[];
 }
@@ -98,7 +98,7 @@ interface IEntityInitConfig extends IInitConfig {
 /**
  * IViews is used internally by ARnft
  */
-interface IViews {
+export interface IViews {
     container: HTMLDivElement;
     canvas: HTMLCanvasElement;
     video: HTMLVideoElement;

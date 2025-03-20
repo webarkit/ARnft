@@ -1,5 +1,5 @@
 /*
- *  NFTWorker.ts
+ *  NFTWorker.simd.ts
  *  ARnft
  *
  *  This file is part of ARnft - WebARKit.
@@ -28,7 +28,7 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021-2024 WebARKit.
+ *  Copyright 2021-2025 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *

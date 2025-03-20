@@ -1,24 +1,24 @@
 import { ConfigData } from "./config/ConfigData";
 import { CameraViewRenderer, ICameraViewRenderer } from "./renderers/CameraViewRenderer";
-interface IEntity {
+export interface IEntity {
     name: string;
     markerUrl: string;
 }
-interface IInitConfig {
+export interface IInitConfig {
     width: number;
     height: number;
     configUrl: string;
     stats?: boolean;
     autoUpdate?: boolean;
 }
-interface INameInitConfig extends IInitConfig {
+export interface INameInitConfig extends IInitConfig {
     markerUrls: Array<Array<string>>;
     names: Array<Array<string>>;
 }
-interface IEntityInitConfig extends IInitConfig {
+export interface IEntityInitConfig extends IInitConfig {
     entities: IEntity[];
 }
-interface IViews {
+export interface IViews {
     container: HTMLDivElement;
     canvas: HTMLCanvasElement;
     video: HTMLVideoElement;
@@ -57,4 +57,3 @@ export default class ARnft {
     disposeAllNFTs(): void;
     disposeVideoStream(): void;
 }
-export {};

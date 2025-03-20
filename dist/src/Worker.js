@@ -124,7 +124,7 @@ const load = async (msg) => {
         }
     }
     console.debug("Loading camera at:", cameraParamUrl);
-    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl).then(onLoad).catch(onError);
+    ARControllerNFT.initWithDimensions(msg.pw, msg.ph, cameraParamUrl, true).then(onLoad).catch(onError);
 };
 const process = (next, frame) => {
     if (frame !== lastFrame) {
