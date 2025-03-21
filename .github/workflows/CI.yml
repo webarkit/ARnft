@@ -10,7 +10,7 @@ jobs:
                 node:
                     - 22.13.0
 
-        runs-on: ubuntu-latest
+        runs-on: ubuntu-24.04
         name: Node.js ${{ matrix.node }}
         steps:
             - uses: actions/checkout@v4
