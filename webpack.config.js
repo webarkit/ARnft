@@ -104,7 +104,7 @@ module.exports = (env, argv) => {
           type: 'module',
         },
         path: path.resolve(__dirname, 'dist'),
-        filename: 'ARnft.module.js',
+        filename: 'ARnft.mjs',
       },
       externalsType: 'module',
       externals: {
@@ -126,7 +126,7 @@ module.exports = (env, argv) => {
           type: 'module',
         },
         path: path.resolve(__dirname, 'dist'),
-        filename: 'ARnft.simd.module.js',
+        filename: 'ARnft.simd.mjs',
       },
       externalsType: 'module',
       externals: {
