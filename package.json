@@ -1,6 +1,6 @@
 {
   "name": "@webarkit/ar-nft",
-  "version": "0.14.10",
+  "version": "0.14.11",
   "main": "dist/ARnft.js",
   "module": "dist/ARnft.mjs",
   "types": "types/src/index.d.ts",

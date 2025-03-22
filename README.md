@@ -59,7 +59,7 @@ and import it as a module:
         "imports": {
             "three": "./js/third_party/three.js/three.module.min.js",
             "arnft-threejs": "./js/ARnftThreejs.module.js",
-            "arnft": "./../dist/ARnft.module.js"
+            "arnft": "./../dist/ARnft.mjs"
         }
     }
 </script>
@@ -82,7 +82,7 @@ or you can use raw.githack services (for development):
         "imports": {
             "three": "https://cdn.jsdelivr.net/npm/three@<version>/build/three.module.min.js",
             "arnft-threejs": "https://raw.githack.com/webarkit/ARnft-threejs/master/dist/ARnftThreejs.module.js",
-            "arnft": "https://raw.githack.com/webarkit/ARnft/master/dist/ARnft.module.js"
+            "arnft": "https://raw.githack.com/webarkit/ARnft/master/dist/ARnft.mjs"
         }
     }
 </script>
@@ -103,7 +103,7 @@ or if you want to import as a module with npm:
 ```
 // In your package.json:
 "devDependencies": {
-    "@webarkit/ar-nft": "^0.14.9"
+    "@webarkit/ar-nft": "^0.14.11"
 },
 ```
 ```javascript
