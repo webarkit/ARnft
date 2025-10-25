@@ -22,10 +22,12 @@ jobs:
                   node-version: ${{ matrix.node-version }}
             - uses: actions/cache@v4
               with:
-                  path: ~/.npm
-                  key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+                  path: |
+                      ~/.cache/yarn
+                      **/node_modules
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
                   restore-keys: |
-                      ${{ runner.os }}-node-
+                      ${{ runner.os }}-yarn-
             - name: Set output
               id: vars
               run: echo name=tag::${GITHUB_REF#refs/*/} >> $GITHUB_OUTPUT
