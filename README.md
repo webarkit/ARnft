@@ -2,7 +2,7 @@
 ![github stars](https://flat.badgen.net/github/stars/webarkit/ARnft)
 ![github forks](https://flat.badgen.net/github/forks/webarkit/ARnft)
 ![npm package version](https://flat.badgen.net/npm/v/@webarkit/ar-nft)
-![Dependabot Badge](https://flat.badgen.net/dependabot/thepracticaldev/dev.to?icon=dependabot)
+![Dependabot status](https://img.shields.io/badge/Dependabot-enabled-02569B?logo=dependabot)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![CI](https://github.com/webarkit/ARnft/actions/workflows/CI.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/CI.yml)
 [![Build ARnft CI](https://github.com/webarkit/ARnft/actions/workflows/build.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/main.yml)
