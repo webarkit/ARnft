@@ -40,13 +40,13 @@
     "@types/node": "22.13.0",
     "@types/stats.js": "^0.17.3",
     "@types/uuid": "10.0.0",
-    "prettier": "3.5.3",
+    "prettier": "3.6.2",
     "rimraf": "6.0.1",
     "stats.js": "^0.17.0",
-    "ts-loader": "9.5.2",
-    "typedoc": "0.28.1",
-    "typescript": "5.8.2",
-    "webpack": "5.98.0",
+    "ts-loader": "9.5.4",
+    "typedoc": "0.28.14",
+    "typescript": "5.9.3",
+    "webpack": "5.102.1",
     "webpack-cli": "6.0.1",
     "worker-loader": "^3.0.8"
   },
@@ -60,9 +60,9 @@
   "license": "LGPL-3.0",
   "resolutions": {},
   "dependencies": {
-    "@webarkit/jsartoolkit-nft": "1.7.4",
+    "@webarkit/jsartoolkit-nft": "1.7.5",
     "@webarkit/oneeurofilter-ts": "0.1.2",
     "terser-webpack-plugin": "5.3.14",
-    "uuid": "11.1.0"
+    "uuid": "13.0.0"
   }
 }
