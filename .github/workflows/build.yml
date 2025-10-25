@@ -56,4 +56,4 @@ jobs:
               with:
                   files: |
                       dist/ARnft.js
-                      dist/ARnft.module.js
+                      dist/ARnft.mjs
