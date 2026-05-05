@@ -1,6 +1,6 @@
 {
     "name": "@webarkit/ar-nft",
-    "version": "0.14.12",
+    "version": "0.14.13",
     "main": "dist/ARnft.js",
     "module": "dist/ARnft.mjs",
     "types": "types/src/index.d.ts",
@@ -37,7 +37,7 @@
         "url": "https://github.com/webarkit/ARnft/issues"
     },
     "devDependencies": {
-        "@types/node": "22.13.0",
+        "@types/node": "24.12.2",
         "@types/stats.js": "^0.17.4",
         "@types/uuid": "10.0.0",
         "prettier": "3.8.3",
