@@ -59,23 +59,65 @@ export function isIOS(): boolean {
     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
 
+export interface ProcessGeometry {
+    /** true when the source was rotated 90 degrees onto the process canvas. */
+    rot: boolean;
+    w: number;
+    h: number;
+    pw: number;
+    ph: number;
+    ox: number;
+    oy: number;
+}
+
+/**
+ * Compute the geometry used to fit a video of size vw x vh onto the (always
+ * landscape) process canvas. When `rotatePortrait` is true and the video is
+ * portrait (vh > vw), the long/short sides are swapped before applying the
+ * existing formula so the video can be drawn rotated 90 degrees instead of
+ * being letterboxed. With `rotatePortrait` false/omitted, or for a landscape
+ * video, this is identical to the original (unrotated) formula.
+ * See https://github.com/webarkit/ARnft/issues/344
+ * @param vw the video width
+ * @param vh the video height
+ * @param rotatePortrait opt-in flag, see VideoSettingData.rotatePortrait
+ * @param floor whether to floor the computed values (CameraViewRenderer always
+ * did; getWindowSize historically did not, kept as-is to avoid changing the
+ * existing numeric output for callers that don't opt into rotatePortrait)
+ * @returns the process canvas geometry
+ */
+export function getProcessGeometry(vw: number, vh: number, rotatePortrait = false, floor = false): ProcessGeometry {
+    const rot = rotatePortrait && vh > vw;
+    const V = rot ? vh : vw;
+    const H = rot ? vw : vh;
+    const round = floor ? Math.floor : (n: number) => n;
+
+    const pscale = 320 / Math.max(V, (H / 3) * 4);
+
+    const w = round(V * pscale);
+    const h = round(H * pscale);
+    const pw = round(Math.max(w, (h / 3) * 4));
+    const ph = round(Math.max(h, (w / 4) * 3));
+    const ox = round((pw - w) / 2);
+    const oy = round((ph - h) / 2);
+
+    return { rot, w, h, pw, ph, ox, oy };
+}
+
 /**
  * Get the Window sizevideo dimensions, used internally in the NFTWorker.
  * @param vw the video width
  * @param vh the video height
+ * @param rotatePortrait opt-in flag, see VideoSettingData.rotatePortrait
  * @returns an array of values.
  */
-export function getWindowSize(vw: number, vh: number): Array<number> {
-    const pscale = 320 / Math.max(vw, (vh / 3) * 4);
+export function getWindowSize(vw: number, vh: number, rotatePortrait = false): Array<number> {
+    const { pw, ph, w, h } = getProcessGeometry(vw, vh, rotatePortrait);
     const sscale = isMobile() ? window.outerWidth / vw : 1;
 
-    let sw = vw * sscale;
-    let sh = vh * sscale;
+    const sw = vw * sscale;
+    const sh = vh * sscale;
 
-    let w: number = vw * pscale;
-    let h: number = vh * pscale;
-    let pw: number = Math.max(w, (h / 3) * 4);
-    let ph: number = Math.max(h, (w / 4) * 3);
     return [sw, sh, pw, ph, w, h];
 }
 

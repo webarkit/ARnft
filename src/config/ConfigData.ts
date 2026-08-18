@@ -67,6 +67,14 @@ export interface VideoSettingData {
     height: ScreenData;
     facingMode: string;
     targetFrameRate: number;
+    /**
+     * Opt-in (default false). When true and the camera stream is portrait
+     * (taller than wide), the video is rotated 90 degrees onto the process
+     * canvas instead of being letterboxed, which increases the usable
+     * tracking width/points for NFT markers. Landscape streams are always
+     * unaffected. See https://github.com/webarkit/ARnft/issues/344
+     */
+    rotatePortrait?: boolean;
 }
 
 export interface StatsData {

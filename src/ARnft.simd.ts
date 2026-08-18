@@ -296,7 +296,15 @@ export default class ARnft {
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
                 markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(
-                        new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0], this.addPath)
+                        new NFTWorker(
+                            markerUrl,
+                            this.cameraView.width,
+                            this.cameraView.height,
+                            this.uuid,
+                            names[index][0],
+                            this.addPath,
+                            this.cameraView.rotated === true
+                        )
                     );
                     this.controllers[index].initialize(
                         this.appData.cameraPara,
@@ -389,7 +397,15 @@ export default class ARnft {
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
                 markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(
-                        new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index], this.addPath)
+                        new NFTWorker(
+                            markerUrl,
+                            cameraView.width,
+                            cameraView.height,
+                            this.uuid,
+                            names[index],
+                            this.addPath,
+                            cameraView.rotated === true
+                        )
                     );
                     this.controllers[index].initialize(
                         this.appData.cameraPara,

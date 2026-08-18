@@ -35,6 +35,7 @@
  */
 
 import { VideoSettingData } from "../config/ConfigData";
+import { getProcessGeometry } from "../utils/ARnftUtils";
 
 export interface ICameraViewRenderer {
     facing: string;
@@ -46,6 +47,8 @@ export interface ICameraViewRenderer {
     getImage: () => ImageData;
     initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
     destroy: () => void;
+    /** true when the video is being rotated 90 degrees onto the process canvas, see VideoSettingData.rotatePortrait. */
+    readonly rotated?: boolean;
 }
 export class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process: HTMLCanvasElement;
@@ -67,6 +70,9 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     private ox: number;
     private oy: number;
+
+    private rotatePortrait: boolean = false;
+    private rot: boolean = false;
 
     private target: EventTarget;
     private targetFrameRate: number = 60;
@@ -112,6 +118,10 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return this.context_process;
     }
 
+    public get rotated(): boolean {
+        return this.rot;
+    }
+
     public getFrame(): number {
         return this._frame;
     }
@@ -119,7 +129,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     public getImage(): ImageData {
         const now = Date.now();
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
-            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            this.drawFrame();
             const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
             if (this.imageDataCache == null) {
                 this.imageDataCache = imageData.data;
@@ -135,7 +145,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
     public get image(): ImageData {
         const now = Date.now();
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
-            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            this.drawFrame();
             const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
             if (this.imageDataCache == null) {
                 this.imageDataCache = imageData.data;
@@ -148,19 +158,38 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
     }
 
+    /**
+     * Draws the current video frame onto the process canvas. When `rot` is
+     * true (portrait video with rotatePortrait opted in) the frame is rotated
+     * 90 degrees so it fills the process canvas without letterboxing; the
+     * destination footprint (ox, oy, w, h) is identical to the non-rotated
+     * case. See https://github.com/webarkit/ARnft/issues/344
+     */
+    private drawFrame(): void {
+        const ctx = this.context_process;
+        if (this.rot) {
+            ctx.save();
+            ctx.translate(this.pw, 0);
+            ctx.rotate(Math.PI / 2);
+            ctx.drawImage(this.video, 0, 0, this.vw, this.vh, this.oy, this.pw - this.ox - this.w, this.h, this.w);
+            ctx.restore();
+        } else {
+            ctx.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+        }
+    }
+
     public prepareImage(): void {
         this.vw = this._video.videoWidth;
         this.vh = this._video.videoHeight;
 
-        const pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
-
-        // Void float point
-        this.w = Math.floor(this.vw * pscale);
-        this.h = Math.floor(this.vh * pscale);
-        this.pw = Math.floor(Math.max(this.w, (this.h / 3) * 4));
-        this.ph = Math.floor(Math.max(this.h, (this.w / 4) * 3));
-        this.ox = Math.floor((this.pw - this.w) / 2);
-        this.oy = Math.floor((this.ph - this.h) / 2);
+        const geometry = getProcessGeometry(this.vw, this.vh, this.rotatePortrait, true);
+        this.rot = geometry.rot;
+        this.w = geometry.w;
+        this.h = geometry.h;
+        this.pw = geometry.pw;
+        this.ph = geometry.ph;
+        this.ox = geometry.ox;
+        this.oy = geometry.oy;
 
         this.canvas_process.width = this.pw;
         this.canvas_process.height = this.ph;
@@ -174,6 +203,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         if (videoSettings.targetFrameRate != null) {
             this.targetFrameRate = videoSettings.targetFrameRate;
         }
+        this.rotatePortrait = videoSettings.rotatePortrait === true;
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
