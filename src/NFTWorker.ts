@@ -51,6 +51,7 @@ export default class NFTWorker {
     private uuid: string;
     private name: string;
     private addPath: string;
+    private rotatePortrait: boolean;
 
     protected ready: boolean;
 
@@ -62,8 +63,18 @@ export default class NFTWorker {
      * @param uuid the UUID of the marker assigned by the ARnft constructor.
      * @param name the name of the marker.
      * @param addPath the additional path for the marker.
+     * @param rotatePortrait opt-in flag, see VideoSettingData.rotatePortrait. Must be
+     * kept in sync with the CameraViewRenderer that produces the processed frames.
      */
-    constructor(markerURL: Array<string>, w: number, h: number, uuid: string, name: string, addPath: string) {
+    constructor(
+        markerURL: Array<string>,
+        w: number,
+        h: number,
+        uuid: string,
+        name: string,
+        addPath: string,
+        rotatePortrait: boolean = false
+    ) {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
@@ -72,6 +83,7 @@ export default class NFTWorker {
         this.name = name;
         this.ready = false;
         this.addPath = addPath;
+        this.rotatePortrait = rotatePortrait;
     }
 
     /**
@@ -128,7 +140,8 @@ export default class NFTWorker {
         trackUpdate: () => void,
         oef: boolean
     ): Promise<boolean> {
-        let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
+        let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh, this.rotatePortrait);
+        const rot = this.rotatePortrait && this.vh > this.vw;
 
         const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
         this.target.dispatchEvent(setWindowSizeEvent);
@@ -158,6 +171,19 @@ export default class NFTWorker {
                     proj[5] *= ratioH;
                     proj[9] *= ratioH;
                     proj[13] *= ratioH;
+                    if (rot) {
+                        // The process canvas received a frame rotated 90 degrees onto it
+                        // (see CameraViewRenderer.drawFrame()), so the projection's x/y
+                        // axes are rotated back here to match the un-rotated video that
+                        // is actually shown on screen.
+                        // See https://github.com/webarkit/ARnft/issues/344
+                        for (let c = 0; c < 4; c++) {
+                            const x = proj[4 * c];
+                            const y = proj[4 * c + 1];
+                            proj[4 * c] = y;
+                            proj[4 * c + 1] = -x;
+                        }
+                    }
                     const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
                         detail: { proj: proj },
                     });
