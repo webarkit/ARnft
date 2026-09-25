@@ -175,13 +175,15 @@ export default class NFTWorker {
                         // The process canvas received a frame rotated 90 degrees onto it
                         // (see CameraViewRenderer.drawFrame()), so the projection's x/y
                         // axes are rotated back here to match the un-rotated video that
-                        // is actually shown on screen.
+                        // is actually shown on screen. drawFrame() rotates clockwise (the video
+                        // top edge lands on the canvas right edge), so the process clip coords
+                        // (xr, yr) map back to the displayed clip coords as (-yr, xr).
                         // See https://github.com/webarkit/ARnft/issues/344
                         for (let c = 0; c < 4; c++) {
                             const x = proj[4 * c];
                             const y = proj[4 * c + 1];
-                            proj[4 * c] = y;
-                            proj[4 * c + 1] = -x;
+                            proj[4 * c] = -y;
+                            proj[4 * c + 1] = x;
                         }
                     }
                     const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
