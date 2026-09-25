@@ -395,12 +395,16 @@ export default class ARnft {
             .then(() => {
                 const renderUpdate = () => (stats ? statsMain.update() : null);
                 const trackUpdate = () => (stats ? statsWorker.update() : null);
+                // A custom renderer may not expose width/height (e.g. examples/js/cameraViewRenderer.js),
+                // in that case fall back to the dimensions passed to the ARnft constructor.
+                const videoWidth = cameraView.width > 0 ? cameraView.width : this.width;
+                const videoHeight = cameraView.height > 0 ? cameraView.height : this.height;
                 markerUrls.forEach((markerUrl: Array<string>, index: number) => {
                     this.controllers.push(
                         new NFTWorker(
                             markerUrl,
-                            cameraView.width,
-                            cameraView.height,
+                            videoWidth,
+                            videoHeight,
                             this.uuid,
                             names[index],
                             this.addPath,
