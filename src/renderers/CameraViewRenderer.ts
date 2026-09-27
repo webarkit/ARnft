@@ -198,6 +198,25 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         this.context_process.fillRect(0, 0, this.pw, this.ph);
     }
 
+    /**
+     * Called when the camera stream changes resolution, e.g. when a mobile device is
+     * rotated and the stream swaps width and height. Recomputes the process canvas
+     * geometry and dispatches a "videoResize" event so the NFTWorker(s) can update
+     * the window size and the projection matrix.
+     */
+    private onVideoResize(): void {
+        const vw = this._video.videoWidth;
+        const vh = this._video.videoHeight;
+        if (vw === 0 || vh === 0 || (vw === this.vw && vh === this.vh)) {
+            return;
+        }
+        this.prepareImage();
+        const videoResizeEvent = new CustomEvent<object>("videoResize", {
+            detail: { width: this.vw, height: this.vh },
+        });
+        this.target.dispatchEvent(videoResizeEvent);
+    }
+
     public async initialize(videoSettings: VideoSettingData): Promise<boolean> {
         this._facing = videoSettings.facingMode || "environment";
         if (videoSettings.targetFrameRate != null) {
@@ -232,6 +251,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
                 this.prepareImage();
+                this._video.addEventListener("resize", () => this.onVideoResize());
                 return true;
             } catch (error) {
                 return Promise.reject(error);
