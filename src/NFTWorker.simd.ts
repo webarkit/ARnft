@@ -46,6 +46,9 @@ export default class NFTWorker {
     private vw: number;
     private vh: number;
 
+    // projection matrix received from the worker, before the video size scaling
+    private cameraProj: number[];
+
     private target: EventTarget;
 
     private uuid: string;
@@ -108,7 +111,25 @@ export default class NFTWorker {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
+        this.target.addEventListener("videoResize", (ev: any) => {
+            this.setVideoSize(ev.detail.width, ev.detail.height);
+        });
         return await this.load(cameraURL, renderUpdate, trackUpdate, oef);
+    }
+
+    /**
+     * Update the camera size after the video stream changed resolution (e.g. when a
+     * mobile device is rotated) and dispatch the recomputed window size and projection matrix.
+     * @param w the new width of the camera.
+     * @param h the new height of the camera.
+     */
+    public setVideoSize(w: number, h: number): void {
+        this.vw = w;
+        this.vh = h;
+        this.dispatchWindowSize();
+        if (this.cameraProj != null) {
+            this.dispatchProjectionMatrix();
+        }
     }
 
     /**
@@ -140,11 +161,9 @@ export default class NFTWorker {
         trackUpdate: () => void,
         oef: boolean
     ): Promise<boolean> {
-        let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh, this.rotatePortrait);
-        const rot = this.rotatePortrait && this.vh > this.vw;
+        const [, , pw, ph] = getWindowSize(this.vw, this.vh, this.rotatePortrait);
 
-        const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
-        this.target.dispatchEvent(setWindowSizeEvent);
+        this.dispatchWindowSize();
 
         this.worker.postMessage({
             type: "load",
@@ -160,36 +179,8 @@ export default class NFTWorker {
             const msg = ev.data;
             switch (msg.type) {
                 case "loaded": {
-                    const proj = JSON.parse(msg.proj);
-                    const ratioW = pw / w;
-                    const ratioH = ph / h;
-                    proj[0] *= ratioW;
-                    proj[4] *= ratioW;
-                    proj[8] *= ratioW;
-                    proj[12] *= ratioW;
-                    proj[1] *= ratioH;
-                    proj[5] *= ratioH;
-                    proj[9] *= ratioH;
-                    proj[13] *= ratioH;
-                    if (rot) {
-                        // The process canvas received a frame rotated 90 degrees onto it
-                        // (see CameraViewRenderer.drawFrame()), so the projection's x/y
-                        // axes are rotated back here to match the un-rotated video that
-                        // is actually shown on screen. drawFrame() rotates clockwise (the video
-                        // top edge lands on the canvas right edge), so the process clip coords
-                        // (xr, yr) map back to the displayed clip coords as (-yr, xr).
-                        // See https://github.com/webarkit/ARnft/issues/344
-                        for (let c = 0; c < 4; c++) {
-                            const x = proj[4 * c];
-                            const y = proj[4 * c + 1];
-                            proj[4 * c] = -y;
-                            proj[4 * c + 1] = x;
-                        }
-                    }
-                    const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
-                        detail: { proj: proj },
-                    });
-                    this.target.dispatchEvent(projectionMatrixEvent);
+                    this.cameraProj = JSON.parse(msg.proj);
+                    this.dispatchProjectionMatrix();
                     break;
                 }
                 case "endLoading": {
@@ -241,6 +232,54 @@ export default class NFTWorker {
         };
         renderU();
         return Promise.resolve(true);
+    }
+
+    /**
+     * Dispatch the size of the rendering window for the current video size.
+     */
+    private dispatchWindowSize(): void {
+        const [sw, sh] = getWindowSize(this.vw, this.vh);
+        const setWindowSizeEvent = new CustomEvent<object>("getWindowSize", { detail: { sw: sw, sh: sh } });
+        this.target.dispatchEvent(setWindowSizeEvent);
+    }
+
+    /**
+     * Scale the projection matrix of the worker, computed for the whole process canvas,
+     * to the area covered by the current video size and dispatch it.
+     */
+    private dispatchProjectionMatrix(): void {
+        const [, , pw, ph, w, h] = getWindowSize(this.vw, this.vh, this.rotatePortrait);
+        const rot = this.rotatePortrait && this.vh > this.vw;
+        const proj = this.cameraProj.slice();
+        const ratioW = pw / w;
+        const ratioH = ph / h;
+        proj[0] *= ratioW;
+        proj[4] *= ratioW;
+        proj[8] *= ratioW;
+        proj[12] *= ratioW;
+        proj[1] *= ratioH;
+        proj[5] *= ratioH;
+        proj[9] *= ratioH;
+        proj[13] *= ratioH;
+        if (rot) {
+            // The process canvas received a frame rotated 90 degrees onto it
+            // (see CameraViewRenderer.drawFrame()), so the projection's x/y
+            // axes are rotated back here to match the un-rotated video that
+            // is actually shown on screen. drawFrame() rotates clockwise (the video
+            // top edge lands on the canvas right edge), so the process clip coords
+            // (xr, yr) map back to the displayed clip coords as (-yr, xr).
+            // See https://github.com/webarkit/ARnft/issues/344
+            for (let c = 0; c < 4; c++) {
+                const x = proj[4 * c];
+                const y = proj[4 * c + 1];
+                proj[4 * c] = -y;
+                proj[4 * c + 1] = x;
+            }
+        }
+        const projectionMatrixEvent = new CustomEvent<object>("getProjectionMatrix", {
+            detail: { proj: proj },
+        });
+        this.target.dispatchEvent(projectionMatrixEvent);
     }
 
     /**
