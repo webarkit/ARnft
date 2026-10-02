@@ -30,11 +30,22 @@ or with npm:
 
 :three: &nbsp; Run the node server:
 
-`npx http-server`
+`npx http-server -c-1`
+
+(`-c-1` disables caching, so the browser always loads the latest `dist/` and `config.json`.)
 
 :four: &nbsp; Go to the examples:
 
-http://localhost:8000/examples/arNFT_example.html
+http://localhost:8080/examples/arNFT_example.html
+
+To test on a phone, the page must be served over **HTTPS**, because browsers only allow the camera on HTTPS or `localhost`. Create a self-signed certificate once and start the server with it:
+
+```bash
+openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/CN=localhost"
+npx http-server -c-1 -S -C cert.pem -K key.pem
+```
+
+Then open on the phone the `https://` address printed by `http-server` for your computer, e.g. `https://192.168.1.10:8080/examples/arNFT_example.html`, and accept the certificate warning. Don't commit `cert.pem` and `key.pem`: they are listed in `.gitignore`.
 
 :five: &nbsp; Point your device 📱 to the pinball image 👇 a red cube will appear !
 

@@ -1,3 +1,6 @@
 node_modules
 docs/*
 .idea
+# local HTTPS certificate for testing the examples on a phone (see AGENTS.md)
+cert.pem
+key.pem
