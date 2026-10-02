@@ -112,7 +112,7 @@ export default class NFTWorker {
             worker.terminate();
         });
         this.target.addEventListener("videoResize", (ev: any) => {
-            this.setVideoSize(ev.detail.width, ev.detail.height);
+            this.setVideoSize(ev.detail.width, ev.detail.height, ev.detail.rotated);
         });
         return await this.load(cameraURL, renderUpdate, trackUpdate, oef);
     }
@@ -122,10 +122,15 @@ export default class NFTWorker {
      * mobile device is rotated) and dispatch the recomputed window size and projection matrix.
      * @param w the new width of the camera.
      * @param h the new height of the camera.
+     * @param rotated optional, whether the renderer now rotates the frames onto the process
+     * canvas (see CameraViewRenderer.rotated). When omitted the current setting is kept.
      */
-    public setVideoSize(w: number, h: number): void {
+    public setVideoSize(w: number, h: number, rotated?: boolean): void {
         this.vw = w;
         this.vh = h;
+        if (rotated != null) {
+            this.rotatePortrait = rotated;
+        }
         this.dispatchWindowSize();
         if (this.cameraProj != null) {
             this.dispatchProjectionMatrix();
