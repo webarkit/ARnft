@@ -69,7 +69,7 @@
                     let coneGeom = new THREE.ConeGeometry(0.5, 1, 32);
                     let cone = new THREE.Mesh(coneGeom, maty);
                     cone.name = "cone";
-                    cone.rotation.x = 90;
+                    cone.rotation.x = Math.PI / 2; // radians: stand the cone up along +z
                     cone.position.z = 90;
                     cone.scale.set(180, 180, 180);
 
