@@ -1055,7 +1055,7 @@ class Ze {
         const n = this.header.length - 12,
             r = new DataView(e, 12);
         let i = 0;
-        for (; i < n; ) {
+        for (; i < n;) {
             const t = r.getUint32(i, !0);
             i += 4;
             const n = r.getUint32(i, !0);
