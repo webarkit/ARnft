@@ -62,7 +62,7 @@
     "resolutions": {},
     "dependencies": {
         "@webarkit/jsartoolkit-nft": "1.13.0",
-        "@webarkit/oneeurofilter-ts": "0.1.2",
+        "@webarkit/oneeurofilter-ts": "0.2.0",
         "uuid": "14.0.2"
     }
 }
