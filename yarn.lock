@@ -194,10 +194,10 @@
     "@babel/runtime" "8.0.5"
     axios "1.20.0"
 
-"@webarkit/oneeurofilter-ts@0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@webarkit/oneeurofilter-ts/-/oneeurofilter-ts-0.1.2.tgz#8511a5e2142d3a9cb6b70e8a7a641183f59bd6da"
-  integrity sha512-My39x2C557gBRlT7XGkcv8D4BAJDMEV3oM0eEWl6zcmfwzcEzKBcePB8KJw9U7wD6g1k6RTKg1cZffzDoq+rPA==
+"@webarkit/oneeurofilter-ts@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@webarkit/oneeurofilter-ts/-/oneeurofilter-ts-0.2.0.tgz#e45585835e884577b61796b3802b805c44ff121b"
+  integrity sha512-2Is33gklcmTY/SOWTzybDbt7EH2LBkl+/ZllRCJmH4FxaC6Le16qVkVwMY4Njo/QWpbYWee1Rvw0qBZbajP+rA==
 
 "@webassemblyjs/ast@1.14.1", "@webassemblyjs/ast@^1.14.1":
   version "1.14.1"
