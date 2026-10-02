@@ -47,6 +47,9 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     private drawFrame;
     prepareImage(): void;
     private onVideoResize;
+    private openCameraStream;
+    private getVideoDevices;
+    private findCamera;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;
     destroy(): void;
 }

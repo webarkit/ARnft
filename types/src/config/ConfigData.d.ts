@@ -29,6 +29,7 @@ export interface VideoSettingData {
     facingMode: string;
     targetFrameRate: number;
     rotatePortrait?: boolean;
+    cameraLabel?: string;
 }
 export interface StatsData {
     createHtml: boolean;
