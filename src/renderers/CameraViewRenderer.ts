@@ -35,7 +35,7 @@
  */
 
 import { VideoSettingData } from "../config/ConfigData";
-import { getProcessGeometry } from "../utils/ARnftUtils";
+import { getProcessGeometry, isMobile } from "../utils/ARnftUtils";
 
 export interface ICameraViewRenderer {
     facing: string;
@@ -219,6 +219,71 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         this.target.dispatchEvent(videoResizeEvent);
     }
 
+    /**
+     * Open the camera stream. With videoSettings.cameraLabel the first camera whose label
+     * contains that text is used. Otherwise smartphones use the last camera (the regular
+     * lens on multi-camera devices) and desktop browsers use the camera chosen by the user.
+     * @param videoSettings the video settings of the config.
+     * @returns the camera stream.
+     */
+    private async openCameraStream(videoSettings: VideoSettingData): Promise<MediaStream> {
+        const hint: any = {
+            audio: false,
+            video: {
+                facingMode: this._facing,
+                width: { min: videoSettings.width.min, max: videoSettings.width.max },
+            },
+        };
+        const label = videoSettings.cameraLabel;
+        const videoDevices = await this.getVideoDevices();
+        // camera labels are only exposed after the camera permission has been granted
+        const labelsAvailable = videoDevices.some((device) => device.label !== "");
+
+        if (label && !labelsAvailable) {
+            // first visit: open the default camera to get the permission, then switch to
+            // the matching camera if it's a different one
+            const stream = await navigator.mediaDevices.getUserMedia(hint);
+            const camera = this.findCamera(await this.getVideoDevices(), label);
+            if (camera == null || camera.deviceId === stream.getVideoTracks()[0].getSettings().deviceId) {
+                return stream;
+            }
+            stream.getTracks().forEach((track) => track.stop());
+            hint.video.deviceId = { exact: camera.deviceId };
+            return navigator.mediaDevices.getUserMedia(hint);
+        }
+
+        const camera = label ? this.findCamera(videoDevices, label) : null;
+        if (camera != null) {
+            hint.video.deviceId = { exact: camera.deviceId };
+        } else if (isMobile() && videoDevices.length > 1) {
+            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1].deviceId };
+        }
+        return navigator.mediaDevices.getUserMedia(hint);
+    }
+
+    private async getVideoDevices(): Promise<MediaDeviceInfo[]> {
+        if (!navigator.mediaDevices.enumerateDevices) {
+            return [];
+        }
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.filter((device) => device.kind == "videoinput");
+    }
+
+    /**
+     * Find the first camera whose label contains `label` (case insensitive). Warns with the
+     * labels of the available cameras when none matches.
+     */
+    private findCamera(videoDevices: MediaDeviceInfo[], label: string): MediaDeviceInfo | undefined {
+        const camera = videoDevices.find((device) => device.label.toLowerCase().includes(label.toLowerCase()));
+        if (camera == null) {
+            console.warn(
+                'No camera matches the cameraLabel "' + label + '", available cameras:',
+                videoDevices.map((device) => device.label)
+            );
+        }
+        return camera;
+    }
+
     public async initialize(videoSettings: VideoSettingData): Promise<boolean> {
         this._facing = videoSettings.facingMode || "environment";
         if (videoSettings.targetFrameRate != null) {
@@ -228,27 +293,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
-                const hint: any = {
-                    audio: false,
-                    video: {
-                        facingMode: this._facing,
-                        width: { min: videoSettings.width.min, max: videoSettings.width.max },
-                    },
-                };
-                if (navigator.mediaDevices.enumerateDevices) {
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    const videoDevices = [] as Array<string>;
-                    let videoDeviceIndex = 0;
-                    devices.forEach(function (device) {
-                        if (device.kind == "videoinput") {
-                            videoDevices[videoDeviceIndex++] = device.deviceId;
-                        }
-                    });
-                    if (videoDevices.length > 1) {
-                        hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
-                    }
-                }
-                this._video.srcObject = await navigator.mediaDevices.getUserMedia(hint);
+                this._video.srcObject = await this.openCameraStream(videoSettings);
                 this._video = await new Promise<HTMLVideoElement>((resolve) => {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
