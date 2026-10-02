@@ -19,6 +19,7 @@ export class CameraViewRenderer {
     imageDataCache;
     _frame;
     lastCache = 0;
+    videoResizeListener = () => this.onVideoResize();
     constructor(video) {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d", { alpha: false, willReadFrequently: true });
@@ -159,7 +160,7 @@ export class CameraViewRenderer {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
                 this.prepareImage();
-                this._video.addEventListener("resize", () => this.onVideoResize());
+                this._video.addEventListener("resize", this.videoResizeListener);
                 return true;
             }
             catch (error) {
@@ -172,6 +173,7 @@ export class CameraViewRenderer {
     }
     destroy() {
         const video = this._video;
+        video.removeEventListener("resize", this.videoResizeListener);
         this.target.addEventListener("stopVideoStreaming", function () {
             const stream = video.srcObject;
             console.log("stop streaming");

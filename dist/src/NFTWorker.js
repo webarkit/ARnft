@@ -27,12 +27,14 @@ export default class NFTWorker {
     async initialize(cameraURL, renderUpdate, trackUpdate, oef) {
         this.worker = new Worker();
         const worker = this.worker;
-        this.target.addEventListener("terminateWorker-" + this.name, function () {
+        const onVideoResize = (ev) => {
+            this.setVideoSize(ev.detail.width, ev.detail.height, ev.detail.rotated);
+        };
+        this.target.addEventListener("videoResize", onVideoResize);
+        this.target.addEventListener("terminateWorker-" + this.name, () => {
             worker.postMessage({ type: "stop" });
             worker.terminate();
-        });
-        this.target.addEventListener("videoResize", (ev) => {
-            this.setVideoSize(ev.detail.width, ev.detail.height, ev.detail.rotated);
+            this.target.removeEventListener("videoResize", onVideoResize);
         });
         return await this.load(cameraURL, renderUpdate, trackUpdate, oef);
     }
