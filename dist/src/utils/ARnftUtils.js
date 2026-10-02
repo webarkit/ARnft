@@ -8,15 +8,25 @@ export function isMobile() {
 export function isIOS() {
     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
 }
-export function getWindowSize(vw, vh) {
-    const pscale = 320 / Math.max(vw, (vh / 3) * 4);
+export function getProcessGeometry(vw, vh, rotatePortrait = false, floor = false) {
+    const rot = rotatePortrait && vh > vw;
+    const V = rot ? vh : vw;
+    const H = rot ? vw : vh;
+    const round = floor ? Math.floor : (n) => n;
+    const pscale = 320 / Math.max(V, (H / 3) * 4);
+    const w = round(V * pscale);
+    const h = round(H * pscale);
+    const pw = round(Math.max(w, (h / 3) * 4));
+    const ph = round(Math.max(h, (w / 4) * 3));
+    const ox = round((pw - w) / 2);
+    const oy = round((ph - h) / 2);
+    return { rot, w, h, pw, ph, ox, oy };
+}
+export function getWindowSize(vw, vh, rotatePortrait = false) {
+    const { pw, ph, w, h } = getProcessGeometry(vw, vh, rotatePortrait);
     const sscale = isMobile() ? window.outerWidth / vw : 1;
-    let sw = vw * sscale;
-    let sh = vh * sscale;
-    let w = vw * pscale;
-    let h = vh * pscale;
-    let pw = Math.max(w, (h / 3) * 4);
-    let ph = Math.max(h, (w / 4) * 3);
+    const sw = vw * sscale;
+    const sh = vh * sscale;
     return [sw, sh, pw, ph, w, h];
 }
 export async function getConfig(configData) {

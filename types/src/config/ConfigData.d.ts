@@ -28,6 +28,7 @@ export interface VideoSettingData {
     height: ScreenData;
     facingMode: string;
     targetFrameRate: number;
+    rotatePortrait?: boolean;
 }
 export interface StatsData {
     createHtml: boolean;

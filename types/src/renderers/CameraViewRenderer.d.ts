@@ -9,6 +9,7 @@ export interface ICameraViewRenderer {
     getImage: () => ImageData;
     initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
     destroy: () => void;
+    readonly rotated?: boolean;
 }
 export declare class CameraViewRenderer implements ICameraViewRenderer {
     private canvas_process;
@@ -23,6 +24,8 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     private ph;
     private ox;
     private oy;
+    private rotatePortrait;
+    private rot;
     private target;
     private targetFrameRate;
     private imageDataCache;
@@ -36,10 +39,13 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     get frame(): number;
     get canvasProcess(): HTMLCanvasElement;
     get contextProcess(): CanvasRenderingContext2D;
+    get rotated(): boolean;
     getFrame(): number;
     getImage(): ImageData;
     get image(): ImageData;
+    private drawFrame;
     prepareImage(): void;
+    private onVideoResize;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;
     destroy(): void;
 }

@@ -1,3 +1,4 @@
+import { getProcessGeometry } from "../utils/ARnftUtils";
 export class CameraViewRenderer {
     canvas_process;
     context_process;
@@ -11,6 +12,8 @@ export class CameraViewRenderer {
     ph;
     ox;
     oy;
+    rotatePortrait = false;
+    rot = false;
     target;
     targetFrameRate = 60;
     imageDataCache;
@@ -44,13 +47,16 @@ export class CameraViewRenderer {
     get contextProcess() {
         return this.context_process;
     }
+    get rotated() {
+        return this.rot;
+    }
     getFrame() {
         return this._frame;
     }
     getImage() {
         const now = Date.now();
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
-            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            this.drawFrame();
             const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
             if (this.imageDataCache == null) {
                 this.imageDataCache = imageData.data;
@@ -66,7 +72,7 @@ export class CameraViewRenderer {
     get image() {
         const now = Date.now();
         if (now - this.lastCache > 1000 / this.targetFrameRate) {
-            this.context_process.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+            this.drawFrame();
             const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
             if (this.imageDataCache == null) {
                 this.imageDataCache = imageData.data;
@@ -79,26 +85,53 @@ export class CameraViewRenderer {
         }
         return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
     }
+    drawFrame() {
+        const ctx = this.context_process;
+        if (this.rot) {
+            ctx.save();
+            ctx.translate(this.pw, 0);
+            ctx.rotate(Math.PI / 2);
+            ctx.drawImage(this.video, 0, 0, this.vw, this.vh, this.oy, this.pw - this.ox - this.w, this.h, this.w);
+            ctx.restore();
+        }
+        else {
+            ctx.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
+        }
+    }
     prepareImage() {
         this.vw = this._video.videoWidth;
         this.vh = this._video.videoHeight;
-        const pscale = 320 / Math.max(this.vw, (this.vh / 3) * 4);
-        this.w = Math.floor(this.vw * pscale);
-        this.h = Math.floor(this.vh * pscale);
-        this.pw = Math.floor(Math.max(this.w, (this.h / 3) * 4));
-        this.ph = Math.floor(Math.max(this.h, (this.w / 4) * 3));
-        this.ox = Math.floor((this.pw - this.w) / 2);
-        this.oy = Math.floor((this.ph - this.h) / 2);
+        const geometry = getProcessGeometry(this.vw, this.vh, this.rotatePortrait, true);
+        this.rot = geometry.rot;
+        this.w = geometry.w;
+        this.h = geometry.h;
+        this.pw = geometry.pw;
+        this.ph = geometry.ph;
+        this.ox = geometry.ox;
+        this.oy = geometry.oy;
         this.canvas_process.width = this.pw;
         this.canvas_process.height = this.ph;
         this.context_process.fillStyle = "black";
         this.context_process.fillRect(0, 0, this.pw, this.ph);
+    }
+    onVideoResize() {
+        const vw = this._video.videoWidth;
+        const vh = this._video.videoHeight;
+        if (vw === 0 || vh === 0 || (vw === this.vw && vh === this.vh)) {
+            return;
+        }
+        this.prepareImage();
+        const videoResizeEvent = new CustomEvent("videoResize", {
+            detail: { width: this.vw, height: this.vh, rotated: this.rot },
+        });
+        this.target.dispatchEvent(videoResizeEvent);
     }
     async initialize(videoSettings) {
         this._facing = videoSettings.facingMode || "environment";
         if (videoSettings.targetFrameRate != null) {
             this.targetFrameRate = videoSettings.targetFrameRate;
         }
+        this.rotatePortrait = videoSettings.rotatePortrait === true;
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
                 const hint = {
@@ -126,6 +159,7 @@ export class CameraViewRenderer {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
                 this.prepareImage();
+                this._video.addEventListener("resize", () => this.onVideoResize());
                 return true;
             }
             catch (error) {
