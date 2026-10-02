@@ -32,4 +32,4 @@
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
- */ declare module "@webarkit/jsartoolkit-nft/dist/ARToolkitNFT_simd";
+ */ declare module "@webarkit/jsartoolkit-nft/simd";
