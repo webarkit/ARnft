@@ -40,6 +40,7 @@ export class cameraViewRenderer {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
                 this.prepareImage();
+                this._video.addEventListener("resize", () => this.onVideoResize());
                 return true;
             } catch (error) {
                 return Promise.reject(error);
@@ -47,6 +48,27 @@ export class cameraViewRenderer {
         } else {
             return Promise.reject("Sorry, Your device does not support this experience.");
         }
+    }
+
+    // the size of the camera stream, used by ARnft for the NFTWorker(s)
+    get width() {
+        return this.vw;
+    }
+
+    get height() {
+        return this.vh;
+    }
+
+    // When the stream changes resolution (e.g. a mobile device is rotated), recompute the
+    // process canvas and dispatch "videoResize" so the NFTWorker(s) update the projection.
+    onVideoResize() {
+        const vw = this._video.videoWidth;
+        const vh = this._video.videoHeight;
+        if (vw === 0 || vh === 0 || (vw === this.vw && vh === this.vh)) {
+            return;
+        }
+        this.prepareImage();
+        window.dispatchEvent(new CustomEvent("videoResize", { detail: { width: this.vw, height: this.vh } }));
     }
 
     getFrame() {
