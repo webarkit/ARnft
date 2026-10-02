@@ -59,7 +59,7 @@ const load = async (msg) => {
             }
             markerResult = {
                 type: "found",
-                matrixGL_RH: JSON.stringify(mat),
+                matrixGL_RH: JSON.stringify(Array.from(mat)),
             };
         });
         const regexM = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#()?&//=]*)/gim;
