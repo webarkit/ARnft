@@ -51,7 +51,11 @@ Scan through our [existing issues](https://github.com/webarkit/ARnft/issues) to 
 
 ### Commit your update
 
-Commit the changes once you are happy with them. See [Atom's contributing guide](https://github.com/atom/atom/blob/master/CONTRIBUTING.md#git-commit-messages) to know how to use emoji for commit messages.
+Commit the changes once you are happy with them. Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/) (`<type>(<optional scope>): <description>`), with types limited to `feat`, `fix`, `perf`, `doc`, `refactor`, `test`, `style`, `chore`. Build, CI and dependency changes are `chore`.
+
+If you changed files in `src/`, run `npm run build-ts` and commit the rebuilt `dist/` and `types/` folders too: the examples and the npm package use them.
+
+If you work with an AI coding agent (Claude Code, GitHub Copilot, Gemini, Antigravity, Codex...), it reads the project guidance from [AGENTS.md](AGENTS.md).
 
 Once your changes are ready, don't forget to self-review to speed up the review process:zap:.
 
