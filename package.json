@@ -40,11 +40,12 @@
     "@types/node": "24.12.2",
     "@types/stats.js": "^0.17.4",
     "@types/uuid": "10.0.0",
-    "prettier": "3.8.3",
+    "prettier": "3.9.9",
     "rimraf": "6.1.3",
     "stats.js": "^0.17.0",
+    "terser-webpack-plugin": "5.5.0",
     "ts-loader": "9.5.7",
-    "typedoc": "0.28.19",
+    "typedoc": "0.28.20",
     "typescript": "6.0.3",
     "webpack": "5.106.2",
     "webpack-cli": "7.0.2",
@@ -62,7 +63,6 @@
   "dependencies": {
     "@webarkit/jsartoolkit-nft": "1.7.7",
     "@webarkit/oneeurofilter-ts": "0.1.2",
-    "terser-webpack-plugin": "5.5.0",
-    "uuid": "14.0.0"
+    "uuid": "14.0.2"
   }
 }
