@@ -31,6 +31,7 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     private imageDataCache;
     private _frame;
     private lastCache;
+    private videoResizeListener;
     constructor(video: HTMLVideoElement);
     get facing(): string;
     get height(): number;
