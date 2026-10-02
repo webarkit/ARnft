@@ -61,7 +61,7 @@
     "license": "LGPL-3.0",
     "resolutions": {},
     "dependencies": {
-        "@webarkit/jsartoolkit-nft": "1.7.7",
+        "@webarkit/jsartoolkit-nft": "1.13.0",
         "@webarkit/oneeurofilter-ts": "0.1.2",
         "uuid": "14.0.2"
     }

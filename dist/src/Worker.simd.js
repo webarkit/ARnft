@@ -1,4 +1,4 @@
-import { ARControllerNFT } from "@webarkit/jsartoolkit-nft/dist/ARToolkitNFT_simd";
+import { ARControllerNFT } from "@webarkit/jsartoolkit-nft/simd";
 import { OneEuroFilter } from "@webarkit/oneeurofilter-ts";
 const ctx = self;
 ctx.onmessage = (e) => {
