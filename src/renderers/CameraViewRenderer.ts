@@ -81,6 +81,8 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     private lastCache: number = 0;
 
+    private videoResizeListener = () => this.onVideoResize();
+
     constructor(video: HTMLVideoElement) {
         this.canvas_process = document.createElement("canvas");
         this.context_process = this.canvas_process.getContext("2d", { alpha: false, willReadFrequently: true });
@@ -251,7 +253,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
                 this.prepareImage();
-                this._video.addEventListener("resize", () => this.onVideoResize());
+                this._video.addEventListener("resize", this.videoResizeListener);
                 return true;
             } catch (error) {
                 return Promise.reject(error);
@@ -263,6 +265,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
 
     public destroy(): void {
         const video = this._video;
+        video.removeEventListener("resize", this.videoResizeListener);
         this.target.addEventListener("stopVideoStreaming", function () {
             const stream = <MediaStream>video.srcObject;
             console.log("stop streaming");

@@ -107,12 +107,14 @@ export default class NFTWorker {
         this.worker = new Worker();
         const worker = this.worker;
 
-        this.target.addEventListener("terminateWorker-" + this.name, function () {
+        const onVideoResize = (ev: any) => {
+            this.setVideoSize(ev.detail.width, ev.detail.height, ev.detail.rotated);
+        };
+        this.target.addEventListener("videoResize", onVideoResize);
+        this.target.addEventListener("terminateWorker-" + this.name, () => {
             worker.postMessage({ type: "stop" });
             worker.terminate();
-        });
-        this.target.addEventListener("videoResize", (ev: any) => {
-            this.setVideoSize(ev.detail.width, ev.detail.height, ev.detail.rotated);
+            this.target.removeEventListener("videoResize", onVideoResize);
         });
         return await this.load(cameraURL, renderUpdate, trackUpdate, oef);
     }
