@@ -140,22 +140,40 @@ export class CameraViewRenderer {
         const labelsAvailable = videoDevices.some((device) => device.label !== "");
         if (label && !labelsAvailable) {
             const stream = await navigator.mediaDevices.getUserMedia(hint);
-            const camera = this.findCamera(await this.getVideoDevices(), label);
-            if (camera == null || camera.deviceId === stream.getVideoTracks()[0].getSettings().deviceId) {
+            let camera;
+            try {
+                camera = this.findCamera(await this.getVideoDevices(), label);
+                if (camera == null || camera.deviceId === stream.getVideoTracks()[0].getSettings().deviceId) {
+                    return stream;
+                }
+            }
+            catch (error) {
+                console.warn("Could not select the camera by cameraLabel, using the default camera:", error);
                 return stream;
             }
             stream.getTracks().forEach((track) => track.stop());
-            hint.video.deviceId = { exact: camera.deviceId };
-            return navigator.mediaDevices.getUserMedia(hint);
+            return this.openCamera(hint, camera);
         }
         const camera = label ? this.findCamera(videoDevices, label) : null;
         if (camera != null) {
-            hint.video.deviceId = { exact: camera.deviceId };
+            return this.openCamera(hint, camera);
         }
-        else if (isMobile() && videoDevices.length > 1) {
+        if (isMobile() && videoDevices.length > 1) {
             hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1].deviceId };
         }
         return navigator.mediaDevices.getUserMedia(hint);
+    }
+    async openCamera(hint, camera) {
+        try {
+            return await navigator.mediaDevices.getUserMedia({
+                ...hint,
+                video: { ...hint.video, deviceId: { exact: camera.deviceId } },
+            });
+        }
+        catch (error) {
+            console.warn('Could not open the camera "' + camera.label + '", using the default camera:', error);
+            return navigator.mediaDevices.getUserMedia(hint);
+        }
     }
     async getVideoDevices() {
         if (!navigator.mediaDevices.enumerateDevices) {
