@@ -243,22 +243,45 @@ export class CameraViewRenderer implements ICameraViewRenderer {
             // first visit: open the default camera to get the permission, then switch to
             // the matching camera if it's a different one
             const stream = await navigator.mediaDevices.getUserMedia(hint);
-            const camera = this.findCamera(await this.getVideoDevices(), label);
-            if (camera == null || camera.deviceId === stream.getVideoTracks()[0].getSettings().deviceId) {
+            let camera: MediaDeviceInfo | undefined;
+            try {
+                camera = this.findCamera(await this.getVideoDevices(), label);
+                if (camera == null || camera.deviceId === stream.getVideoTracks()[0].getSettings().deviceId) {
+                    return stream;
+                }
+            } catch (error) {
+                // keep using the open default camera instead of leaving its stream running
+                console.warn("Could not select the camera by cameraLabel, using the default camera:", error);
                 return stream;
             }
             stream.getTracks().forEach((track) => track.stop());
-            hint.video.deviceId = { exact: camera.deviceId };
-            return navigator.mediaDevices.getUserMedia(hint);
+            return this.openCamera(hint, camera);
         }
 
         const camera = label ? this.findCamera(videoDevices, label) : null;
         if (camera != null) {
-            hint.video.deviceId = { exact: camera.deviceId };
-        } else if (isMobile() && videoDevices.length > 1) {
+            return this.openCamera(hint, camera);
+        }
+        if (isMobile() && videoDevices.length > 1) {
             hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1].deviceId };
         }
         return navigator.mediaDevices.getUserMedia(hint);
+    }
+
+    /**
+     * Open the camera selected by cameraLabel, falling back to the default camera when it
+     * can't be opened (e.g. it is in use by another application).
+     */
+    private async openCamera(hint: any, camera: MediaDeviceInfo): Promise<MediaStream> {
+        try {
+            return await navigator.mediaDevices.getUserMedia({
+                ...hint,
+                video: { ...hint.video, deviceId: { exact: camera.deviceId } },
+            });
+        } catch (error) {
+            console.warn('Could not open the camera "' + camera.label + '", using the default camera:', error);
+            return navigator.mediaDevices.getUserMedia(hint);
+        }
     }
 
     private async getVideoDevices(): Promise<MediaDeviceInfo[]> {
