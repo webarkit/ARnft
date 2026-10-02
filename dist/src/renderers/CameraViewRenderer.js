@@ -1,4 +1,4 @@
-import { getProcessGeometry } from "../utils/ARnftUtils";
+import { getProcessGeometry, isMobile } from "../utils/ARnftUtils";
 export class CameraViewRenderer {
     canvas_process;
     context_process;
@@ -127,6 +127,50 @@ export class CameraViewRenderer {
         });
         this.target.dispatchEvent(videoResizeEvent);
     }
+    async openCameraStream(videoSettings) {
+        const hint = {
+            audio: false,
+            video: {
+                facingMode: this._facing,
+                width: { min: videoSettings.width.min, max: videoSettings.width.max },
+            },
+        };
+        const label = videoSettings.cameraLabel;
+        const videoDevices = await this.getVideoDevices();
+        const labelsAvailable = videoDevices.some((device) => device.label !== "");
+        if (label && !labelsAvailable) {
+            const stream = await navigator.mediaDevices.getUserMedia(hint);
+            const camera = this.findCamera(await this.getVideoDevices(), label);
+            if (camera == null || camera.deviceId === stream.getVideoTracks()[0].getSettings().deviceId) {
+                return stream;
+            }
+            stream.getTracks().forEach((track) => track.stop());
+            hint.video.deviceId = { exact: camera.deviceId };
+            return navigator.mediaDevices.getUserMedia(hint);
+        }
+        const camera = label ? this.findCamera(videoDevices, label) : null;
+        if (camera != null) {
+            hint.video.deviceId = { exact: camera.deviceId };
+        }
+        else if (isMobile() && videoDevices.length > 1) {
+            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1].deviceId };
+        }
+        return navigator.mediaDevices.getUserMedia(hint);
+    }
+    async getVideoDevices() {
+        if (!navigator.mediaDevices.enumerateDevices) {
+            return [];
+        }
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        return devices.filter((device) => device.kind == "videoinput");
+    }
+    findCamera(videoDevices, label) {
+        const camera = videoDevices.find((device) => device.label.toLowerCase().includes(label.toLowerCase()));
+        if (camera == null) {
+            console.warn('No camera matches the cameraLabel "' + label + '", available cameras:', videoDevices.map((device) => device.label));
+        }
+        return camera;
+    }
     async initialize(videoSettings) {
         this._facing = videoSettings.facingMode || "environment";
         if (videoSettings.targetFrameRate != null) {
@@ -135,27 +179,7 @@ export class CameraViewRenderer {
         this.rotatePortrait = videoSettings.rotatePortrait === true;
         if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
             try {
-                const hint = {
-                    audio: false,
-                    video: {
-                        facingMode: this._facing,
-                        width: { min: videoSettings.width.min, max: videoSettings.width.max },
-                    },
-                };
-                if (navigator.mediaDevices.enumerateDevices) {
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    const videoDevices = [];
-                    let videoDeviceIndex = 0;
-                    devices.forEach(function (device) {
-                        if (device.kind == "videoinput") {
-                            videoDevices[videoDeviceIndex++] = device.deviceId;
-                        }
-                    });
-                    if (videoDevices.length > 1) {
-                        hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1] };
-                    }
-                }
-                this._video.srcObject = await navigator.mediaDevices.getUserMedia(hint);
+                this._video.srcObject = await this.openCameraStream(videoSettings);
                 this._video = await new Promise((resolve) => {
                     this._video.onloadedmetadata = () => resolve(this._video);
                 });
