@@ -17,4 +17,5 @@ Read it before making changes: it is the canonical source and this file is only 
   `index.ts` each have a `.simd.ts` copy that differs only in the imports.
 - **A green build proves very little.** There is no test suite; check tracking and overlay
   changes on a real device, serving the repository with `npx http-server -c-1` so the device
-  doesn't use cached files.
+  doesn't use cached files. A phone also needs HTTPS: see the verification section of
+  AGENTS.md.

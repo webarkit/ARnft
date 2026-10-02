@@ -161,9 +161,25 @@ A green build proves only that the code compiles. **Tracking and overlay changes
 checked in a browser, on a real device**, with a printed or on-screen marker
 (`examples/DataNFT/pinball`):
 
-- serve the repository root with `npx http-server -c-1`. `-c-1` disables caching; without
-  it a phone can keep using an old `dist/` or `config.json` for an hour;
-- the camera needs HTTPS outside `localhost`;
+- always serve the repository root with `-c-1`, which disables caching; without it a phone
+  can keep using an old `dist/` or `config.json` for an hour;
+- on desktop, `npx http-server -c-1` and `http://localhost:8080/examples/...` are enough;
+- **on a phone the page must be served over HTTPS**, because browsers only allow the camera
+  on HTTPS or `localhost`. Create a self-signed certificate once (`openssl` is included in
+  Git for Windows) and start `http-server` with it:
+
+  ```bash
+  openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365 -subj "/CN=localhost"
+  npx http-server -c-1 -S -C cert.pem -K key.pem
+  ```
+
+  On the phone, open the **`https://`** address that `http-server` prints for the computer's
+  network interface, e.g. `https://192.168.1.10:8080/examples/arNFT_example.html` (it moves to
+  the next port if 8080 is busy), and accept the certificate warning. `cert.pem` and
+  `key.pem` are git-ignored: never commit them;
+- on Android, Chrome's port forwarding is an alternative without certificates. Connect the
+  phone over USB, open `chrome://inspect` on the computer, forward port `8080` to
+  `localhost:8080`, and open `http://localhost:8080/examples/...` on the phone;
 - test `arNFT_example.html` and `arNFT_simd_example.html`, and `arNFT_initialize_raw_example.html`
   when touching the renderer contract;
 - for camera geometry changes, start in portrait and in landscape, rotate the device both
