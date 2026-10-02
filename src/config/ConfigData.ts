@@ -75,6 +75,12 @@ export interface VideoSettingData {
      * unaffected. See https://github.com/webarkit/ARnft/issues/344
      */
     rotatePortrait?: boolean;
+    /**
+     * Optional. Use the first camera whose label contains this text (case insensitive),
+     * e.g. "Logitech". Without it, smartphones use the last camera (the regular lens on
+     * multi-camera devices) and desktop browsers use the camera chosen by the user.
+     */
+    cameraLabel?: string;
 }
 
 export interface StatsData {
