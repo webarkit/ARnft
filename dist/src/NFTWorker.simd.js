@@ -6,12 +6,14 @@ export default class NFTWorker {
     _processing = false;
     vw;
     vh;
+    cameraProj;
     target;
     uuid;
     name;
     addPath;
+    rotatePortrait;
     ready;
-    constructor(markerURL, w, h, uuid, name, addPath) {
+    constructor(markerURL, w, h, uuid, name, addPath, rotatePortrait = false) {
         this.markerURL = markerURL;
         this.vw = w;
         this.vh = h;
@@ -20,6 +22,7 @@ export default class NFTWorker {
         this.name = name;
         this.ready = false;
         this.addPath = addPath;
+        this.rotatePortrait = rotatePortrait;
     }
     async initialize(cameraURL, renderUpdate, trackUpdate, oef) {
         this.worker = new Worker();
@@ -28,7 +31,21 @@ export default class NFTWorker {
             worker.postMessage({ type: "stop" });
             worker.terminate();
         });
+        this.target.addEventListener("videoResize", (ev) => {
+            this.setVideoSize(ev.detail.width, ev.detail.height, ev.detail.rotated);
+        });
         return await this.load(cameraURL, renderUpdate, trackUpdate, oef);
+    }
+    setVideoSize(w, h, rotated) {
+        this.vw = w;
+        this.vh = h;
+        if (rotated != null) {
+            this.rotatePortrait = rotated;
+        }
+        this.dispatchWindowSize();
+        if (this.cameraProj != null) {
+            this.dispatchProjectionMatrix();
+        }
     }
     process(imagedata, frame) {
         if (this._processing) {
@@ -38,9 +55,8 @@ export default class NFTWorker {
         this.worker.postMessage({ type: "process", imagedata, frame }, [imagedata.data.buffer]);
     }
     load(cameraURL, renderUpdate, trackUpdate, oef) {
-        let [sw, sh, pw, ph, w, h] = getWindowSize(this.vw, this.vh);
-        const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
-        this.target.dispatchEvent(setWindowSizeEvent);
+        const [, , pw, ph] = getWindowSize(this.vw, this.vh, this.rotatePortrait);
+        this.dispatchWindowSize();
         this.worker.postMessage({
             type: "load",
             pw: pw,
@@ -54,21 +70,8 @@ export default class NFTWorker {
             const msg = ev.data;
             switch (msg.type) {
                 case "loaded": {
-                    const proj = JSON.parse(msg.proj);
-                    const ratioW = pw / w;
-                    const ratioH = ph / h;
-                    proj[0] *= ratioW;
-                    proj[4] *= ratioW;
-                    proj[8] *= ratioW;
-                    proj[12] *= ratioW;
-                    proj[1] *= ratioH;
-                    proj[5] *= ratioH;
-                    proj[9] *= ratioH;
-                    proj[13] *= ratioH;
-                    const projectionMatrixEvent = new CustomEvent("getProjectionMatrix", {
-                        detail: { proj: proj },
-                    });
-                    this.target.dispatchEvent(projectionMatrixEvent);
+                    this.cameraProj = JSON.parse(msg.proj);
+                    this.dispatchProjectionMatrix();
                     break;
                 }
                 case "endLoading": {
@@ -119,6 +122,38 @@ export default class NFTWorker {
         };
         renderU();
         return Promise.resolve(true);
+    }
+    dispatchWindowSize() {
+        const [sw, sh] = getWindowSize(this.vw, this.vh);
+        const setWindowSizeEvent = new CustomEvent("getWindowSize", { detail: { sw: sw, sh: sh } });
+        this.target.dispatchEvent(setWindowSizeEvent);
+    }
+    dispatchProjectionMatrix() {
+        const [, , pw, ph, w, h] = getWindowSize(this.vw, this.vh, this.rotatePortrait);
+        const rot = this.rotatePortrait && this.vh > this.vw;
+        const proj = this.cameraProj.slice();
+        const ratioW = pw / w;
+        const ratioH = ph / h;
+        proj[0] *= ratioW;
+        proj[4] *= ratioW;
+        proj[8] *= ratioW;
+        proj[12] *= ratioW;
+        proj[1] *= ratioH;
+        proj[5] *= ratioH;
+        proj[9] *= ratioH;
+        proj[13] *= ratioH;
+        if (rot) {
+            for (let c = 0; c < 4; c++) {
+                const x = proj[4 * c];
+                const y = proj[4 * c + 1];
+                proj[4 * c] = -y;
+                proj[4 * c + 1] = x;
+            }
+        }
+        const projectionMatrixEvent = new CustomEvent("getProjectionMatrix", {
+            detail: { proj: proj },
+        });
+        this.target.dispatchEvent(projectionMatrixEvent);
     }
     found(msg) {
         let world;

@@ -104,7 +104,7 @@ export default class ARnft {
             const renderUpdate = () => (stats ? statsMain.update() : null);
             const trackUpdate = () => (stats ? statsWorker.update() : null);
             markerUrls.forEach((markerUrl, index) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index][0], this.addPath));
+                this.controllers.push(new NFTWorker(markerUrl, this.cameraView.width, this.cameraView.height, this.uuid, names[index][0], this.addPath, this.cameraView.rotated === true));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate, this.appData.oef);
             });
             this.initialized = true;
@@ -157,8 +157,10 @@ export default class ARnft {
             .then(() => {
             const renderUpdate = () => (stats ? statsMain.update() : null);
             const trackUpdate = () => (stats ? statsWorker.update() : null);
+            const videoWidth = cameraView.width > 0 ? cameraView.width : this.width;
+            const videoHeight = cameraView.height > 0 ? cameraView.height : this.height;
             markerUrls.forEach((markerUrl, index) => {
-                this.controllers.push(new NFTWorker(markerUrl, this.width, this.height, this.uuid, names[index], this.addPath));
+                this.controllers.push(new NFTWorker(markerUrl, videoWidth, videoHeight, this.uuid, names[index], this.addPath, cameraView.rotated === true));
                 this.controllers[index].initialize(this.appData.cameraPara, renderUpdate, trackUpdate, this.appData.oef);
             });
             this.initialized = true;
