@@ -212,7 +212,7 @@ export class CameraViewRenderer implements ICameraViewRenderer {
         }
         this.prepareImage();
         const videoResizeEvent = new CustomEvent<object>("videoResize", {
-            detail: { width: this.vw, height: this.vh },
+            detail: { width: this.vw, height: this.vh, rotated: this.rot },
         });
         this.target.dispatchEvent(videoResizeEvent);
     }
