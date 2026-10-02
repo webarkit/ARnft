@@ -183,6 +183,11 @@ first and make it fail before fixing.
 - **Rebuild noise on Windows.** A rebuild rewrites `dist/src` and `types/` with LF endings, so
   `git status` lists them as modified even when nothing changed. `git add` normalises them;
   there is no content change to commit.
+- **Build with a real `node_modules`.** webpack derives module ids from the module paths. A
+  `node_modules` symlinked or junctioned from another checkout, which is common in git
+  worktrees, changes those paths and therefore the ids in `dist/ARnft*.js`. The result is
+  harmless but differs from a regular build. Run `yarn install` in the checkout you build
+  from.
 - **Pinned tracker.** `@webarkit/jsartoolkit-nft` is pinned to `1.7.7`, and `src/Worker*.ts`
   import its types from deep `types/src/...` paths. Upgrading is tracked in #355.
 - **Camera choice.** On smartphones the last listed camera is used unless `cameraLabel` matches;
