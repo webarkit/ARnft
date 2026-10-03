@@ -219,7 +219,7 @@ To rebuild `dist/` and `types/` (standard and SIMD bundles) on every change, run
 ```
 yarn dev-ts
 ```
-For a clean build, to run before committing `dist/` and `types/`:
+For a clean build, which deletes `dist/` and `types/` and regenerates them, to run before committing them:
 ```
 yarn build-ts
 ```

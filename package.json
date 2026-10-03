@@ -48,7 +48,7 @@
     "vite": "8.3.2"
   },
   "scripts": {
-    "build-ts": "rimraf ./dist && tsc --emitDeclarationOnly && vite build && vite build --mode simd",
+    "build-ts": "rimraf ./dist ./types && tsc --emitDeclarationOnly && vite build && vite build --mode simd",
     "dev-ts": "node scripts/dev.mjs",
     "docs": "typedoc",
     "format-check": "prettier --check .",
