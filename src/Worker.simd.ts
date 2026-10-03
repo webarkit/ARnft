@@ -35,10 +35,8 @@
  *
  */
 
-import { ARControllerNFT } from "@webarkit/jsartoolkit-nft/simd";
+import { ARControllerNFT, type IImageObj } from "@webarkit/jsartoolkit-nft/simd";
 import { OneEuroFilter } from "@webarkit/oneeurofilter-ts";
-import { AbstractARControllerNFT } from "@webarkit/jsartoolkit-nft/types/src/abstractions/AbstractARControllerNFT";
-import { IImageObj } from "@webarkit/jsartoolkit-nft/types/src/abstractions/CommonInterfaces";
 const ctx: Worker = self as any;
 
 ctx.onmessage = (e: MessageEvent<any>) => {
@@ -80,7 +78,7 @@ type GetNftMarkerEventArgs = {
 
 let next: IImageObj = null;
 let lastFrame: number = 0;
-let ar: AbstractARControllerNFT | null = null;
+let ar: ARControllerNFT | null = null;
 let markerResult: any = null;
 
 // initialize the OneEuroFilter
@@ -109,7 +107,7 @@ const load = async (msg: any) => {
     let markerLength: number = msg.marker.length;
     oef = msg.oef;
     console.debug("Base path:", basePath);
-    const onLoad = async (arController: AbstractARControllerNFT) => {
+    const onLoad = async (arController: ARControllerNFT) => {
         ar = arController;
         const cameraMatrix = ar.getCameraMatrix();
 
@@ -155,7 +153,7 @@ const load = async (msg: any) => {
                 nftMarkerUrls,
                 (id: number[]) => {
                     let m = 0;
-                    let marker = ar.getNFTData(id[m], 0);
+                    let marker = ar.getNFTData(id[m]);
                     ctx.postMessage({ type: "markerInfos", marker: marker });
                     ar.trackNFTMarkerId(id[m]);
                     console.log("loadNFTMarker -> ", id[m]);
