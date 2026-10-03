@@ -40,8 +40,8 @@ import { CameraViewRenderer, ICameraViewRenderer } from "./renderers/CameraViewR
 import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker.simd";
 import { v4 as uuidv4 } from "uuid";
-import packageJson from "../package.json";
-const { version } = packageJson;
+// only the version is bundled, not the whole package.json
+import { version } from "../package.json";
 
 /**
  * Basic interface for an Entity.
