@@ -477,7 +477,7 @@ function T(e, t, n) {
 }
 //#endregion
 //#region package.json
-var E = "0.14.13", D = { ARnft: class e {
+var E = "0.15.0", D = { ARnft: class e {
 	cameraView;
 	appData;
 	addPath;
