@@ -37,7 +37,7 @@
     "url": "https://github.com/webarkit/ARnft/issues"
   },
   "devDependencies": {
-    "@types/node": "24.12.2",
+    "@types/node": "26.6.4",
     "@types/stats.js": "^0.17.4",
     "@types/uuid": "10.0.0",
     "prettier": "3.9.9",

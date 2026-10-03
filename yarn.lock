@@ -145,12 +145,12 @@
   dependencies:
     "@types/unist" "*"
 
-"@types/node@24.12.2":
-  version "24.12.2"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-24.12.2.tgz#353cb161dbf1785ea25e8829ba7ec574c5c629ac"
-  integrity sha512-A1sre26ke7HDIuY/M23nd9gfB+nrmhtYyMINbjI1zHJxYteKR6qSMX56FsmjMcDb3SMcjJg5BiRRgOCC/yBD0g==
+"@types/node@26.6.4":
+  version "26.6.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-26.6.4.tgz#5aaac1a7337945f7f9a2de4e0d14e7107157e813"
+  integrity sha512-ldVPDCzj7fsaGZrLB0NuHuTvJcsNasysBAqMolr/cgxrLd1xbqxIr3XJiPnHHJUCxj5sNF1vnRj9aWnrVh5Jcg==
   dependencies:
-    undici-types "~7.16.0"
+    undici-types "~8.9.0"
 
 "@types/stats.js@^0.17.4":
   version "0.17.4"
@@ -665,10 +665,10 @@ uc.micro@^2.0.0, uc.micro@^2.1.0:
   resolved "https://registry.yarnpkg.com/uc.micro/-/uc.micro-2.1.0.tgz#f8d3f7d0ec4c3dea35a7e3c8efa4cb8b45c9e7ee"
   integrity sha512-ARDJmphmdvUk6Glw7y9DQ2bFkKBHwQHLi2lsaH6PPmz/Ka9sFOBsBluozhDltWmnv9u/cF6Rt87znRTPV+yp/A==
 
-undici-types@~7.16.0:
-  version "7.16.0"
-  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-7.16.0.tgz#ffccdff36aea4884cbfce9a750a0580224f58a46"
-  integrity sha512-Zz+aZWSj8LE6zoxD+xrjh4VfkIG8Ya6LvYkZqtUQGJPZjYl53ypCaUwWqo7eI0x66KBGeRo+mlBEkMSeSZ38Nw==
+undici-types@~8.9.0:
+  version "8.9.0"
+  resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-8.9.0.tgz#e240d97c8b5d85e5347ce73d25865c7906c1ec9f"
+  integrity sha512-KTDyRTYX8sWmKXAikPHHSyc63CRPETMctyjKFupcC6OBLXT3xsN0e9aF7m+mIXutFWpUXuedtowG7iLOzp0kQg==
 
 uuid@14.0.2:
   version "14.0.2"
