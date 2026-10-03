@@ -43,17 +43,13 @@
     "prettier": "3.9.9",
     "rimraf": "6.1.3",
     "stats.js": "^0.17.0",
-    "terser-webpack-plugin": "5.5.0",
-    "ts-loader": "9.5.7",
     "typedoc": "0.28.20",
     "typescript": "6.0.3",
-    "webpack": "5.106.2",
-    "webpack-cli": "7.0.2",
-    "worker-loader": "^3.0.8"
+    "vite": "8.3.2"
   },
   "scripts": {
-    "build-ts": "rimraf ./dist && tsc && webpack --mode production",
-    "dev-ts": "rimraf ./dist && tsc && webpack --mode development --progress --watch",
+    "build-ts": "rimraf ./dist && tsc --emitDeclarationOnly && vite build && vite build --mode simd",
+    "dev-ts": "tsc --emitDeclarationOnly && vite build --mode development --watch",
     "docs": "typedoc",
     "format-check": "prettier --check .",
     "format": "prettier --write ."

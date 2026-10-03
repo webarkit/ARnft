@@ -33,7 +33,7 @@
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
-import Worker from "worker-loader?inline=no-fallback!./Worker.simd";
+import Worker from "./Worker.simd?worker&inline";
 import { getWindowSize } from "./utils/ARnftUtils";
 
 export default class NFTWorker {
