@@ -134,7 +134,7 @@ ARnft reads its settings from the JSON file passed to `ARnft.init()` (see [examp
 |---|---|
 | `cameraPara` | URL of the camera calibration file, e.g. `examples/Data/camera_para.dat` |
 | `addPath` | optional path prefix for the marker and camera files |
-| `container` | `create: true` lets ARnft create the container, video and canvas; otherwise set `containerName` and `canvasName` |
+| `container` | `create: true` lets ARnft create the container, video and canvas. With `create: false` the page provides them: the container and canvas with the ids set in `containerName` and `canvasName`, and a `<video id="video" muted playsinline autoplay>` element (the id must be `video`), see [arNFT_container_example.html](examples/arNFT_container_example.html) |
 | `loading` | loading screen: `create`, `logo` (`src`, `alt`) and `loadingMessage` |
 | `stats` | `createHtml: true` creates the HTML elements for the stats panels |
 | `oef` | smooth the marker pose with the OneEuroFilter |
