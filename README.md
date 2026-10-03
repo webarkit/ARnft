@@ -5,7 +5,7 @@
 ![Dependabot status](https://img.shields.io/badge/Dependabot-enabled-02569B?logo=dependabot)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
 [![CI](https://github.com/webarkit/ARnft/actions/workflows/CI.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/CI.yml)
-[![Build ARnft CI](https://github.com/webarkit/ARnft/actions/workflows/build.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/main.yml)
+[![Build ARnft CI](https://github.com/webarkit/ARnft/actions/workflows/build.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/build.yml)
 ![twitter](https://flat.badgen.net/badge/twitter/WebarkitO/follow)
 
 # 🖼️ ARnft - WebAR with NFT
@@ -57,7 +57,9 @@ The ARnft library now includes support for SIMD (Single Instruction, Multiple Da
 
 To see the SIMD feature in action, you can try the `arNFT_simd_example.html` example:
 
-http://localhost:8000/examples/arNFT_example.simd.html
+http://localhost:8080/examples/arNFT_simd_example.html
+
+In your app, import `dist/ARnft.simd.mjs` (or `dist/ARnft.simd.js`) instead of `dist/ARnft.mjs`.
 
 ## 📦 Usage
 
@@ -106,7 +108,7 @@ or raw.cdn (for production, you need to add the hash):
 
 ```
 // As the examples above import three.js, Arnft-threejs and Arnft in an importmap
-"arnft": "https://rawcdn.githack.com/webarkit/ARnft/<hash>/dist/ARnft.js"
+"arnft": "https://rawcdn.githack.com/webarkit/ARnft/<hash>/dist/ARnft.mjs"
 ```
 
 or if you want to import as a module with npm:
@@ -114,13 +116,39 @@ or if you want to import as a module with npm:
 ```
 // In your package.json:
 "devDependencies": {
-    "@webarkit/ar-nft": "^0.14.11"
+    "@webarkit/ar-nft": "^0.15.0"
 },
 ```
 ```javascript
 // Then in your .ts or .js file
-import { ARnft } from "@webarkit/ar-nft";
+import arnft from "@webarkit/ar-nft";
+const { ARnft } = arnft;
 ```
+
+## ⚙️ Configuration
+
+ARnft reads its settings from the JSON file passed to `ARnft.init()` (see [examples/config.json](examples/config.json)). Unknown keys are silently ignored, so double-check the option names.
+
+| key | meaning |
+|---|---|
+| `cameraPara` | URL of the camera calibration file, e.g. `examples/Data/camera_para.dat` |
+| `addPath` | optional path prefix for the marker and camera files |
+| `container` | `create: true` lets ARnft create the container, video and canvas; otherwise set `containerName` and `canvasName` |
+| `loading` | loading screen: `create`, `logo` (`src`, `alt`) and `loadingMessage` |
+| `stats` | `createHtml: true` creates the HTML elements for the stats panels |
+| `oef` | smooth the marker pose with the OneEuroFilter |
+| `videoSettings` | camera options, see below |
+
+`videoSettings`:
+
+| key | meaning |
+|---|---|
+| `width` | `{ min, max }` of the requested camera width |
+| `height` | `{ min, max }`, kept for compatibility: the camera request currently uses only the width |
+| `facingMode` | `"environment"` (back camera, the default) or `"user"` |
+| `targetFrameRate` | maximum number of frames per second sent to the tracker |
+| `rotatePortrait` | optional, default `false`. When the camera stream is portrait, it is rotated onto the tracking canvas instead of being letterboxed, so more of the image is used for tracking |
+| `cameraLabel` | optional. Use the first camera whose name contains this text (case insensitive), e.g. `"Logitech"`. Without it, smartphones use the last listed camera and desktop browsers use the camera chosen in the browser |
 
 ## 🧪 Examples
 
@@ -174,19 +202,24 @@ yarn add @webarkit/ar-nft
 
 - Filtering of the matrix with the **O**ne**E**uro**F**ilter.
 
+- Rotating the phone between portrait and landscape keeps the content aligned on the marker; portrait streams can also be rotated onto the tracking canvas (`rotatePortrait`).
+
+- Choosing the camera by name (`cameraLabel`).
+
 ## 🛠️ Format the code with Prettier
 We are using [Prettier](https://prettier.io/) as code formatter. You only need to run `yarn format` to write the formatted code with Prettier. If you want to check if the code is well formatted run instead: `yarn format-check`
 
 ## 🔧 Build
-If you make changes to the code, run these commands to build the distribution library, install all the dependencies with:
+The library is built with [Vite](https://vite.dev/). If you make changes to the code, install all the dependencies with:
 ```
-yarn --include=dev i
+yarn install
 ```
-For a development build, that is the code will be rebuilt for every change, run:
+To rebuild `dist/` and `types/` (standard and SIMD bundles) on every change, run:
 ```
 yarn dev-ts
 ```
-Instead for a production build, with more optimizations in the code and smaller size, run:
+For a clean build, to run before committing `dist/` and `types/`:
 ```
 yarn build-ts
 ```
+Both produce the same minified bundles. See [CONTRIBUTING.md](CONTRIBUTING.md) (and [AGENTS.md](AGENTS.md) if you work with an AI coding agent) for the contribution workflow.
