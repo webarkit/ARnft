@@ -61,7 +61,7 @@ CI installs with **yarn** (`yarn.lock` is the lock file); `npm run <script>` wor
 
 | Script | Does |
 |---|---|
-| `build-ts` | `rimraf ./dist && tsc --emitDeclarationOnly && vite build && vite build --mode simd`: type-checks and emits `types/`, then Vite (`vite.config.mjs`) bundles `dist/ARnft.js` (UMD) and `dist/ARnft.mjs` (ES module), and their `.simd` versions |
+| `build-ts` | `rimraf ./dist ./types && tsc --emitDeclarationOnly && vite build && vite build --mode simd`: deletes `dist/` and `types/`, type-checks and emits `types/`, then Vite (`vite.config.mjs`) bundles `dist/ARnft.js` (UMD) and `dist/ARnft.mjs` (ES module), and their `.simd` versions |
 | `dev-ts` | declarations, then the standard bundles in development mode and watch |
 | `format-check` / `format` | `prettier --check .` / `prettier --write .` |
 | `docs` | `typedoc` (output in `docs/`, not committed) |
