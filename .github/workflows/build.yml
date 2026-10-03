@@ -15,12 +15,12 @@ jobs:
                 node-version:
                     - 22.13.0
         steps:
-            - uses: actions/checkout@v4
+            - uses: actions/checkout@v7
             - name: Use Node.js ${{ matrix.node-version }}
-              uses: actions/setup-node@v4
+              uses: actions/setup-node@v7
               with:
                   node-version: ${{ matrix.node-version }}
-            - uses: actions/cache@v4
+            - uses: actions/cache@v6
               with:
                   path: |
                       ~/.cache/yarn
@@ -39,7 +39,7 @@ jobs:
                   echo ${{ steps.vars.outputs.tag }}
             - run: |
                   yarn
-            - uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v7
               with:
                   name: dist
                   path: dist
@@ -47,13 +47,13 @@ jobs:
                   yarn build-ts
             - name: Commit changes
               if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-              uses: EndBug/add-and-commit@v9
+              uses: EndBug/add-and-commit@v11
               with:
                   default_author: github_actions
                   message: new dist files from action
                   add: "dist"
             - name: Release
-              uses: softprops/action-gh-release@v2
+              uses: softprops/action-gh-release@v3
               if: startsWith(github.ref, 'refs/tags/')
               with:
                   files: |
