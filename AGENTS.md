@@ -61,8 +61,8 @@ CI installs with **yarn** (`yarn.lock` is the lock file); `npm run <script>` wor
 
 | Script | Does |
 |---|---|
-| `build-ts` | `rimraf ./dist && tsc && webpack --mode production`: type-checks, emits `dist/src` + `types/`, bundles `dist/ARnft*.js` / `.mjs` |
-| `dev-ts` | same, development mode and watch |
+| `build-ts` | `rimraf ./dist && tsc --emitDeclarationOnly && vite build && vite build --mode simd`: type-checks and emits `types/`, then Vite (`vite.config.mjs`) bundles `dist/ARnft.js` (UMD) and `dist/ARnft.mjs` (ES module), and their `.simd` versions |
+| `dev-ts` | declarations, then the standard bundles in development mode and watch |
 | `format-check` / `format` | `prettier --check .` / `prettier --write .` |
 | `docs` | `typedoc` (output in `docs/`, not committed) |
 
@@ -107,8 +107,9 @@ aligning them belongs in a separate change.
 used by `arNFT_initialize_raw_example.html` through `initializeRaw`. Changes to the
 `ICameraViewRenderer` contract must be reflected there (see #353).
 
-The worker is bundled inline with `worker-loader`, which is archived; replacing it (and moving
-to Vite) is tracked in #347.
+The worker is inlined in the bundles with Vite's `import Worker from "./Worker?worker&inline"`
+and started from a `blob:` URL. Keep it inlined: ARnft is also loaded from CDNs, and a page
+cannot start a worker from a cross-origin file (#347).
 
 ---
 
@@ -196,14 +197,13 @@ first and make it fail before fixing.
 - **Prettier on Windows.** With `core.autocrlf=true` the working tree has CRLF line endings and
   `prettier --check` reports every file. Use `npx prettier --check --end-of-line auto <files>`
   locally; CI (Linux) checks LF files.
-- **Rebuild noise on Windows.** A rebuild rewrites `dist/src` and `types/` with LF endings, so
-  `git status` lists them as modified even when nothing changed. `git add` normalises them;
-  there is no content change to commit.
-- **Build with a real `node_modules`.** webpack derives module ids from the module paths. A
-  `node_modules` symlinked or junctioned from another checkout, which is common in git
-  worktrees, changes those paths and therefore the ids in `dist/ARnft*.js`. The result is
-  harmless but differs from a regular build. Run `yarn install` in the checkout you build
-  from.
+- **Rebuild noise on Windows.** A rebuild rewrites `types/` with LF endings, so `git status`
+  lists the files as modified even when nothing changed. `git add` normalises them; there is
+  no content change to commit.
+- **Build with a real `node_modules`.** A `node_modules` symlinked or junctioned from another
+  checkout, which is common in git worktrees, changes the module paths the bundler sees; with
+  the former webpack build this changed the bundles (#357). Run `yarn install` in the checkout
+  you build from.
 - **Pinned tracker.** `@webarkit/jsartoolkit-nft` is pinned to `1.7.7`, and `src/Worker*.ts`
   import its types from deep `types/src/...` paths. Upgrading is tracked in #355.
 - **Camera choice.** On smartphones the last listed camera is used unless `cameraLabel` matches;
