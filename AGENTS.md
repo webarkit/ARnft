@@ -204,8 +204,10 @@ first and make it fail before fixing.
   checkout, which is common in git worktrees, changes the module paths the bundler sees; with
   the former webpack build this changed the bundles (#357). Run `yarn install` in the checkout
   you build from.
-- **Pinned tracker.** `@webarkit/jsartoolkit-nft` is pinned to `1.7.7`, and `src/Worker*.ts`
-  import its types from deep `types/src/...` paths. Upgrading is tracked in #355.
+- **jsartoolkit-nft imports.** `tsconfig.json` uses `moduleResolution: "bundler"`, which honours
+  the package's `exports`: import from `@webarkit/jsartoolkit-nft` or its `./simd` entry, never
+  from deep `types/src/...` or `dist/...` paths.
+- **TypeScript 7.** Stay on 6.0.x until `typedoc`, which CI runs, supports TypeScript 7.
 - **Camera choice.** On smartphones the last listed camera is used unless `cameraLabel` matches;
   that rule currently ignores `facingMode: "user"` (#351).
 
