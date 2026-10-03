@@ -15,7 +15,8 @@
     "outDir": "dist",                        /* Redirect output structure to the directory. */
     "strictNullChecks": false,
     "types": [
-    "node"
+    "node",
+    "vite/client"
      ],
 
     /* Strict Type-Checking Options */
@@ -59,6 +60,5 @@
     "out": "docs"
     },
   "include": [
-    "src/**/*",
-    "typings/worker-loader.d.ts"  ]
+    "src/**/*"  ]
 }
