@@ -4,6 +4,7 @@
 ![npm package version](https://flat.badgen.net/npm/v/@webarkit/ar-nft)
 ![Dependabot status](https://img.shields.io/badge/Dependabot-enabled-02569B?logo=dependabot)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![built with Vite](https://img.shields.io/badge/built%20with-Vite-646CFF?logo=vite&logoColor=white)](https://vite.dev/)
 [![CI](https://github.com/webarkit/ARnft/actions/workflows/CI.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/CI.yml)
 [![Build ARnft CI](https://github.com/webarkit/ARnft/actions/workflows/build.yml/badge.svg)](https://github.com/webarkit/ARnft/actions/workflows/build.yml)
 ![twitter](https://flat.badgen.net/badge/twitter/WebarkitO/follow)
