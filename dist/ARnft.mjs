@@ -524,7 +524,7 @@ var { version: E } = {
 	},
 	scripts: {
 		"build-ts": "rimraf ./dist && tsc --emitDeclarationOnly && vite build && vite build --mode simd",
-		"dev-ts": "tsc --emitDeclarationOnly && vite build --mode development --watch",
+		"dev-ts": "node scripts/dev.mjs",
 		docs: "typedoc",
 		"format-check": "prettier --check .",
 		format: "prettier --write ."
