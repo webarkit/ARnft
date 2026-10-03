@@ -9,9 +9,6 @@ export default defineConfig(({ mode }) => {
     const fileBase = simd ? "ARnft.simd" : "ARnft";
     return {
         publicDir: false,
-        resolve: {
-            alias: { jsartoolkitnft: "@webarkit/jsartoolkit-nft" },
-        },
         worker: { format: "iife" },
         build: {
             outDir: "dist",
