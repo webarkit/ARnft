@@ -132,8 +132,8 @@ ARnft reads its settings from the JSON file passed to `ARnft.init()` (see [examp
 
 | key | meaning |
 |---|---|
-| `cameraPara` | URL of the camera calibration file, e.g. `examples/Data/camera_para.dat` |
-| `addPath` | optional path prefix for the marker and camera files |
+| `cameraPara` | camera calibration file: a path from the site root (not from the page), e.g. `examples/Data/camera_para.dat`, or an absolute `http(s)` URL |
+| `addPath` | optional folder added in front of the `cameraPara` path and of the marker paths passed to `ARnft.init()`: with `addPath: "app"`, `examples/Data/camera_para.dat` is loaded from `<site root>/app/examples/Data/camera_para.dat`. Use it only with relative paths: leave it empty when `cameraPara` is an absolute URL, because the prefix is added to absolute URLs too |
 | `container` | `create: true` lets ARnft create the container, video and canvas. With `create: false` the page provides them: the container and canvas with the ids set in `containerName` and `canvasName`, and a `<video id="video" muted playsinline autoplay>` element (the id must be `video`), see [arNFT_container_example.html](examples/arNFT_container_example.html) |
 | `loading` | loading screen: `create`, `logo` (`src`, `alt`) and `loadingMessage` |
 | `stats` | `createHtml: true` creates the HTML elements for the stats panels |
