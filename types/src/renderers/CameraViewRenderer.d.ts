@@ -1,4 +1,6 @@
+import { CameraView, CameraViewError, type CameraViewOptions, type FrameGeometry } from "@webarkit/camera-view";
 import { VideoSettingData } from "../config/ConfigData";
+export { CameraView, CameraViewError, type CameraViewOptions, type FrameGeometry };
 export interface ICameraViewRenderer {
     facing: string;
     readonly frame: number;
@@ -7,31 +9,15 @@ export interface ICameraViewRenderer {
     width: number;
     readonly image: ImageData;
     getImage: () => ImageData;
-    initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
+    initialize: (videoSettings: VideoSettingData) => Promise<boolean | void>;
     destroy: () => void;
     readonly rotated?: boolean;
 }
 export declare class CameraViewRenderer implements ICameraViewRenderer {
-    private canvas_process;
-    private context_process;
     _video: HTMLVideoElement;
-    private _facing;
-    private vw;
-    private vh;
-    private w;
-    private h;
-    private pw;
-    private ph;
-    private ox;
-    private oy;
-    private rotatePortrait;
-    private rot;
+    private view;
     private target;
-    private targetFrameRate;
-    private imageDataCache;
-    private _frame;
-    private lastCache;
-    private videoResizeListener;
+    private onGeometryChange;
     constructor(video: HTMLVideoElement);
     get facing(): string;
     get height(): number;
@@ -41,16 +27,11 @@ export declare class CameraViewRenderer implements ICameraViewRenderer {
     get canvasProcess(): HTMLCanvasElement;
     get contextProcess(): CanvasRenderingContext2D;
     get rotated(): boolean;
+    get geometry(): FrameGeometry;
     getFrame(): number;
     getImage(): ImageData;
     get image(): ImageData;
-    private drawFrame;
     prepareImage(): void;
-    private onVideoResize;
-    private openCameraStream;
-    private openCamera;
-    private getVideoDevices;
-    private findCamera;
     initialize(videoSettings: VideoSettingData): Promise<boolean>;
     destroy(): void;
 }
