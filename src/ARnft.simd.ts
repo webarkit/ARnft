@@ -36,7 +36,7 @@
 import Container from "./utils/html/Container";
 import { ConfigData } from "./config/ConfigData";
 import Stats from "stats.js";
-import { CameraViewRenderer, ICameraViewRenderer } from "./renderers/CameraViewRenderer";
+import { CameraViewRenderer, type FrameGeometry, ICameraViewRenderer } from "./renderers/CameraViewRenderer";
 import { getConfig } from "./utils/ARnftUtils";
 import NFTWorker from "./NFTWorker.simd";
 import { v4 as uuidv4 } from "uuid";
@@ -364,6 +364,28 @@ export default class ARnft {
             "ARnft init() %cstart...",
             "color: yellow; background-color: blue; border-radius: 4px; padding: 2px"
         );
+
+        // If a @webarkit/camera-view CameraView instance is passed directly, bridge its
+        // "geometrychange" event to the legacy global "videoResize" event used by NFTWorker.
+        const maybeEventTarget = cameraView as unknown as EventTarget;
+        if (typeof maybeEventTarget.addEventListener === "function") {
+            const onGeometryChange = (event: Event) => {
+                const { videoWidth, videoHeight, rotated } = (event as CustomEvent<FrameGeometry>).detail;
+                this.target.dispatchEvent(
+                    new CustomEvent<object>("videoResize", {
+                        detail: { width: videoWidth, height: videoHeight, rotated },
+                    })
+                );
+            };
+            maybeEventTarget.addEventListener("geometrychange", onGeometryChange);
+            this.target.addEventListener(
+                "stopVideoStreaming",
+                () => {
+                    maybeEventTarget.removeEventListener("geometrychange", onGeometryChange);
+                },
+                { once: true }
+            );
+        }
 
         let statsMain: any, statsWorker: any;
         getConfig(this.configUrl)

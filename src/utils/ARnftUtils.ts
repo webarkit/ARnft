@@ -28,11 +28,15 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021-2024 WebARKit.
+ *  Copyright 2021-2026 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
+import { getProcessGeometry, type ProcessGeometry } from "@webarkit/camera-view";
+
+export { getProcessGeometry, type ProcessGeometry };
+
 const target: EventTarget = window || global;
 /**
  * Convert degrees to radians.
@@ -57,51 +61,6 @@ export function isMobile(): boolean {
  */
 export function isIOS(): boolean {
     return /iPhone|iPad|iPod/i.test(navigator.userAgent);
-}
-
-export interface ProcessGeometry {
-    /** true when the source was rotated 90 degrees onto the process canvas. */
-    rot: boolean;
-    w: number;
-    h: number;
-    pw: number;
-    ph: number;
-    ox: number;
-    oy: number;
-}
-
-/**
- * Compute the geometry used to fit a video of size vw x vh onto the (always
- * landscape) process canvas. When `rotatePortrait` is true and the video is
- * portrait (vh > vw), the long/short sides are swapped before applying the
- * existing formula so the video can be drawn rotated 90 degrees instead of
- * being letterboxed. With `rotatePortrait` false/omitted, or for a landscape
- * video, this is identical to the original (unrotated) formula.
- * See https://github.com/webarkit/ARnft/issues/344
- * @param vw the video width
- * @param vh the video height
- * @param rotatePortrait opt-in flag, see VideoSettingData.rotatePortrait
- * @param floor whether to floor the computed values (CameraViewRenderer always
- * did; getWindowSize historically did not, kept as-is to avoid changing the
- * existing numeric output for callers that don't opt into rotatePortrait)
- * @returns the process canvas geometry
- */
-export function getProcessGeometry(vw: number, vh: number, rotatePortrait = false, floor = false): ProcessGeometry {
-    const rot = rotatePortrait && vh > vw;
-    const V = rot ? vh : vw;
-    const H = rot ? vw : vh;
-    const round = floor ? Math.floor : (n: number) => n;
-
-    const pscale = 320 / Math.max(V, (H / 3) * 4);
-
-    const w = round(V * pscale);
-    const h = round(H * pscale);
-    const pw = round(Math.max(w, (h / 3) * 4));
-    const ph = round(Math.max(h, (w / 4) * 3));
-    const ox = round((pw - w) / 2);
-    const oy = round((ph - h) / 2);
-
-    return { rot, w, h, pw, ph, ox, oy };
 }
 
 /**
