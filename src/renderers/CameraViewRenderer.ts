@@ -28,15 +28,22 @@
  *  are not obligated to do so. If you do not wish to do so, delete this exception
  *  statement from your version.
  *
- *  Copyright 2021-2024 WebARKit.
+ *  Copyright 2021-2026 WebARKit.
  *
  *  Author(s): Walter Perdan @kalwalt https://github.com/kalwalt
  *
  */
 
+import { CameraView, CameraViewError, type CameraViewOptions, type FrameGeometry } from "@webarkit/camera-view";
 import { VideoSettingData } from "../config/ConfigData";
-import { getProcessGeometry, isMobile } from "../utils/ARnftUtils";
 
+export { CameraView, CameraViewError, type CameraViewOptions, type FrameGeometry };
+
+/**
+ * Interface for camera frame providers passed to `ARnft.initializeRaw`.
+ * Both {@link CameraView} from `@webarkit/camera-view` and the legacy
+ * {@link CameraViewRenderer} wrapper satisfy this contract.
+ */
 export interface ICameraViewRenderer {
     facing: string;
     readonly frame: number;
@@ -45,312 +52,115 @@ export interface ICameraViewRenderer {
     width: number;
     readonly image: ImageData;
     getImage: () => ImageData;
-    initialize: (videoSettings: VideoSettingData) => Promise<boolean>;
+    initialize: (videoSettings: VideoSettingData) => Promise<boolean | void>;
     destroy: () => void;
     /** true when the video is being rotated 90 degrees onto the process canvas, see VideoSettingData.rotatePortrait. */
     readonly rotated?: boolean;
 }
+
+/**
+ * Thin compatibility wrapper around {@link CameraView} from `@webarkit/camera-view`
+ * that forwards instance `"geometrychange"` events to the legacy global `"videoResize"`
+ * event on `window`.
+ *
+ * @deprecated Use {@link CameraView} from `@webarkit/camera-view` directly.
+ */
 export class CameraViewRenderer implements ICameraViewRenderer {
-    private canvas_process: HTMLCanvasElement;
-
-    private context_process: CanvasRenderingContext2D;
-
     public _video: HTMLVideoElement;
 
-    private _facing: VideoSettingData["facingMode"];
-
-    private vw: number;
-    private vh: number;
-
-    private w: number;
-    private h: number;
-
-    private pw: number;
-    private ph: number;
-
-    private ox: number;
-    private oy: number;
-
-    private rotatePortrait: boolean = false;
-    private rot: boolean = false;
-
+    private view: CameraView;
     private target: EventTarget;
-    private targetFrameRate: number = 60;
-    private imageDataCache: Uint8ClampedArray;
-    private _frame: number;
 
-    private lastCache: number = 0;
-
-    private videoResizeListener = () => this.onVideoResize();
+    private onGeometryChange = (event: Event) => {
+        const { videoWidth, videoHeight, rotated } = (event as CustomEvent<FrameGeometry>).detail;
+        const videoResizeEvent = new CustomEvent<object>("videoResize", {
+            detail: { width: videoWidth, height: videoHeight, rotated },
+        });
+        this.target.dispatchEvent(videoResizeEvent);
+    };
 
     constructor(video: HTMLVideoElement) {
-        this.canvas_process = document.createElement("canvas");
-        this.context_process = this.canvas_process.getContext("2d", { alpha: false, willReadFrequently: true });
         this._video = video;
         this.target = window || global;
-        this._frame = 0;
+        this.view = new CameraView(video);
     }
 
     // Getters
     public get facing(): string {
-        return this._facing;
+        return this.view.facing;
     }
 
     public get height(): number {
-        return this.vh;
+        return this.view.height;
     }
 
     public get width(): number {
-        return this.vw;
+        return this.view.width;
     }
 
     public get video(): HTMLVideoElement {
-        return this._video;
+        return this.view.video;
     }
 
     public get frame(): number {
-        return this._frame;
+        return this.view.frame;
     }
 
     public get canvasProcess(): HTMLCanvasElement {
-        return this.canvas_process;
+        return this.view.canvasProcess;
     }
 
     public get contextProcess(): CanvasRenderingContext2D {
-        return this.context_process;
+        return this.view.canvasProcess.getContext("2d", { alpha: false, willReadFrequently: true });
     }
 
     public get rotated(): boolean {
-        return this.rot;
+        return this.view.rotated;
+    }
+
+    public get geometry(): FrameGeometry {
+        return this.view.geometry;
     }
 
     public getFrame(): number {
-        return this._frame;
+        return this.view.getFrame();
     }
 
     public getImage(): ImageData {
-        const now = Date.now();
-        if (now - this.lastCache > 1000 / this.targetFrameRate) {
-            this.drawFrame();
-            const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
-            if (this.imageDataCache == null) {
-                this.imageDataCache = imageData.data;
-            } else {
-                this.imageDataCache.set(imageData.data);
-            }
-            this.lastCache = now;
-            this._frame++;
-        }
-        return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
+        return this.view.getImage();
     }
 
     public get image(): ImageData {
-        const now = Date.now();
-        if (now - this.lastCache > 1000 / this.targetFrameRate) {
-            this.drawFrame();
-            const imageData = this.context_process.getImageData(0, 0, this.pw, this.ph);
-            if (this.imageDataCache == null) {
-                this.imageDataCache = imageData.data;
-            } else {
-                this.imageDataCache.set(imageData.data);
-            }
-            this.lastCache = now;
-            this._frame++;
-        }
-        return new ImageData(this.imageDataCache.slice(), this.pw, this.ph);
-    }
-
-    /**
-     * Draws the current video frame onto the process canvas. When `rot` is
-     * true (portrait video with rotatePortrait opted in) the frame is rotated
-     * 90 degrees so it fills the process canvas without letterboxing; the
-     * destination footprint (ox, oy, w, h) is identical to the non-rotated
-     * case. See https://github.com/webarkit/ARnft/issues/344
-     */
-    private drawFrame(): void {
-        const ctx = this.context_process;
-        if (this.rot) {
-            ctx.save();
-            ctx.translate(this.pw, 0);
-            ctx.rotate(Math.PI / 2);
-            ctx.drawImage(this.video, 0, 0, this.vw, this.vh, this.oy, this.pw - this.ox - this.w, this.h, this.w);
-            ctx.restore();
-        } else {
-            ctx.drawImage(this.video, 0, 0, this.vw, this.vh, this.ox, this.oy, this.w, this.h);
-        }
+        return this.view.image;
     }
 
     public prepareImage(): void {
-        this.vw = this._video.videoWidth;
-        this.vh = this._video.videoHeight;
-
-        const geometry = getProcessGeometry(this.vw, this.vh, this.rotatePortrait, true);
-        this.rot = geometry.rot;
-        this.w = geometry.w;
-        this.h = geometry.h;
-        this.pw = geometry.pw;
-        this.ph = geometry.ph;
-        this.ox = geometry.ox;
-        this.oy = geometry.oy;
-
-        this.canvas_process.width = this.pw;
-        this.canvas_process.height = this.ph;
-
-        this.context_process.fillStyle = "black";
-        this.context_process.fillRect(0, 0, this.pw, this.ph);
-    }
-
-    /**
-     * Called when the camera stream changes resolution, e.g. when a mobile device is
-     * rotated and the stream swaps width and height. Recomputes the process canvas
-     * geometry and dispatches a "videoResize" event so the NFTWorker(s) can update
-     * the window size and the projection matrix.
-     */
-    private onVideoResize(): void {
-        const vw = this._video.videoWidth;
-        const vh = this._video.videoHeight;
-        if (vw === 0 || vh === 0 || (vw === this.vw && vh === this.vh)) {
-            return;
-        }
-        this.prepareImage();
-        const videoResizeEvent = new CustomEvent<object>("videoResize", {
-            detail: { width: this.vw, height: this.vh, rotated: this.rot },
-        });
-        this.target.dispatchEvent(videoResizeEvent);
-    }
-
-    /**
-     * Open the camera stream. With videoSettings.cameraLabel the first camera whose label
-     * contains that text is used. Otherwise smartphones use the last camera (the regular
-     * lens on multi-camera devices) and desktop browsers use the camera chosen by the user.
-     * @param videoSettings the video settings of the config.
-     * @returns the camera stream.
-     */
-    private async openCameraStream(videoSettings: VideoSettingData): Promise<MediaStream> {
-        const hint: any = {
-            audio: false,
-            video: {
-                facingMode: this._facing,
-                width: { min: videoSettings.width.min, max: videoSettings.width.max },
-            },
-        };
-        const label = videoSettings.cameraLabel;
-        const videoDevices = await this.getVideoDevices();
-        // camera labels are only exposed after the camera permission has been granted
-        const labelsAvailable = videoDevices.some((device) => device.label !== "");
-
-        if (label && !labelsAvailable) {
-            // first visit: open the default camera to get the permission, then switch to
-            // the matching camera if it's a different one
-            const stream = await navigator.mediaDevices.getUserMedia(hint);
-            let camera: MediaDeviceInfo | undefined;
-            try {
-                camera = this.findCamera(await this.getVideoDevices(), label);
-                if (camera == null || camera.deviceId === stream.getVideoTracks()[0].getSettings().deviceId) {
-                    return stream;
-                }
-            } catch (error) {
-                // keep using the open default camera instead of leaving its stream running
-                console.warn("Could not select the camera by cameraLabel, using the default camera:", error);
-                return stream;
-            }
-            stream.getTracks().forEach((track) => track.stop());
-            return this.openCamera(hint, camera);
-        }
-
-        const camera = label ? this.findCamera(videoDevices, label) : null;
-        if (camera != null) {
-            return this.openCamera(hint, camera);
-        }
-        if (isMobile() && videoDevices.length > 1) {
-            hint.video.deviceId = { exact: videoDevices[videoDevices.length - 1].deviceId };
-        }
-        return navigator.mediaDevices.getUserMedia(hint);
-    }
-
-    /**
-     * Open the camera selected by cameraLabel, falling back to the default camera when it
-     * can't be opened (e.g. it is in use by another application).
-     */
-    private async openCamera(hint: any, camera: MediaDeviceInfo): Promise<MediaStream> {
-        try {
-            return await navigator.mediaDevices.getUserMedia({
-                ...hint,
-                video: { ...hint.video, deviceId: { exact: camera.deviceId } },
-            });
-        } catch (error) {
-            console.warn('Could not open the camera "' + camera.label + '", using the default camera:', error);
-            return navigator.mediaDevices.getUserMedia(hint);
-        }
-    }
-
-    private async getVideoDevices(): Promise<MediaDeviceInfo[]> {
-        if (!navigator.mediaDevices.enumerateDevices) {
-            return [];
-        }
-        const devices = await navigator.mediaDevices.enumerateDevices();
-        return devices.filter((device) => device.kind == "videoinput");
-    }
-
-    /**
-     * Find the first camera whose label contains `label` (case insensitive). Warns with the
-     * labels of the available cameras when none matches.
-     */
-    private findCamera(videoDevices: MediaDeviceInfo[], label: string): MediaDeviceInfo | undefined {
-        const camera = videoDevices.find((device) => device.label.toLowerCase().includes(label.toLowerCase()));
-        if (camera == null) {
-            console.warn(
-                'No camera matches the cameraLabel "' + label + '", available cameras:',
-                videoDevices.map((device) => device.label)
-            );
-        }
-        return camera;
+        // Handled internally by CameraView on initialize() and video resize.
     }
 
     public async initialize(videoSettings: VideoSettingData): Promise<boolean> {
-        this._facing = videoSettings.facingMode || "environment";
-        if (videoSettings.targetFrameRate != null) {
-            this.targetFrameRate = videoSettings.targetFrameRate;
-        }
-        this.rotatePortrait = videoSettings.rotatePortrait === true;
-
-        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-            try {
-                this._video.srcObject = await this.openCameraStream(videoSettings);
-                this._video = await new Promise<HTMLVideoElement>((resolve) => {
-                    this._video.onloadedmetadata = () => resolve(this._video);
-                });
-                this.prepareImage();
-                this._video.addEventListener("resize", this.videoResizeListener);
-                return true;
-            } catch (error) {
-                return Promise.reject(error);
-            }
-        } else {
-            return Promise.reject("Sorry, Your device does not support this experience.");
-        }
+        this.view.removeEventListener("geometrychange", this.onGeometryChange);
+        this.view.addEventListener("geometrychange", this.onGeometryChange);
+        await this.view.initialize(videoSettings);
+        return true;
     }
 
     public destroy(): void {
-        const video = this._video;
-        video.removeEventListener("resize", this.videoResizeListener);
-        this.target.addEventListener("stopVideoStreaming", function () {
-            const stream = <MediaStream>video.srcObject;
-            console.log("stop streaming");
-            if (stream !== null && stream !== undefined) {
-                const tracks = stream.getTracks();
-
-                tracks.forEach(function (track) {
-                    track.stop();
-                });
-
-                video.srcObject = null;
-
-                let currentAR = document.getElementById("app");
-                if (currentAR !== null && currentAR !== undefined) {
-                    currentAR.remove();
+        this.view.removeEventListener("geometrychange", this.onGeometryChange);
+        const hadStream = this._video.srcObject != null;
+        this.view.destroy();
+        this.target.addEventListener(
+            "stopVideoStreaming",
+            function () {
+                console.log("stop streaming");
+                if (hadStream) {
+                    const currentAR = document.getElementById("app");
+                    if (currentAR !== null && currentAR !== undefined) {
+                        currentAR.remove();
+                    }
                 }
-            }
-        });
+            },
+            { once: true }
+        );
     }
 }
