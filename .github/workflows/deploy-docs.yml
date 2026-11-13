@@ -1,0 +1,173 @@
+name: Deploy API docs to webarkit.org
+
+# Builds the TypeDoc API reference and proposes it to the website
+# (webarkit/webarkit.github.io) as a pull request against its `dev` branch, where
+# /arnft/api shows public/api/arnft/ (as /jsartoolkitnft/api does for jsartoolkitNFT,
+# webarkit/jsartoolkitNFT#764). Never pushes to the website's dev or master: a person
+# reviews the deploy preview and merges.
+#
+# Separate from build.yml on purpose: a docs failure must never block or fail the
+# GitHub release of a tag.
+
+on:
+    push:
+        tags:
+            # Release tags only, e.g. 0.15.0.
+            - "[0-9]*.[0-9]*.[0-9]*"
+    pull_request:
+        # Dry run: builds the docs and the website with them, opens nothing. It runs on
+        # every input TypeDoc reads, so a change that breaks the docs fails its own PR
+        # instead of the next release: the sources, the README (the docs' front page),
+        # the compiler options, and the TypeDoc version in the lockfile.
+        paths:
+            - .github/workflows/deploy-docs.yml
+            - typedoc.json
+            - tsconfig.json
+            - package.json
+            - yarn.lock
+            - README.md
+            - src/**
+    workflow_dispatch:
+        inputs:
+            tag:
+                description: >-
+                    Existing release tag to build the docs from, e.g. 0.15.0. Opens (or
+                    updates) a pull request on the website; nothing is published until it
+                    is merged there.
+                required: true
+
+permissions:
+    contents: read
+
+concurrency:
+    group: deploy-docs-${{ inputs.tag || github.ref_name }}
+    # A newer push to a PR supersedes its dry run; a release run is never cancelled.
+    cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+    docs:
+        runs-on: ubuntu-24.04
+        env:
+            # Empty on pull_request, which documents the PR's code, not a release.
+            TAG: ${{ inputs.tag || (github.event_name == 'push' && github.ref_name) || '' }}
+            WEBSITE_REPO: webarkit/webarkit.github.io
+        steps:
+            - name: Check the tag and the token
+              if: github.event_name != 'pull_request'
+              env:
+                  WEBSITE_DOCS_TOKEN: ${{ secrets.WEBSITE_DOCS_TOKEN }}
+              run: |
+                  # The tag names the website branch; keep it to a plain version.
+                  if [[ ! "$TAG" =~ ^[0-9]+\.[0-9]+\.[0-9]+([-.][0-9A-Za-z.-]+)?$ ]]; then
+                    echo "::error::'$TAG' is not a release version such as 0.15.0"
+                    exit 1
+                  fi
+                  # Without it the website checkout fails with an opaque "input required".
+                  # It needs Contents: write and Pull requests: write on the website repo.
+                  if [ -z "$WEBSITE_DOCS_TOKEN" ]; then
+                    echo "::error::The WEBSITE_DOCS_TOKEN secret is not set"
+                    exit 1
+                  fi
+
+            - name: Checkout ARnft
+              uses: actions/checkout@v7
+              with:
+                  # On workflow_dispatch github.ref is the default branch, so the input is
+                  # applied here, under refs/tags/ so that only an existing tag resolves.
+                  # On a tag push or a PR, github.ref is already right.
+                  ref: >-
+                      ${{ inputs.tag && format('refs/tags/{0}', inputs.tag) || github.ref }}
+
+            # Same version as CI.yml and build.yml.
+            - name: Use Node.js 22.13.0
+              uses: actions/setup-node@v7
+              with:
+                  node-version: 22.13.0
+                  cache: yarn
+
+            - name: Install
+              run: yarn install --frozen-lockfile --ignore-scripts
+
+            # Strict on PRs only: a release's docs should not be held back by a warning
+            # in a tag that can no longer be changed.
+            - name: Build the API docs
+              run: |
+                  if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+                    yarn docs --treatWarningsAsErrors
+                  else
+                    yarn docs
+                  fi
+
+            - name: Upload the API docs
+              uses: actions/upload-artifact@v7
+              with:
+                  name: api-docs${{ env.TAG && format('-{0}', env.TAG) || '' }}
+                  path: docs/
+                  include-hidden-files: true
+
+            - name: Checkout the website (dev)
+              uses: actions/checkout@v7
+              with:
+                  repository: ${{ env.WEBSITE_REPO }}
+                  ref: dev
+                  path: website
+                  # The dry run only reads the public repo, so the default token is enough
+                  # and the secret is not exposed to PR runs.
+                  token: >-
+                      ${{ github.event_name == 'pull_request' && github.token || secrets.WEBSITE_DOCS_TOKEN }}
+
+            - name: Copy the docs into the website
+              run: |
+                  rm -rf website/public/api/arnft
+                  mkdir -p website/public/api
+                  cp -r docs website/public/api/arnft
+
+            # npm run build is the website's only check; it must pass with the new docs in.
+            - name: Build the website (dry run)
+              if: github.event_name == 'pull_request'
+              working-directory: website
+              run: |
+                  npm ci --no-audit --no-fund
+                  npm run build
+
+            - name: Commit, push and open a pull request on the website
+              if: github.event_name != 'pull_request'
+              working-directory: website
+              env:
+                  GH_TOKEN: ${{ secrets.WEBSITE_DOCS_TOKEN }}
+              run: |
+                  BRANCH="docs/arnft-api-${TAG}"
+                  git config user.name "github-actions[bot]"
+                  git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+                  git switch -c "$BRANCH"
+                  # Stages deletions too, for pages a release no longer has.
+                  git add public/api/arnft
+                  if git diff --cached --quiet; then
+                    echo "::notice::The API docs for ${TAG} match the website's dev; nothing to propose"
+                    exit 0
+                  fi
+                  git commit -q -m "docs: update the ARnft API reference to ${TAG}" \
+                    -m "Generated with TypeDoc from webarkit/ARnft@${TAG}."
+                  # --force, not --force-with-lease: this clone has no remote-tracking ref for
+                  # the branch, so a lease is always "stale" and a re-run for the same tag
+                  # would be rejected. The branch is written only by this workflow.
+                  git push --force origin "$BRANCH"
+
+                  RUN_URL="${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
+                  EXISTING=$(gh pr list --repo "$WEBSITE_REPO" --head "$BRANCH" --state open \
+                    --json url --jq '.[0].url // empty')
+                  if [ -n "$EXISTING" ]; then
+                    echo "::notice::Updated the open pull request ${EXISTING}"
+                    exit 0
+                  fi
+                  BODY_FILE=$(mktemp)
+                  cat > "$BODY_FILE" <<EOF
+                  Updates \`public/api/arnft/\` with the API reference of [ARnft ${TAG}](https://github.com/${GITHUB_REPOSITORY}/releases/tag/${TAG}), generated with TypeDoc by [this workflow run](${RUN_URL}).
+
+                  Before merging, check \`/arnft/api\` on the deploy preview.
+
+                  The files are generated: do not edit them by hand. To change them, change the sources or \`typedoc.json\` in webarkit/ARnft.
+                  EOF
+                  gh pr create --repo "$WEBSITE_REPO" --base dev --head "$BRANCH" \
+                    --title "docs: update the ARnft API reference to ${TAG}" \
+                    --body-file "$BODY_FILE"
