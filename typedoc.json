@@ -1,0 +1,13 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/index.ts",
+    "src/ARnft.ts",
+    "src/NFTWorker.ts",
+    "src/config/ConfigData.ts",
+    "src/utils/ARnftUtils.ts",
+    "src/utils/html/Container.ts",
+    "src/renderers/CameraViewRenderer.ts"
+  ],
+  "out": "docs"
+}
